@@ -54,10 +54,13 @@ add("Normalize Output", "n8n-nodes-base.code", 2, {"jsCode": """
 const b = $('Validate Input').first().json;
 const output = $input.first().json;
 const failed = Boolean(output.error);
+// Inspect locally, but export only a fixed safe category, never provider error text.
+const detail = failed ? JSON.stringify(output.error) : '';
+const errorCode = /429|quota|RESOURCE_EXHAUSTED|rate.limit|too.many.requests/i.test(detail) ? 'MODEL_RATE_LIMIT' : /401|403|unauthorized|API.key.not.valid|authorization.failed/i.test(detail) ? 'MODEL_AUTH_FAILED' : /timeout|timed.out/i.test(detail) ? 'MODEL_TIMEOUT' : /400|bad.request|invalid|schema|parse|json/i.test(detail) ? 'MODEL_REQUEST_REJECTED' : /503|unavailable|overloaded/i.test(detail) ? 'MODEL_UNAVAILABLE' : 'MODEL_EXECUTION_FAILED';
 return [{json: {contract_version:'1', run_id:b.run_id, scenario_id:b.scenario_id, execution_mode:'LIVE_MODEL',
 status:failed ? 'failed' : 'completed', final_response:failed ? null : String(output.output || '').slice(0,16000), tool_call_count:null,
 started_at:b.started_at, completed_at:new Date().toISOString(),
-error:failed ? {code:'MODEL_EXECUTION_FAILED', message:'Agent execution failed.'} : null}}];
+error:failed ? {code:errorCode, message:'Agent execution failed.'} : null}}];
 """}, [800, 0])
 add("Respond", "n8n-nodes-base.respondToWebhook", 1.4,
     {"respondWith": "json", "responseBody": "={{ $json }}", "options": {}}, [1050, 0])

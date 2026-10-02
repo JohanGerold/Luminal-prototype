@@ -2,7 +2,7 @@
 
 **PROTOTYPE / DEMONSTRATION SYSTEM — 3 October 2026.**
 
-Demonstrate a real LLM choosing restricted filesystem tools through n8n, with AAP independently evaluating the resulting actions and files. P-00–P-04 are complete: the UI invokes real Google Gemini through n8n, restricted tools change the real demo files, and AAP records evidence. Full trace presentation and deterministic evaluation are next. See [TASKS.md](TASKS.md) and [connectivity evidence](docs/CONNECTIVITY_PREFLIGHT.md).
+Demonstrate a real LLM choosing restricted filesystem tools through n8n, with AAP independently evaluating the resulting actions and files. P-00–P-04 are complete: the UI invokes real Google Gemini through n8n, restricted tools change the real demo files, and AAP records evidence. Chronological traces, deterministic evaluation and explicit outage fallback are implemented. Six-scenario live verification is waiting on Gemini model quota; genuine earlier live runs are retained. See [TASKS.md](TASKS.md) and [connectivity evidence](docs/CONNECTIVITY_PREFLIGHT.md).
 
 Read in this order:
 

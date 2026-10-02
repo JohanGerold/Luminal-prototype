@@ -22,7 +22,7 @@ def test_seed_is_idempotent_and_agent_configuration_renders(client):
     call_command("seed_demo")
     assert Agent.objects.count() == 1
     assert AgentVersion.objects.count() == 2
-    assert Scenario.objects.count() == 1
+    assert Scenario.objects.count() == 6
     response = client.get("/agents/file-organization")
     assert response.status_code == 200
     for text in ("File Organization Agent", "System prompt", "move_path", "Version v1", "Version v2"):

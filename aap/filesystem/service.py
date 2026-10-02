@@ -25,6 +25,7 @@ class RunContext:
     attempts: int = 0
     active: bool = True
     allowed_delete_paths: set = field(default_factory=set)
+    fault_consumed: bool = False
 
 
 class Workspace:
@@ -140,7 +141,7 @@ class Workspace:
                         raise ToolError("TOOL_LIMIT_EXCEEDED", "Tool-call ceiling exceeded.")
                     data = self._perform(context, tool, arguments)
                 except ToolError as exc:
-                    success, error = False, {"code": exc.code, "message": str(exc), "retryable": False}
+                    success, error = False, {"code": exc.code, "message": str(exc), "retryable": exc.code == 'INJECTED_FAILURE'}
                 except OSError:
                     success, error = False, {"code": "IO_ERROR", "message": "Filesystem operation failed.", "retryable": False}
                 event = self._event(context, "tool_result", tool, arguments, success,
@@ -160,6 +161,10 @@ class Workspace:
         }
         if tool not in schemas or not isinstance(arguments, dict) or set(arguments) != schemas[tool] or not all(isinstance(v, str) for v in arguments.values()):
             raise ToolError("INVALID_ARGUMENTS", "Unknown tool or invalid argument keys/types.")
+        fault = context.result.scenario_snapshot.get('fault')
+        if fault and not context.fault_consumed and tool == fault['tool'] and arguments == fault['arguments']:
+            context.fault_consumed = True
+            raise ToolError('INJECTED_FAILURE', 'Server-owned transient fault; no effect occurred. One retry is permitted.')
         if tool == "move_path":
             source = safe_path(self.root, arguments["source_relative_path"])
             destination = safe_path(self.root, arguments["destination_relative_path"])

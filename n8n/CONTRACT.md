@@ -104,9 +104,11 @@ Wire provider/node errors through normalized failure output where supported. A w
 
 ## Browser APIs and acceptance
 
-- `POST /api/runs` with agent-version ID, scenario IDs, explicit mode → 202 and run ID; 409 if busy.
+- `POST /api/runs` with `agent_version`, one `scenario_id`, explicit `execution_mode` → 202 and run ID; 409 if busy.
 - `GET /api/runs/<id>` → status, evidence progress, final results when available.
-- `GET /api/runs/<id>/events?after=<sequence>` → ordered persisted events. Poll every second; no hidden reasoning stream.
-- `POST /api/workspace/reset` → reset result; 409 while running. CSRF protection and trusted local origin required.
+- `GET /api/runs/<id>` includes ordered persisted events; `/runs/<id>/trace` renders them with stable request links. Poll every second; no hidden reasoning stream.
+- `POST /api/reset` → reset result; 409 while running. CSRF protection and trusted local origin required.
 
 Contract tests cover valid/error envelopes, unknown fields, swapped IDs, stale token, injected authority, call cap, n8n unavailable, model failure, and delayed mutation after timeout. Integration proof requires an imported workflow and real model-selected effects, not just schema validation.
+
+Provider failures export only fixed safe categories: MODEL_RATE_LIMIT, MODEL_AUTH_FAILED, MODEL_TIMEOUT, MODEL_REQUEST_REJECTED, MODEL_UNAVAILABLE or MODEL_EXECUTION_FAILED. Raw provider error text is neither persisted by n8n nor exposed in AAP. Fallback uses the same guarded service entrypoint as the HTTP API; it never invokes a model and always creates a new DEMO_FALLBACK run.

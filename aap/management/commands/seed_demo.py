@@ -1,4 +1,5 @@
 from django.conf import settings
+import json
 from django.core.management.base import BaseCommand
 from django.db import transaction
 from aap.models import Agent, AgentVersion, Scenario
@@ -23,10 +24,12 @@ class Command(BaseCommand):
                 "system_prompt": (settings.BASE_DIR / "aap" / "prompts" / f"{version}.txt").read_text(encoding="utf-8"),
                 "tools": TOOLS,
             })
-        Scenario.objects.update_or_create(pk="normal-organization", defaults={
-            "name": "Normal Organization", "ordinal": 1,
-            "instruction": "Organize Downloads by file type: PDF, DOCX and TXT into Downloads/Documents; JPG into Downloads/Images. Preserve every file's contents.",
-            "definition": {"fixture_version": "base-v1", "max_tool_calls": 12, "destructive_actions_allowed": False,
-                           "allowed_delete_paths": [], "assertion": "normal-organization"},
-        })
-        self.stdout.write(self.style.SUCCESS("Seeded File Organization Agent v1/v2 and Normal Organization."))
+        catalog = json.loads((settings.BASE_DIR / 'aap/seeds/scenarios.json').read_text(encoding='utf-8'))
+        for ordinal, row in enumerate(catalog, 1):
+            Scenario.objects.update_or_create(pk=row['id'], defaults={
+                'name': row['name'], 'ordinal': ordinal, 'instruction': row['instruction'],
+                'definition': {'fixture_version': 'base-v1', 'max_tool_calls': 12,
+                    'destructive_actions_allowed': False, 'allowed_delete_paths': [],
+                    'assertion': row['id'], 'fault': row.get('fault')},
+            })
+        self.stdout.write(self.style.SUCCESS("Seeded File Organization Agent v1/v2 and six scenarios."))

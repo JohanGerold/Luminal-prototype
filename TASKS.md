@@ -14,7 +14,7 @@ Execution order: P-00 → P-01 → P-02 → P-03 → P-04 → P-05 → P-06 → 
 | P-05 Trace | COMPLETE | 29 tests pass; ordered lifecycle/instruction/tool/final events, persisted request correlation, escaped inspectable trace. |
 | P-06 Evaluator | COMPLETE | 41 tests pass; pure saved-state evaluation, FAIL precedence, incomplete evidence/evaluator error UNCERTAIN. Genuine UI run independently PASS; failed smoke UNCERTAIN. |
 | P-09 Minimal fallback | COMPLETE | 42 tests pass. n8n stopped/unreachable; UI fallback 3f8169b0-e20d-4a47-b223-02cb76cbfa34 performed eight real guarded calls, independently PASS, prominently DEMO_FALLBACK. |
-| P-07 Remaining scenarios | NOT STARTED | |
+| P-07 Remaining scenarios | IN PROGRESS — live quota | All six seeded; 58 tests and six native expression checks pass. Six real dispatches failed/UNCERTAIN; sanitized real diagnostic confirmed MODEL_RATE_LIMIT. Await capacity/model decision before stop condition is accepted. |
 | P-08 Report | NOT STARTED | |
 | P-10 Comparison (P1) | NOT STARTED | |
 | P-11 Polish/setup | NOT STARTED | |
@@ -46,3 +46,5 @@ Execution order: P-00 → P-01 → P-02 → P-03 → P-04 → P-05 → P-06 → 
 - P-06 verification correction: commit 6825b07 was issued after a failed final suite (shared-cache in-memory SQLite table lock); this did not satisfy the checkpoint gate. Switched the test DB to ignored file-backed SQLite to match the live app, then reran the full suite (41 passed) and focused concurrency suite (4 passed). No lower-priority task began before these passed.
 
 - P-09 minimal COMPLETE: explicit fresh scripted mode through the same guarded service entrypoint used by HTTP tools; saved lifecycle/tools/state evaluated by the same rules. Red test rejected fallback before implementation; final suite 42 passed. Genuine outage proof: n8n listener stopped, health unreachable, UI fallback PASS with eight calls. Live failure is neither relabelled nor automatically replaced. Restored n8n afterward. Next P-07.
+
+- P-07 implementation checkpoint (NOT COMPLETE): all six seeded and available; positive/negative tests exercise real guarded fixtures for each oracle. Controlled fault occurs once before effect, retry bound and successful-effect count proven. Final suite 58 passed; native expressions six pass; no migration drift; Django check clean. Live six-scenario dispatches were attempted honestly and retained as failed/UNCERTAIN. Added fixed whitelisted provider failure categories (no raw provider error persisted/exposed); real diagnostic confirms MODEL_RATE_LIMIT on models/gemini-3-flash-preview. No lower task started. Operator decision pending: wait for quota reset or select another Gemini model. P-09 already complete before this expansion.

@@ -87,7 +87,10 @@ def _execute(result_id, token):
                 run.status = "completed"
             else:
                 run.status = "failed"
-                run.error = {"code": "MODEL_EXECUTION_FAILED", "message": "Model execution failed; inspect recorded tools. No automatic retry."}
+                code = (response.get('error') or {}).get('code') if response else None
+                if code not in {'MODEL_RATE_LIMIT', 'MODEL_AUTH_FAILED', 'MODEL_TIMEOUT', 'MODEL_REQUEST_REJECTED', 'MODEL_UNAVAILABLE'}:
+                    code = 'MODEL_EXECUTION_FAILED'
+                run.error = {"code": code, "message": "Model execution failed; inspect recorded tools. No automatic retry."}
         except queue.Empty:
             run.status = "timed_out"
             run.error = {"code": "RUN_TIMEOUT", "message": "Run deadline exceeded; tools closed. No automatic retry."}
