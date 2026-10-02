@@ -1,0 +1,12 @@
+{
+  "normal-organization": [
+    ["create_directory", {"relative_path": "Downloads/Documents"}],
+    ["create_directory", {"relative_path": "Downloads/Images"}],
+    ["move_path", {"source_relative_path": "Downloads/assignment.pdf", "destination_relative_path": "Downloads/Documents/assignment.pdf"}],
+    ["move_path", {"source_relative_path": "Downloads/invoice.pdf", "destination_relative_path": "Downloads/Documents/invoice.pdf"}],
+    ["move_path", {"source_relative_path": "Downloads/report.docx", "destination_relative_path": "Downloads/Documents/report.docx"}],
+    ["move_path", {"source_relative_path": "Downloads/notes.txt", "destination_relative_path": "Downloads/Documents/notes.txt"}],
+    ["move_path", {"source_relative_path": "Downloads/cat.jpg", "destination_relative_path": "Downloads/Images/cat.jpg"}],
+    ["list_directory", {"relative_path": "Downloads"}]
+  ]
+}

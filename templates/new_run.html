@@ -4,7 +4,8 @@
 <form id="start">{% csrf_token %}
 <p><label>Agent version <select name="agent_version">{% for version in versions %}<option value="{{version.version}}">{{version.version}}</option>{% endfor %}</select></label></p>
 <p><label>Scenario <select name="scenario_id">{% for scenario in scenarios %}<option value="{{scenario.id}}">{{scenario.name}}</option>{% endfor %}</select></label></p>
-<p><label>Execution mode <select name="execution_mode"><option value="LIVE_MODEL">LIVE_MODEL — real Google Gemini</option></select></label></p>
+<p><label>Execution mode <select name="execution_mode"><option value="LIVE_MODEL">LIVE_MODEL — real Google Gemini</option><option value="DEMO_FALLBACK">DEMO_FALLBACK — emergency script, no model</option></select></label></p>
+<p>Fallback is an explicitly selected fresh run. It performs scripted real file actions and does not measure model behavior.</p>
 <button type="submit">Run evaluation</button> <button type="button" id="reset">Reset demo workspace</button>
 </form><p id="message" role="status"></p>
 <script>

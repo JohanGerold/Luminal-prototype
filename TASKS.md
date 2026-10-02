@@ -13,7 +13,7 @@ Execution order: P-00 → P-01 → P-02 → P-03 → P-04 → P-05 → P-06 → 
 | P-04 Live UI E2E | COMPLETE | UI run 7babba2e-afb6-4d08-8c34-c4502f7595ff: Gemini chose 11 attempts/five real moves, hashes preserved. 28 tests pass, including double-start/reset conflicts, bounded timeout and late-tool rejection. |
 | P-05 Trace | COMPLETE | 29 tests pass; ordered lifecycle/instruction/tool/final events, persisted request correlation, escaped inspectable trace. |
 | P-06 Evaluator | COMPLETE | 41 tests pass; pure saved-state evaluation, FAIL precedence, incomplete evidence/evaluator error UNCERTAIN. Genuine UI run independently PASS; failed smoke UNCERTAIN. |
-| P-09 Minimal fallback | NOT STARTED | Execute immediately after stable P-05/P-06 contracts. |
+| P-09 Minimal fallback | COMPLETE | 42 tests pass. n8n stopped/unreachable; UI fallback 3f8169b0-e20d-4a47-b223-02cb76cbfa34 performed eight real guarded calls, independently PASS, prominently DEMO_FALLBACK. |
 | P-07 Remaining scenarios | NOT STARTED | |
 | P-08 Report | NOT STARTED | |
 | P-10 Comparison (P1) | NOT STARTED | |
@@ -44,3 +44,5 @@ Execution order: P-00 → P-01 → P-02 → P-03 → P-04 → P-05 → P-06 → 
 - P-06 COMPLETE: focused evaluator tests failed before implementation; additional evidence tests caught a partial-fixture confidence issue and fixed it. Final suite 41 passed, migration applied, Django check clean. Saved genuine live runs independently PASS (including UI run); failed model smoke UNCERTAIN. Rules/version/loop threshold/missing evidence persisted. Loop finding alone is heuristic, not FAIL. Next P-09 minimal fallback before remaining scenarios.
 
 - P-06 verification correction: commit 6825b07 was issued after a failed final suite (shared-cache in-memory SQLite table lock); this did not satisfy the checkpoint gate. Switched the test DB to ignored file-backed SQLite to match the live app, then reran the full suite (41 passed) and focused concurrency suite (4 passed). No lower-priority task began before these passed.
+
+- P-09 minimal COMPLETE: explicit fresh scripted mode through the same guarded service entrypoint used by HTTP tools; saved lifecycle/tools/state evaluated by the same rules. Red test rejected fallback before implementation; final suite 42 passed. Genuine outage proof: n8n listener stopped, health unreachable, UI fallback PASS with eight calls. Live failure is neither relabelled nor automatically replaced. Restored n8n afterward. Next P-07.

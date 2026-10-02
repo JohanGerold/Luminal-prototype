@@ -8,6 +8,7 @@ from aap.models import AgentVersion, EvaluationRun, Scenario, ScenarioResult
 from aap.n8n_client import invoke_agent
 from aap.traces import append
 from aap.evaluation import evaluate_result
+from aap import fallback
 
 RUN_SECONDS = 100
 active_lock = threading.Lock()
@@ -27,8 +28,8 @@ def reset():
 
 
 def start(version_name, scenario_id, mode):
-    if mode != "LIVE_MODEL":
-        raise ValueError("Select LIVE_MODEL explicitly. Fallback is not implemented yet.")
+    if mode not in ("LIVE_MODEL", "DEMO_FALLBACK"):
+        raise ValueError("Select an execution mode explicitly.")
     version = AgentVersion.objects.get(agent_id="file-organization", version=version_name)
     scenario = Scenario.objects.get(pk=scenario_id)
     if not active_lock.acquire(blocking=False):
@@ -39,7 +40,9 @@ def start(version_name, scenario_id, mode):
         run = EvaluationRun.objects.create(agent_version=version, execution_mode=mode, status="executing",
             started_at=timezone.now(), input_snapshot={"agent_version": version.version,
                 "system_prompt": version.system_prompt, "tools": version.tools,
-                "provider": "Google Gemini", "model": "models/gemini-3-flash-preview"})
+                "provider": "Google Gemini" if mode == 'LIVE_MODEL' else None,
+                "model": "models/gemini-3-flash-preview" if mode == 'LIVE_MODEL' else None,
+                "fallback_script_version": fallback.SCRIPT_VERSION if mode == 'DEMO_FALLBACK' else None})
         result = ScenarioResult.objects.create(run=run, scenario=scenario,
             scenario_snapshot={**scenario.definition, "instruction": scenario.instruction}, before=before)
         with workspace.lock:
@@ -62,7 +65,7 @@ def start(version_name, scenario_id, mode):
 def _dispatch(result, token, mailbox):
     close_old_connections()
     try:
-        mailbox.put(invoke_agent(result, token))
+        mailbox.put(invoke_agent(result, token) if result.run.execution_mode == 'LIVE_MODEL' else fallback.execute(result, token, workspace))
     except Exception:
         # Provider response bodies and credentials never enter app error logs.
         mailbox.put(None)

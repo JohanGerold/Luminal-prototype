@@ -66,3 +66,5 @@ Production uses in-memory simulated tools; this prototype deliberately uses guar
 Future delivery files: tested `n8n/aap-filesystem-agent.json`, expanded startup README, `docs/DEMO_RUNBOOK.md` (ten-minute script), and `docs/VERIFICATION.md` (actual commands/results, versions, live proof and limitations). These are implementation deliverables, not placeholders claiming completion now.
 
 P-06 verification correction: initial checkpoint commit `6825b07` preceded resolution of a shared-cache test SQLite lock. Test database now uses ignored file-backed SQLite, matching the app. Full suite 41 passed and focused concurrency suite 4 passed before proceeding to P-09.
+
+**P-09 minimal COMPLETE:** 42 tests pass; n8n was stopped/unreachable while UI fallback run `3f8169b0-e20d-4a47-b223-02cb76cbfa34` completed eight real guarded calls and independently PASS. Explicit fresh DEMO_FALLBACK mode; same service/evaluator, no fabricated model evidence. Scripts initially cover normal organization only; extend with remaining scenarios at P-07. Resume P-07 after commit/clean-tree verification. AAP session 24942; n8n restarted after outage proof.
