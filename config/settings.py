@@ -32,6 +32,9 @@ DATABASES = {"default": {
     "ENGINE": "django.db.backends.sqlite3",
     "NAME": os.environ.get("AAP_DB_PATH", str(DATA_DIR / "aap.sqlite3")),
     "OPTIONS": {"timeout": 10},
+    # Exercise background-thread concurrency on the same file-backed SQLite
+    # behavior as the app, rather than shared-cache in-memory SQLITE_LOCKED.
+    "TEST": {"NAME": str(DATA_DIR / "test-aap.sqlite3")},
 }}
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 USE_TZ = True

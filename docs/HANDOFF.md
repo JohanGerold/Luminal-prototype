@@ -64,3 +64,5 @@ Production uses in-memory simulated tools; this prototype deliberately uses guar
 - [ ] Optional comparison either demonstrates measured changes or is explicitly listed as omitted.
 
 Future delivery files: tested `n8n/aap-filesystem-agent.json`, expanded startup README, `docs/DEMO_RUNBOOK.md` (ten-minute script), and `docs/VERIFICATION.md` (actual commands/results, versions, live proof and limitations). These are implementation deliverables, not placeholders claiming completion now.
+
+P-06 verification correction: initial checkpoint commit `6825b07` preceded resolution of a shared-cache test SQLite lock. Test database now uses ignored file-backed SQLite, matching the app. Full suite 41 passed and focused concurrency suite 4 passed before proceeding to P-09.

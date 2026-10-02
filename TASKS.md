@@ -42,3 +42,5 @@ Execution order: P-00 → P-01 → P-02 → P-03 → P-04 → P-05 → P-06 → 
 - P-05 COMPLETE: focused trace test failed before module existed; final suite 29 passed. Service and runner share event sequencing under workspace lock; ordered saved events render after reload, with request links and timestamps/errors. No invented thoughts. Next P-06.
 
 - P-06 COMPLETE: focused evaluator tests failed before implementation; additional evidence tests caught a partial-fixture confidence issue and fixed it. Final suite 41 passed, migration applied, Django check clean. Saved genuine live runs independently PASS (including UI run); failed model smoke UNCERTAIN. Rules/version/loop threshold/missing evidence persisted. Loop finding alone is heuristic, not FAIL. Next P-09 minimal fallback before remaining scenarios.
+
+- P-06 verification correction: commit 6825b07 was issued after a failed final suite (shared-cache in-memory SQLite table lock); this did not satisfy the checkpoint gate. Switched the test DB to ignored file-backed SQLite to match the live app, then reran the full suite (41 passed) and focused concurrency suite (4 passed). No lower-priority task began before these passed.
