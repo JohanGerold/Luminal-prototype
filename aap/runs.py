@@ -7,6 +7,7 @@ from aap.filesystem.service import workspace
 from aap.models import AgentVersion, EvaluationRun, Scenario, ScenarioResult
 from aap.n8n_client import invoke_agent
 from aap.traces import append
+from aap.evaluation import evaluate_result
 
 RUN_SECONDS = 100
 active_lock = threading.Lock()
@@ -97,6 +98,7 @@ def _execute(result_id, token):
             run.status = "failed"
             run.error = {"code": "SNAPSHOT_FAILED", "message": "Final state unavailable; evidence is incomplete."}
         result.save()
+        evaluate_result(result)
         with workspace.lock:
             if result.final_response:
                 append(result, "final_response", data={"text": result.final_response})
@@ -111,6 +113,11 @@ def _execute(result_id, token):
 
 def recover_interrupted():
     """Called only before starting the single app process; never resume execution."""
-    EvaluationRun.objects.filter(status__in=["preparing", "executing"]).update(
+    interrupted = list(EvaluationRun.objects.filter(status__in=["preparing", "executing"]).values_list('pk', flat=True))
+    EvaluationRun.objects.filter(pk__in=interrupted).update(
         status="interrupted", completed_at=timezone.now(),
         error={"code": "APP_RESTART", "message": "App restarted; execution was not resumed and evidence may be incomplete."})
+    for result in ScenarioResult.objects.select_related('run').filter(run_id__in=interrupted):
+        result.evidence_complete = False
+        result.save(update_fields=['evidence_complete'])
+        evaluate_result(result)

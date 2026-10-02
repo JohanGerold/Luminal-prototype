@@ -64,6 +64,7 @@ class ScenarioResult(models.Model):
     verdict = models.CharField(max_length=20, null=True)
     assertions = models.JSONField(default=list)
     findings = models.JSONField(default=list)
+    evaluation_metadata = models.JSONField(default=dict)
     evidence_complete = models.BooleanField(default=False)
     final_response = models.TextField(blank=True)
 

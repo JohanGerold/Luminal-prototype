@@ -46,4 +46,5 @@ def status(request, run_id):
         "tool_call_count": sum(e["kind"] == "tool_requested" for e in events), "events": events,
         "before": result.before if result else {}, "after": result.after if result else {},
         "final_response": result.final_response if result else "", "evidence_complete": bool(result and result.evidence_complete),
-        "verdict": result.verdict if result else None})
+        "verdict": result.verdict if result else None, "assertions": result.assertions if result else [],
+        "findings": result.findings if result else [], "evaluation_metadata": result.evaluation_metadata if result else {}})
