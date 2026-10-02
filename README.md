@@ -26,7 +26,7 @@ uv sync --locked
 .venv\Scripts\waitress-serve.exe --listen=127.0.0.1:8001 --threads=4 config.wsgi:application
 ```
 
-Open `http://127.0.0.1:8001`. Tests: `.venv\Scripts\python.exe -m pytest -p no:cacheprovider -q`. Start n8n with `powershell -File scripts/start-n8n.ps1`. Gemini credential stays in n8n. The future filesystem-workflow artifact is `n8n/aap-filesystem-agent.json`; it does not exist yet. Fixture reset and presentation instructions will be added when verified.
+Open `http://127.0.0.1:8001`. Tests: `.venv\Scripts\python.exe -m pytest -p no:cacheprovider --basetemp=C:\Code\AAP-Prototype\.runtime\test-tmp -q`. Reset the owned demo fixture while the app is stopped: `.venv\Scripts\python.exe manage.py reset_demo`. Start n8n with `powershell -File scripts/start-n8n.ps1`. Gemini credential stays in n8n. The future filesystem-workflow artifact is `n8n/aap-filesystem-agent.json`; it does not exist yet. Presentation instructions will be added when verified.
 
 Normal execution is **LIVE_MODEL**. Emergency scripted execution is **DEMO_FALLBACK**, visibly labelled on every relevant screen. No silent switching.
 

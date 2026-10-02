@@ -10,9 +10,15 @@ Fixed native topology: AAP → `http://127.0.0.1:5678/webhook/aap-filesystem-age
 
 P-00 committed as `aeeb57a`, with a verified clean tree. **P-01 COMPLETE:** Django 5.2.17, SQLite schema, idempotent V1/V2/normal-scenario seed and basic agent/scenario pages implemented. Three bootstrap tests pass; migrations, drift check and live health/agent HTTP checks pass. Database enforces explicit `LIVE_MODEL|DEMO_FALLBACK` for every saved run. No evaluation runner or filesystem tools yet.
 
-Resume at P-02 after the P-01 checkpoint commit/clean-tree verification. After P-06, implement minimal P-09 before P-07. Update TASKS/HANDOFF and commit each meaningful verified checkpoint. Production remains read only.
+P-01 committed as `643aaf9`. **P-02 COMPLETE:** six real filesystem tools and token-bound API, intent/result logging, owned fixture manifest/reset and path/link containment implemented. Fixture created/reset at `C:\AAP-Demo-Workspace`; five synthetic files, eight entries. Final suite: **16 passed**; Django check clean. Core boundary tested on actual Windows paths/junctions; no hostile-local-process sandbox claim.
 
-Runtime processes: n8n session 76871; Waitress/Django session 61536. Temporary probe 20882 was stopped before Django started. Restart n8n with `scripts/start-n8n.ps1`; start Django using the README command. The preflight's `/health/preflight` endpoint belonged to the stopped probe; P-03 will replace that temporary workflow with actual tool callbacks. Ignore native-hosting/optional Python-runner deprecation for this deadline; native HTTP/model/tool path works without Python runner infrastructure.
+Resume at P-03 after P-02 commit/clean-tree verification. Tools use `Workspace.activate(result)` to mint a token and `execute(run_id, scenario_id, token, tool, arguments)`; `close(token)` closes access under the service lock. HTTP endpoint `/api/tools/<tool>` requires a bearer token; root is fixed server-side. `ScenarioResult.scenario_snapshot` stores authority/tool limits. Events distinguish `tool_requested` and `tool_result`, correlated by request sequence; counters must count requests, not both records. No model execution through filesystem tools yet.
+
+After P-06, implement minimal P-09 before P-07. Update TASKS/HANDOFF and commit each meaningful verified checkpoint. Production remains read only.
+
+Runtime processes: n8n session 76871; Waitress/Django session 61536 still has P-01 imports and needs restart to expose P-02 routes. Temporary probe 20882 was stopped. Restart n8n with `scripts/start-n8n.ps1`; start Django using README. The preflight's `/health/preflight` endpoint belonged to the stopped probe; P-03 replaces it with actual callbacks. Ignore native-hosting/optional Python-runner deprecation for this deadline; native HTTP/model/tool path works without Python runner infrastructure.
+
+Filesystem checks that mutate `C:\AAP-Demo-Workspace` require narrowly scoped sandbox escalation. Run tests with `--basetemp=C:\Code\AAP-Prototype\.runtime\test-tmp` and `-p no:cacheprovider`; default temporary directories are restricted in this environment. `.runtime/test-tmp` is disposable and does not contain n8n state.
 
 ## Production inspection and deliberate boundaries
 
