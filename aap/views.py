@@ -1,7 +1,7 @@
 from django.db import connection
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
-from .models import Agent, Scenario
+from .models import Agent, Scenario, AgentVersion, EvaluationRun
 
 
 def home(request):
@@ -26,3 +26,11 @@ def agent_detail(request, agent_id):
 
 def scenarios(request):
     return render(request, "scenarios.html", {"scenarios": Scenario.objects.all()})
+
+
+def new_run(request):
+    return render(request, "new_run.html", {"versions": AgentVersion.objects.order_by("version"), "scenarios": Scenario.objects.all()})
+
+
+def run_detail(request, run_id):
+    return render(request, "run.html", {"run": get_object_or_404(EvaluationRun, pk=run_id)})

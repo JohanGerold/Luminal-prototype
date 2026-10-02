@@ -10,7 +10,7 @@ Execution order: P-00 → P-01 → P-02 → P-03 → P-04 → P-05 → P-06 → 
 | P-01 Bootstrap | COMPLETE | Django 5.2.17 / SQLite / Waitress. Three bootstrap tests pass; initial migrations applied; repeated seeding idempotent; live health and agent page pass on port 8001. |
 | P-02 Filesystem | COMPLETE | Six restricted tools, real fixture reset, run-scoped token binding and intent/result events. 16 total tests pass, including traversal/absolute/drive/UNC/ADS/device/junction rejection, unauthorized delete, root protection and safe reset. |
 | P-03 n8n filesystem agent | COMPLETE | Native Gemini workflow imported/published; real run 04fcd45c-0217-458c-9ff9-cbf3ae4c6417 executed 10 tools and five real moves with preserved hashes. 24 Python tests and six native expression checks pass. |
-| P-04 Live UI E2E | NOT STARTED | |
+| P-04 Live UI E2E | COMPLETE | UI run 7babba2e-afb6-4d08-8c34-c4502f7595ff: Gemini chose 11 attempts/five real moves, hashes preserved. 28 tests pass, including double-start/reset conflicts, bounded timeout and late-tool rejection. |
 | P-05 Trace | NOT STARTED | |
 | P-06 Evaluator | NOT STARTED | |
 | P-09 Minimal fallback | NOT STARTED | Execute immediately after stable P-05/P-06 contracts. |
@@ -35,6 +35,6 @@ Execution order: P-00 → P-01 → P-02 → P-03 → P-04 → P-05 → P-06 → 
 - P-02 COMPLETE: tests first failed for missing filesystem module after resolving sandbox temporary-directory access. Implemented restricted service/API and owned-path fixture reset. Final suite: 16 passed; Django check clean. Actual demo root reset created eight entries/five synthetic files. Test files use dedicated `.runtime/test-tmp`; filesystem tests require sandbox escalation. Next: P-03 after commit/clean-tree check.
 - P-03 COMPLETE: imported/published the native Gemini agent with six restricted HTTP tools and local header auth. First genuine smoke failed before tool effects due to n8n treating adjacent object braces as expression terminator; reproduced/fixed with installed native parser and retained failed run evidence. Successful real run 04fcd45c-0217-458c-9ff9-cbf3ae4c6417: 10 attempts, five successful moves, original hashes preserved, complete tool evidence. No verdict until P-06. Final Python suite 24 passed; six tool expressions pass native parser. Next: P-04 after commit/clean-tree check.
 
-- P-00 COMPLETE: user-selected single provider is Google Gemini. Healthy n8n 2.41.6, real credential-authenticated execution 1, exact model `models/gemini-3-flash-preview`, successful probe and webhook directions verified. Secrets excluded; no model/provider abstraction. Next: P-01 after commit/clean-tree verification.
 
-- P-00 COMPLETE: user-selected single provider is Google Gemini. Healthy n8n 2.41.6, real credential-authenticated execution 1, exact model `models/gemini-3-flash-preview`, successful probe and webhook directions verified. Secrets excluded; no model/provider abstraction. Next: P-01 after commit/clean-tree verification.
+
+- P-04 COMPLETE: UI click produced live run 7babba2e-afb6-4d08-8c34-c4502f7595ff, 11 attempts and five moves with preserved hashes. Focused tests first failed for absent runner, then caught a shared model-object race; worker now fetches independent objects. Final suite 28 passed, Django check clean. Double start/reset return 409, timeout closes token before snapshot, late effects rejected, restart never redispatches. Ruling: keep the small polling script inline until P-11 rather than add a static asset server now. Next P-05.

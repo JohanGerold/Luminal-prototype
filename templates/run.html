@@ -1,0 +1,11 @@
+{% extends 'base.html' %}{% block content %}
+<h1>Evaluation run</h1><p><strong>{{run.execution_mode}}</strong> · Run {{run.id}}</p>
+<p><a href="/runs/new">Start another run</a></p><p id="status" role="status" aria-live="polite">Loading recorded evidence…</p>
+<p id="configuration"></p><p id="error"></p>
+<h2>Final response</h2><pre id="response"></pre>
+<h2>Recorded tool events</h2><pre id="events"></pre>
+<h2>Before</h2><pre id="before"></pre><h2>After</h2><pre id="after"></pre>
+<script>
+async function poll(){try{const response=await fetch('/api/runs/{{run.id}}',{cache:'no-store'});if(!response.ok)throw new Error('Status unavailable. Reload to retry.');const data=await response.json();document.querySelector('#status').textContent=data.status+' · '+data.tool_call_count+' tool attempts · '+(data.verdict||'Not evaluated yet')+' · Evidence '+(data.evidence_complete?'complete':'incomplete');document.querySelector('#configuration').textContent='Version '+data.agent_version+' · '+data.execution_mode+' · '+data.model;document.querySelector('#error').textContent=data.error?data.error.message:'';for(const [id,value] of Object.entries({response:data.final_response,events:data.events,before:data.before,after:data.after})){document.getElementById(id).textContent=typeof value==='string'?value:JSON.stringify(value,null,2);}if(!data.completed_at)setTimeout(poll,1000);}catch(error){document.querySelector('#status').textContent=error.message;}}
+poll();
+</script>{% endblock %}

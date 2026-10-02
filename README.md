@@ -1,8 +1,8 @@
 # AAP Prototype
 
-**PROTOTYPE / DEMONSTRATION SYSTEM — P-00 connectivity preflight, 3 October 2026.**
+**PROTOTYPE / DEMONSTRATION SYSTEM — 3 October 2026.**
 
-Demonstrate a real LLM choosing restricted filesystem tools through n8n, with AAP independently evaluating the resulting actions and files. P-00/P-01 are complete: real Gemini invocation and probe connectivity verified; minimal Django/SQLite app runs with seeded agent versions and one scenario. Filesystem tools, evaluation execution and reports are next. See [TASKS.md](TASKS.md) and [connectivity evidence](docs/CONNECTIVITY_PREFLIGHT.md).
+Demonstrate a real LLM choosing restricted filesystem tools through n8n, with AAP independently evaluating the resulting actions and files. P-00–P-04 are complete: the UI invokes real Google Gemini through n8n, restricted tools change the real demo files, and AAP records evidence. Full trace presentation and deterministic evaluation are next. See [TASKS.md](TASKS.md) and [connectivity evidence](docs/CONNECTIVITY_PREFLIGHT.md).
 
 Read in this order:
 
@@ -15,7 +15,7 @@ Read in this order:
 
 Production documentation in `C:\Code\AAP` was consulted for product understanding only. Do not modify it, reuse its implementation plan, continue T-001–T-045, or import its release gates.
 
-Proposed runtime: Python/Django, SQLite, server-rendered HTML with small JavaScript polling, one multithreaded local web process, and local n8n with one Google Gemini chat model. Exact compatible versions must be recorded when implementation begins.
+Runtime: Python 3.13.15, Django 5.2.17, SQLite, Waitress 3.0.2, server-rendered HTML with JavaScript polling, and native n8n 2.41.6 with Google Gemini `models/gemini-3-flash-preview`. Run one app process only.
 
 Verified P-01 setup (Python 3.13 required):
 
@@ -23,10 +23,10 @@ Verified P-01 setup (Python 3.13 required):
 uv sync --locked
 .venv\Scripts\python.exe manage.py migrate
 .venv\Scripts\python.exe manage.py seed_demo
-.venv\Scripts\waitress-serve.exe --listen=127.0.0.1:8001 --threads=4 config.wsgi:application
+.venv\Scripts\python.exe manage.py serve_demo
 ```
 
-Open `http://127.0.0.1:8001`. Tests: `.venv\Scripts\python.exe -m pytest -p no:cacheprovider --basetemp=C:\Code\AAP-Prototype\.runtime\test-tmp -q`. Reset the owned demo fixture while the app is stopped: `.venv\Scripts\python.exe manage.py reset_demo`. Start n8n with `powershell -File scripts/start-n8n.ps1`. Gemini credential stays in n8n. The future filesystem-workflow artifact is `n8n/aap-filesystem-agent.json`; it does not exist yet. Presentation instructions will be added when verified.
+Open `http://127.0.0.1:8001/runs/new`. Tests: `.venv\Scripts\python.exe -m pytest -p no:cacheprovider --basetemp=C:\Code\AAP-Prototype\.runtime\test-tmp -q`. The UI resets the owned fixture before each run and rejects simultaneous start/reset. CLI reset is only for a stopped app: `.venv\Scripts\python.exe manage.py reset_demo`. Start n8n with `powershell -File scripts/start-n8n.ps1`; import/configure the committed workflow as described in `n8n/README.md`. Gemini credential stays in n8n. `serve_demo` marks unfinished historical runs interrupted on startup; it never resumes or retries them. Presentation instructions will be added when verified.
 
 Normal execution is **LIVE_MODEL**. Emergency scripted execution is **DEMO_FALLBACK**, visibly labelled on every relevant screen. No silent switching.
 
