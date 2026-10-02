@@ -23,5 +23,6 @@ Execution order: P-00 → P-01 → P-02 → P-03 → P-04 → P-05 → P-06 → 
 ## Checkpoint log
 
 - P-00 discovery: runtime inventory and npm package metadata verified. Docker engine unavailable; choose native n8n unless the user supplies an existing instance. No model credential has been selected or model invocation verified yet.
+- P-00 probe checkpoint: temporary loopback probe started on 127.0.0.1:8001; GET `/health/preflight` returned the expected JSON and an unrelated route returned 404. This verifies the local listener only; n8n → probe remains outstanding. Added a loopback-only native n8n launcher; installation is still running.
 - Ruling: initialize Git in the explicitly separate prototype directory and use a prototype branch; no linked worktree is needed for this new repository. Use the same local author identity configured in the production checkout, without changing that checkout.
 - Ruling: use this committed ledger plus `docs/HANDOFF.md` as the durable execution record requested by the user; do not add duplicate skill scratch ledgers.

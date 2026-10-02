@@ -13,6 +13,8 @@ Start with [PROTOTYPE_PLAN.md](PROTOTYPE_PLAN.md), then architecture, contract a
 - Registry metadata identifies n8n 2.41.6, requiring Node >=24.0.0; pinned native installation is underway under ignored `.runtime/n8n`.
 - Candidate topology is same-host native: n8n → Django `http://127.0.0.1:8001`; Django → n8n `http://127.0.0.1:5678/webhook/aap-filesystem-agent`. These URLs are not yet connectivity-verified.
 - Credential selection and real-model AI Agent verification are outstanding. Do not mark P-00 complete or start P-01 based only on installation/startup.
+- Temporary probe is running at `http://127.0.0.1:8001/health/preflight`; direct GET and 404 rejection checks passed. This is not n8n-origin connectivity proof. Stop probe before P-01 Django startup.
+- `scripts/start-n8n.ps1` configures native n8n on loopback port 5678 with isolated ignored local state. Startup and real-model checks remain outstanding while installation completes.
 
 ## Production inspection and deliberate boundaries
 
