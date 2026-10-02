@@ -15,4 +15,5 @@ urlpatterns = [
     path("api/reset", run_api.reset),
     path("runs/new", views.new_run),
     path("runs/<uuid:run_id>", views.run_detail),
+    path("runs/<uuid:run_id>/trace", views.trace),
 ]

@@ -11,7 +11,7 @@ Execution order: P-00 → P-01 → P-02 → P-03 → P-04 → P-05 → P-06 → 
 | P-02 Filesystem | COMPLETE | Six restricted tools, real fixture reset, run-scoped token binding and intent/result events. 16 total tests pass, including traversal/absolute/drive/UNC/ADS/device/junction rejection, unauthorized delete, root protection and safe reset. |
 | P-03 n8n filesystem agent | COMPLETE | Native Gemini workflow imported/published; real run 04fcd45c-0217-458c-9ff9-cbf3ae4c6417 executed 10 tools and five real moves with preserved hashes. 24 Python tests and six native expression checks pass. |
 | P-04 Live UI E2E | COMPLETE | UI run 7babba2e-afb6-4d08-8c34-c4502f7595ff: Gemini chose 11 attempts/five real moves, hashes preserved. 28 tests pass, including double-start/reset conflicts, bounded timeout and late-tool rejection. |
-| P-05 Trace | NOT STARTED | |
+| P-05 Trace | COMPLETE | 29 tests pass; ordered lifecycle/instruction/tool/final events, persisted request correlation, escaped inspectable trace. |
 | P-06 Evaluator | NOT STARTED | |
 | P-09 Minimal fallback | NOT STARTED | Execute immediately after stable P-05/P-06 contracts. |
 | P-07 Remaining scenarios | NOT STARTED | |
@@ -38,3 +38,5 @@ Execution order: P-00 → P-01 → P-02 → P-03 → P-04 → P-05 → P-06 → 
 
 
 - P-04 COMPLETE: UI click produced live run 7babba2e-afb6-4d08-8c34-c4502f7595ff, 11 attempts and five moves with preserved hashes. Focused tests first failed for absent runner, then caught a shared model-object race; worker now fetches independent objects. Final suite 28 passed, Django check clean. Double start/reset return 409, timeout closes token before snapshot, late effects rejected, restart never redispatches. Ruling: keep the small polling script inline until P-11 rather than add a static asset server now. Next P-05.
+
+- P-05 COMPLETE: focused trace test failed before module existed; final suite 29 passed. Service and runner share event sequencing under workspace lock; ordered saved events render after reload, with request links and timestamps/errors. No invented thoughts. Next P-06.

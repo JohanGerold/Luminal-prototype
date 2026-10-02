@@ -6,8 +6,7 @@ import threading
 import time
 from dataclasses import dataclass, field
 from pathlib import Path
-from django.db.models import Max
-from aap.models import TraceEvent
+from aap.traces import append
 from .fixtures import DIRECTORIES, FIXTURE, MARKER
 from .paths import ToolError, reject_links, safe_path
 
@@ -122,9 +121,7 @@ class Workspace:
                 context.active = False
 
     def _event(self, context, kind, tool, arguments, success=None, data=None, error=None):
-        sequence = (context.result.events.aggregate(value=Max("sequence"))["value"] or 0) + 1
-        return TraceEvent.objects.create(result=context.result, sequence=sequence, kind=kind,
-            tool=tool, arguments=arguments, success=success, data=data or {}, error=error)
+        return append(context.result, kind, tool, arguments, success, data, error)
 
     def execute(self, run_id, scenario_id, token, tool, arguments):
         with self.lock:

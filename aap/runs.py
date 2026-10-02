@@ -6,6 +6,7 @@ from django.utils import timezone
 from aap.filesystem.service import workspace
 from aap.models import AgentVersion, EvaluationRun, Scenario, ScenarioResult
 from aap.n8n_client import invoke_agent
+from aap.traces import append
 
 RUN_SECONDS = 100
 active_lock = threading.Lock()
@@ -40,6 +41,9 @@ def start(version_name, scenario_id, mode):
                 "provider": "Google Gemini", "model": "models/gemini-3-flash-preview"})
         result = ScenarioResult.objects.create(run=run, scenario=scenario,
             scenario_snapshot={**scenario.definition, "instruction": scenario.instruction}, before=before)
+        with workspace.lock:
+            append(result, "run_started", data={"execution_mode": mode, "agent_version": version.version})
+            append(result, "user_instruction", data={"instruction": scenario.instruction})
         token = workspace.activate(result, deadline_seconds=RUN_SECONDS)
         threading.Thread(target=_execute, args=(result.pk, token), daemon=True).start()
         return run
@@ -93,6 +97,10 @@ def _execute(result_id, token):
             run.status = "failed"
             run.error = {"code": "SNAPSHOT_FAILED", "message": "Final state unavailable; evidence is incomplete."}
         result.save()
+        with workspace.lock:
+            if result.final_response:
+                append(result, "final_response", data={"text": result.final_response})
+            append(result, "run_finished", data={"status": run.status, "evidence_complete": result.evidence_complete}, error=run.error)
         run.completed_at = timezone.now()
         run.save()
     finally:

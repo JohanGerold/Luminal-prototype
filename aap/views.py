@@ -34,3 +34,10 @@ def new_run(request):
 
 def run_detail(request, run_id):
     return render(request, "run.html", {"run": get_object_or_404(EvaluationRun, pk=run_id)})
+
+
+def trace(request, run_id):
+    from .traces import rows
+    run = get_object_or_404(EvaluationRun, pk=run_id)
+    result = run.results.first()
+    return render(request, "trace.html", {"run": run, "events": rows(result) if result else []})
