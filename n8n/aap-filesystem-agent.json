@@ -1,0 +1,462 @@
+{
+  "id": "aapFilesystemAgent",
+  "name": "AAP Filesystem Agent",
+  "active": false,
+  "nodes": [
+    {
+      "id": "aap-webhook",
+      "name": "AAP Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "aap-filesystem-agent",
+        "authentication": "headerAuth",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "position": [
+        0,
+        0
+      ],
+      "webhookId": "aap-filesystem-agent-v1"
+    },
+    {
+      "id": "validate-input",
+      "name": "Validate Input",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "parameters": {
+        "jsCode": "\nconst b = $input.first().json.body;\nconst keys = ['contract_version','run_id','scenario_id','agent_version','system_prompt','instruction','scenario_context','tool_token'];\nif (!b || Object.keys(b).length !== keys.length || !keys.every(k => k in b)) throw new Error('Invalid envelope');\nif (b.contract_version !== '1' || !/^[0-9a-f-]{36}$/i.test(b.run_id) || typeof b.scenario_id !== 'string') throw new Error('Invalid identity');\nif (!['v1','v2'].includes(b.agent_version) || typeof b.system_prompt !== 'string' || !b.system_prompt || b.system_prompt.length > 16000 || typeof b.instruction !== 'string' || !b.instruction || b.instruction.length > 8000) throw new Error('Invalid prompt');\nconst c = b.scenario_context;\nif (!c || Object.keys(c).length !== 2 || typeof c.destructive_actions_allowed !== 'boolean' || !Number.isInteger(c.max_tool_calls) || c.max_tool_calls < 1 || c.max_tool_calls > 12 || typeof b.tool_token !== 'string' || b.tool_token.length < 32) throw new Error('Invalid context');\nreturn [{json: {...b, started_at: new Date().toISOString()}}];\n"
+      },
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "id": "filesystem-agent",
+      "name": "Filesystem Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Validate Input').first().json.instruction + '\\nScenario context: ' + JSON.stringify($('Validate Input').first().json.scenario_context) }}",
+        "options": {
+          "systemMessage": "={{ $('Validate Input').first().json.system_prompt }}",
+          "maxIterations": 12
+        }
+      },
+      "position": [
+        450,
+        0
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "id": "google-gemini-chat-model",
+      "name": "Google Gemini Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.2,
+      "parameters": {
+        "modelName": "models/gemini-3-flash-preview",
+        "options": {
+          "maxOutputTokens": 2048
+        }
+      },
+      "position": [
+        400,
+        250
+      ]
+    },
+    {
+      "id": "list_directory",
+      "name": "list_directory",
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.3,
+      "parameters": {
+        "method": "POST",
+        "url": "http://127.0.0.1:8001/api/tools/list_directory",
+        "descriptionType": "manual",
+        "toolDescription": "Inspect files and directories at a workspace-relative path. Use . to inspect the root.",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ 'Bearer ' + $('Validate Input').first().json.tool_token }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ {run_id: $('Validate Input').first().json.run_id, scenario_id: $('Validate Input').first().json.scenario_id, arguments: {relative_path: $fromAI('relative_path', 'Workspace-relative path', 'string')} } }}",
+        "options": {
+          "timeout": 10000,
+          "response": {
+            "response": {
+              "neverError": true,
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "position": [
+        550,
+        250
+      ],
+      "retryOnFail": false
+    },
+    {
+      "id": "read_file",
+      "name": "read_file",
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.3,
+      "parameters": {
+        "method": "POST",
+        "url": "http://127.0.0.1:8001/api/tools/read_file",
+        "descriptionType": "manual",
+        "toolDescription": "Read a bounded file using a workspace-relative path.",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ 'Bearer ' + $('Validate Input').first().json.tool_token }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ {run_id: $('Validate Input').first().json.run_id, scenario_id: $('Validate Input').first().json.scenario_id, arguments: {relative_path: $fromAI('relative_path', 'Workspace-relative path', 'string')} } }}",
+        "options": {
+          "timeout": 10000,
+          "response": {
+            "response": {
+              "neverError": true,
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "position": [
+        710,
+        250
+      ],
+      "retryOnFail": false
+    },
+    {
+      "id": "create_directory",
+      "name": "create_directory",
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.3,
+      "parameters": {
+        "method": "POST",
+        "url": "http://127.0.0.1:8001/api/tools/create_directory",
+        "descriptionType": "manual",
+        "toolDescription": "Create one directory; its parent must exist.",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ 'Bearer ' + $('Validate Input').first().json.tool_token }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ {run_id: $('Validate Input').first().json.run_id, scenario_id: $('Validate Input').first().json.scenario_id, arguments: {relative_path: $fromAI('relative_path', 'Workspace-relative path', 'string')} } }}",
+        "options": {
+          "timeout": 10000,
+          "response": {
+            "response": {
+              "neverError": true,
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "position": [
+        870,
+        250
+      ],
+      "retryOnFail": false
+    },
+    {
+      "id": "create_file",
+      "name": "create_file",
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.3,
+      "parameters": {
+        "method": "POST",
+        "url": "http://127.0.0.1:8001/api/tools/create_file",
+        "descriptionType": "manual",
+        "toolDescription": "Create one new UTF-8 file. Existing files cannot be overwritten.",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ 'Bearer ' + $('Validate Input').first().json.tool_token }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ {run_id: $('Validate Input').first().json.run_id, scenario_id: $('Validate Input').first().json.scenario_id, arguments: {relative_path: $fromAI('relative_path', 'Workspace-relative path', 'string'), content: $fromAI('content', 'UTF-8 file contents', 'string')} } }}",
+        "options": {
+          "timeout": 10000,
+          "response": {
+            "response": {
+              "neverError": true,
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "position": [
+        1030,
+        250
+      ],
+      "retryOnFail": false
+    },
+    {
+      "id": "move_path",
+      "name": "move_path",
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.3,
+      "parameters": {
+        "method": "POST",
+        "url": "http://127.0.0.1:8001/api/tools/move_path",
+        "descriptionType": "manual",
+        "toolDescription": "Move a file or directory; destination parent must exist. No overwrite.",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ 'Bearer ' + $('Validate Input').first().json.tool_token }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ {run_id: $('Validate Input').first().json.run_id, scenario_id: $('Validate Input').first().json.scenario_id, arguments: {source_relative_path: $fromAI('source_relative_path', 'Workspace-relative path', 'string'), destination_relative_path: $fromAI('destination_relative_path', 'Workspace-relative path', 'string')} } }}",
+        "options": {
+          "timeout": 10000,
+          "response": {
+            "response": {
+              "neverError": true,
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "position": [
+        1190,
+        250
+      ],
+      "retryOnFail": false
+    },
+    {
+      "id": "delete_path",
+      "name": "delete_path",
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.3,
+      "parameters": {
+        "method": "POST",
+        "url": "http://127.0.0.1:8001/api/tools/delete_path",
+        "descriptionType": "manual",
+        "toolDescription": "Delete a file or empty directory only when scenario authority explicitly permits the exact path.",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ 'Bearer ' + $('Validate Input').first().json.tool_token }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ {run_id: $('Validate Input').first().json.run_id, scenario_id: $('Validate Input').first().json.scenario_id, arguments: {relative_path: $fromAI('relative_path', 'Workspace-relative path', 'string')} } }}",
+        "options": {
+          "timeout": 10000,
+          "response": {
+            "response": {
+              "neverError": true,
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "position": [
+        1350,
+        250
+      ],
+      "retryOnFail": false
+    },
+    {
+      "id": "normalize-output",
+      "name": "Normalize Output",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "parameters": {
+        "jsCode": "\nconst b = $('Validate Input').first().json;\nconst output = $input.first().json;\nconst failed = Boolean(output.error);\nreturn [{json: {contract_version:'1', run_id:b.run_id, scenario_id:b.scenario_id, execution_mode:'LIVE_MODEL',\nstatus:failed ? 'failed' : 'completed', final_response:failed ? null : String(output.output || '').slice(0,16000), tool_call_count:null,\nstarted_at:b.started_at, completed_at:new Date().toISOString(),\nerror:failed ? {code:'MODEL_EXECUTION_FAILED', message:'Agent execution failed.'} : null}}];\n"
+      },
+      "position": [
+        800,
+        0
+      ]
+    },
+    {
+      "id": "respond",
+      "name": "Respond",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "position": [
+        1050,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "AAP Webhook": {
+      "main": [
+        [
+          {
+            "node": "Validate Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Input": {
+      "main": [
+        [
+          {
+            "node": "Filesystem Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filesystem Agent": {
+      "main": [
+        [
+          {
+            "node": "Normalize Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Output": {
+      "main": [
+        [
+          {
+            "node": "Respond",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Filesystem Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "list_directory": {
+      "ai_tool": [
+        [
+          {
+            "node": "Filesystem Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "read_file": {
+      "ai_tool": [
+        [
+          {
+            "node": "Filesystem Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "create_directory": {
+      "ai_tool": [
+        [
+          {
+            "node": "Filesystem Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "create_file": {
+      "ai_tool": [
+        [
+          {
+            "node": "Filesystem Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "move_path": {
+      "ai_tool": [
+        [
+          {
+            "node": "Filesystem Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "delete_path": {
+      "ai_tool": [
+        [
+          {
+            "node": "Filesystem Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "executionTimeout": 90,
+    "saveDataSuccessExecution": "none",
+    "saveDataErrorExecution": "none",
+    "saveManualExecutions": false,
+    "saveExecutionProgress": false
+  },
+  "pinData": {},
+  "tags": []
+}

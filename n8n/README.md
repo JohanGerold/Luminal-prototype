@@ -1,14 +1,14 @@
 # n8n setup handoff
 
-Planning artifact only. `aap-filesystem-agent.json` will be created in P-03, after the filesystem API exists; there is no importable workflow yet.
+`aap-filesystem-agent.json` is the verified native Gemini filesystem workflow for n8n **2.41.6**. P-03 import, real model-selected tools, five real file moves and preserved-content hashes are verified. No model credentials or local webhook secret are embedded in the checked-in JSON.
 
 Use local n8n on the same Windows host so its fixed HTTP tools can reach AAP at `127.0.0.1:8001`. Prefer a pinned local npm installation; record supported Node/n8n versions before installation. Container networking is an optional setup change, not the baseline.
 
-Implementation/setup order:
+Setup contract:
 
 1. Record exact n8n version and export node `typeVersion` values from that installation.
-2. Build the workflow described in [CONTRACT.md](CONTRACT.md), export JSON without credentials, import into a clean workflow and verify all six connections.
-3. User selects/configures the one Google Gemini model credential in n8n. Record the actual model ID after a successful tool-calling smoke test; do not silently substitute models.
+2. Import `aap-filesystem-agent.json` and bind the configured Gemini credential to the native Google Gemini Chat Model node. Exact tested model: `models/gemini-3-flash-preview`.
+3. Keep the one Google Gemini credential in n8n. No alternative-provider credential or abstraction. Native tools call only fixed AAP loopback URLs.
 4. Configure fixed tool base URL and header-auth webhook credential. Keep model credentials and run tokens out of prompts/browser/logs.
 5. Publish/activate as required by the installed n8n version. Set AAP's server-side webhook URL to the production webhook path, not the temporary test listener.
 6. Verify manual webhook → real model-selected tool → real fixture mutation → matching AAP event. Then verify UI E2E, timeout and stale-token refusal.
@@ -23,4 +23,4 @@ Official documentation checked while planning:
 - [Webhook](https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.webhook/) documents separate test/production URLs and response configuration.
 - [npm installation](https://docs.n8n.io/hosting/installation/npm/) is the setup reference; verify runtime compatibility when pinning.
 
-Documentation support does not prove that a generated workflow imports or runs. P-03 must capture that evidence.
+P-03 evidence: real AAP run `04fcd45c-0217-458c-9ff9-cbf3ae4c6417`, 10 attempts, five successful moves, before/after hashes preserved. The earlier failed smoke remains a failure, not a forced success. Workflow settings disable saved execution payloads containing tool tokens; AAP records authoritative tool evidence. `python scripts/build-n8n-workflow.py` regenerates the credential-free JSON; `node tests/check_n8n_expressions.cjs` verifies the six expressions with installed n8n.

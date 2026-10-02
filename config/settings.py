@@ -3,6 +3,12 @@ import secrets
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+# Local operator configuration only. Never rendered into browser responses.
+if (BASE_DIR / ".env").exists():
+    for line in (BASE_DIR / ".env").read_text(encoding="utf-8").splitlines():
+        if line.startswith("AAP_") and "=" in line:
+            name, value = line.split("=", 1)
+            os.environ.setdefault(name, value)
 SECRET_KEY = os.environ.get("AAP_DJANGO_SECRET_KEY") or secrets.token_urlsafe(48)
 DEBUG = False
 ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
@@ -33,3 +39,5 @@ TIME_ZONE = "UTC"
 CSRF_TRUSTED_ORIGINS = ["http://127.0.0.1:8001", "http://localhost:8001"]
 SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS = "DENY"
+AAP_N8N_WEBHOOK_URL = os.environ.get("AAP_N8N_WEBHOOK_URL", "http://127.0.0.1:5678/webhook/aap-filesystem-agent")
+AAP_N8N_AUTH_TOKEN = os.environ.get("AAP_N8N_AUTH_TOKEN", "")
