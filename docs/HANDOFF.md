@@ -18,6 +18,16 @@ Start with [PROTOTYPE_PLAN.md](PROTOTYPE_PLAN.md), then architecture, contract a
 - Installation finished: n8n executable reports **2.41.6**. npm 12 blocked install scripts; the missing sqlite3 binary was diagnosed with a failed direct load, then repaired by approving only sqlite3@5.1.7 and rebuilding. Direct load now prints `SQLITE_DRIVER_OK`. Startup is initializing; health/editor verification is still pending.
 - `n8n/p00-connectivity-preflight.json` is a five-node native workflow (webhook → HTTP loopback probe → AI Agent with OpenAI model and Calculator). It contains no credential. Its model is the installed node's default `gpt-5-mini`; operator must select a credential and confirm an available model. JSON checks passed; import/model execution remain unverified.
 
+### P-00 current resume point
+
+Native n8n **2.41.6** is running. GET `/healthz`, `/healthz/readiness`, and `/` each returned HTTP **200**. CLI import returned `Successfully imported 1 workflow`; workflow ID is `aapP00Connectivity`, name **AAP P-00 Connectivity Preflight**. The workflow is inactive and awaiting credential selection.
+
+Operator handoff: finish owner setup at `http://127.0.0.1:5678/setup`, then create/select the OpenAI credential. The user agreed to enter credentials in the UI. Do not capture passwords/API keys in evidence or chat. After setup, open the imported workflow, select credential/model, publish it, POST the exact webhook URL, and confirm the probe and real calculator/model response. Preserve nonsecret execution ID and model ID; mark P-00 complete only after these pass.
+
+Processes started in this session: n8n exec session 76871; temporary probe exec session 20882. If they are no longer alive, restart using `scripts/start-n8n.ps1` and `python scripts/preflight_probe.py`. Stop the probe before starting Django. No application files have been created.
+
+n8n startup warns that native hosting/internal task runners will be deprecated in future releases; current startup passed. Missing optional Python runner is irrelevant to this native HTTP/AI Agent/Calculator preflight. Do not add runner infrastructure for this checkpoint. Launcher now uses the current `N8N_WEBHOOK_URL` setting; the live process accepted its older equivalent during first startup.
+
 ## Production inspection and deliberate boundaries
 
 | Read source in `C:\Code\AAP` | Product understanding retained | Excluded |

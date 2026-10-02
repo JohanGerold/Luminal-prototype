@@ -1,8 +1,8 @@
 # AAP Prototype
 
-**PROTOTYPE / DEMONSTRATION SYSTEM — planning only, 3 October 2026.**
+**PROTOTYPE / DEMONSTRATION SYSTEM — P-00 connectivity preflight, 3 October 2026.**
 
-Demonstrate a real LLM choosing restricted filesystem tools through n8n, with AAP independently evaluating the resulting actions and files. This directory currently contains documentation only. No application, dependencies, database, demo workspace, or n8n workflow has been created.
+Demonstrate a real LLM choosing restricted filesystem tools through n8n, with AAP independently evaluating the resulting actions and files. The approved plan is frozen with the user's amendments. Native n8n 2.41.6 is installed/running with an imported connectivity preflight; credential selection and real model verification are pending. No Django application, evaluator, demo filesystem or filesystem-agent workflow exists yet. See [TASKS.md](TASKS.md) and [connectivity evidence](docs/CONNECTIVITY_PREFLIGHT.md).
 
 Read in this order:
 
