@@ -1,0 +1,1 @@
+{% extends 'base.html' %}{% block content %}<h1>Evaluation scenarios</h1><p>Real execution uses <strong>LIVE_MODEL</strong>. Emergency scripted execution is labelled <strong>DEMO_FALLBACK</strong>.</p>{% for scenario in scenarios %}<section><h2>{{scenario.name}}</h2><p>{{scenario.instruction}}</p></section>{% empty %}<p>No scenarios yet.</p>{% endfor %}{% endblock %}

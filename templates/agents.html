@@ -1,0 +1,1 @@
+{% extends 'base.html' %}{% block content %}<h1>Agents</h1>{% for agent in agents %}<section><h2><a href="/agents/{{agent.id}}">{{agent.name}}</a></h2><p>{{agent.description}}</p></section>{% empty %}<p>No agents yet.</p>{% endfor %}{% endblock %}

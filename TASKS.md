@@ -7,7 +7,7 @@ Execution order: P-00 → P-01 → P-02 → P-03 → P-04 → P-05 → P-06 → 
 | Task | State | Evidence / next action |
 |---|---|---|
 | P-00 Connectivity Preflight | COMPLETE | n8n 2.41.6 healthy; native Google Gemini model `models/gemini-3-flash-preview`; real webhook execution 1 returned `AAP_PREFLIGHT_OK 4`; n8n reached local probe. See CONNECTIVITY_PREFLIGHT.md. |
-| P-01 Bootstrap | NOT STARTED | P-00 passed; next task after checkpoint commit. |
+| P-01 Bootstrap | COMPLETE | Django 5.2.17 / SQLite / Waitress. Three bootstrap tests pass; initial migrations applied; repeated seeding idempotent; live health and agent page pass on port 8001. |
 | P-02 Filesystem | NOT STARTED | Core containment invariant required; obscure hardening must not displace Day-1 E2E. |
 | P-03 n8n filesystem agent | NOT STARTED | |
 | P-04 Live UI E2E | NOT STARTED | |
@@ -31,6 +31,7 @@ Execution order: P-00 → P-01 → P-02 → P-03 → P-04 → P-05 → P-06 → 
 - Ruling: use this committed ledger plus `docs/HANDOFF.md` as the durable execution record requested by the user; do not add duplicate skill scratch ledgers.
 
 - P-00 COMPLETE: user-selected single provider is Google Gemini. Healthy n8n 2.41.6, real credential-authenticated execution 1, exact model `models/gemini-3-flash-preview`, successful probe and webhook directions verified. Secrets excluded; no model/provider abstraction. Next: P-01 after commit/clean-tree verification.
+- P-01 COMPLETE: missing app entrypoint test failed before implementation; explicit-mode test failed until a database constraint was added. Final bootstrap suite: 3 passed. `migrate`, repeated `seed_demo`, and `makemigrations --check --dry-run` passed. Actual HTTP health/database and agent page verified. Probe stopped; Waitress now binds 127.0.0.1:8001 (session 61536). Next: P-02.
 
 - P-00 COMPLETE: user-selected single provider is Google Gemini. Healthy n8n 2.41.6, real credential-authenticated execution 1, exact model `models/gemini-3-flash-preview`, successful probe and webhook directions verified. Secrets excluded; no model/provider abstraction. Next: P-01 after commit/clean-tree verification.
 

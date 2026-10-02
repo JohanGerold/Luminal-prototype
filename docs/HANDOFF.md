@@ -8,9 +8,11 @@ The single provider is Google Gemini. Preserve the configured credential in n8n;
 
 Fixed native topology: AAP → `http://127.0.0.1:5678/webhook/aap-filesystem-agent`; n8n → AAP base `http://127.0.0.1:8001`. P-00 proved reachability using the temporary probe, not actual Django/tools. Stop probe before P-01 starts the app. Replace temporary published preflight with the filesystem workflow at P-03.
 
-Resume: commit P-00 and verify clean tree, then P-01. After P-06, implement minimal P-09 before P-07. Update TASKS/HANDOFF and commit each meaningful verified checkpoint. No application code exists yet. Production remains read only.
+P-00 committed as `aeeb57a`, with a verified clean tree. **P-01 COMPLETE:** Django 5.2.17, SQLite schema, idempotent V1/V2/normal-scenario seed and basic agent/scenario pages implemented. Three bootstrap tests pass; migrations, drift check and live health/agent HTTP checks pass. Database enforces explicit `LIVE_MODEL|DEMO_FALLBACK` for every saved run. No evaluation runner or filesystem tools yet.
 
-Runtime processes from prior turn: n8n exec session 76871; temporary probe 20882. Restart with `scripts/start-n8n.ps1` and `python scripts/preflight_probe.py` if absent. Ignore native-hosting/optional Python-runner deprecation for this deadline; native HTTP/model/tool path works without Python runner infrastructure.
+Resume at P-02 after the P-01 checkpoint commit/clean-tree verification. After P-06, implement minimal P-09 before P-07. Update TASKS/HANDOFF and commit each meaningful verified checkpoint. Production remains read only.
+
+Runtime processes: n8n session 76871; Waitress/Django session 61536. Temporary probe 20882 was stopped before Django started. Restart n8n with `scripts/start-n8n.ps1`; start Django using the README command. The preflight's `/health/preflight` endpoint belonged to the stopped probe; P-03 will replace that temporary workflow with actual tool callbacks. Ignore native-hosting/optional Python-runner deprecation for this deadline; native HTTP/model/tool path works without Python runner infrastructure.
 
 ## Production inspection and deliberate boundaries
 
