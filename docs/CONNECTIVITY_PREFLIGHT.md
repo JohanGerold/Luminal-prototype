@@ -22,7 +22,7 @@ Registry metadata: n8n **2.41.6**, Node requirement **>=24.0.0**. Install locati
 
 Probe verification: direct GET `http://127.0.0.1:8001/health/preflight` returned `{service: aap-preflight-probe, ok: true}`; GET `/` returned 404. This is direct host verification, not n8n-origin proof. Native startup command after installation: `powershell -File scripts/start-n8n.ps1`.
 
-- [ ] Exact installed n8n version verified from executable.
+- [x] Exact installed n8n version verified from executable: 2.41.6.
 - [ ] n8n starts and editor/health responds.
 - [ ] Model credential selected/configured by operator without copying secrets into repository or chat.
 - [ ] Native AI Agent executes a trivial prompt using the real model; preserve execution ID, observed response and selected model ID.

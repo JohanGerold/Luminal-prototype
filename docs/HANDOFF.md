@@ -15,6 +15,8 @@ Start with [PROTOTYPE_PLAN.md](PROTOTYPE_PLAN.md), then architecture, contract a
 - Credential selection and real-model AI Agent verification are outstanding. Do not mark P-00 complete or start P-01 based only on installation/startup.
 - Temporary probe is running at `http://127.0.0.1:8001/health/preflight`; direct GET and 404 rejection checks passed. This is not n8n-origin connectivity proof. Stop probe before P-01 Django startup.
 - `scripts/start-n8n.ps1` configures native n8n on loopback port 5678 with isolated ignored local state. Startup and real-model checks remain outstanding while installation completes.
+- Installation finished: n8n executable reports **2.41.6**. npm 12 blocked install scripts; the missing sqlite3 binary was diagnosed with a failed direct load, then repaired by approving only sqlite3@5.1.7 and rebuilding. Direct load now prints `SQLITE_DRIVER_OK`. Startup is initializing; health/editor verification is still pending.
+- `n8n/p00-connectivity-preflight.json` is a five-node native workflow (webhook → HTTP loopback probe → AI Agent with OpenAI model and Calculator). It contains no credential. Its model is the installed node's default `gpt-5-mini`; operator must select a credential and confirm an available model. JSON checks passed; import/model execution remain unverified.
 
 ## Production inspection and deliberate boundaries
 
