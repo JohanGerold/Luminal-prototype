@@ -6,8 +6,8 @@ Execution order: P-00 → P-01 → P-02 → P-03 → P-04 → P-05 → P-06 → 
 
 | Task | State | Evidence / next action |
 |---|---|---|
-| P-00 Connectivity Preflight | AWAITING CREDENTIAL SETUP | Native n8n 2.41.6 starts; health/readiness/editor HTTP 200. Preflight workflow imported. Operator must finish owner setup and select OpenAI credential; real model response and n8n → probe still unverified. |
-| P-01 Bootstrap | NOT STARTED | Blocked by P-00 stop condition. |
+| P-00 Connectivity Preflight | COMPLETE | n8n 2.41.6 healthy; native Google Gemini model `models/gemini-3-flash-preview`; real webhook execution 1 returned `AAP_PREFLIGHT_OK 4`; n8n reached local probe. See CONNECTIVITY_PREFLIGHT.md. |
+| P-01 Bootstrap | NOT STARTED | P-00 passed; next task after checkpoint commit. |
 | P-02 Filesystem | NOT STARTED | Core containment invariant required; obscure hardening must not displace Day-1 E2E. |
 | P-03 n8n filesystem agent | NOT STARTED | |
 | P-04 Live UI E2E | NOT STARTED | |
@@ -26,6 +26,12 @@ Execution order: P-00 → P-01 → P-02 → P-03 → P-04 → P-05 → P-06 → 
 - P-00 probe checkpoint: temporary loopback probe started on 127.0.0.1:8001; GET `/health/preflight` returned the expected JSON and an unrelated route returned 404. This verifies the local listener only; n8n → probe remains outstanding. Added a loopback-only native n8n launcher; installation is still running.
 - P-00 installation checkpoint: npm installed pinned n8n 2.41.6; executable `--version` returned 2.41.6. npm 12 initially blocked SQLite's install script; direct driver load failed. Approved only sqlite3@5.1.7 in ignored local runtime metadata, rebuilt it, and verified `SQLITE_DRIVER_OK`. No blanket lifecycle-script approval. Startup now reports initialization and has created ignored local state.
 - Preflight workflow JSON structurally verified: five native nodes, inactive, no embedded credential. Import and execution are not yet verified.
-- P-00 startup/import checkpoint: health, readiness and editor each returned HTTP 200. CLI reported `Successfully imported 1 workflow` for `aapP00Connectivity`. Owner setup is open at `/setup`; operator must enter the new password and OpenAI credential. Real AI Agent execution is not verified. No P-01 work started.
+- P-00 startup/import checkpoint: health, readiness and editor each returned HTTP 200. CLI reported `Successfully imported 1 workflow` for `aapP00Connectivity`. Owner setup is open at `/setup`; operator must enter the new password and Google Gemini credential. Real AI Agent execution is not verified. No P-01 work started.
 - Ruling: initialize Git in the explicitly separate prototype directory and use a prototype branch; no linked worktree is needed for this new repository. Use the same local author identity configured in the production checkout, without changing that checkout.
 - Ruling: use this committed ledger plus `docs/HANDOFF.md` as the durable execution record requested by the user; do not add duplicate skill scratch ledgers.
+
+- P-00 COMPLETE: user-selected single provider is Google Gemini. Healthy n8n 2.41.6, real credential-authenticated execution 1, exact model `models/gemini-3-flash-preview`, successful probe and webhook directions verified. Secrets excluded; no model/provider abstraction. Next: P-01 after commit/clean-tree verification.
+
+- P-00 COMPLETE: user-selected single provider is Google Gemini. Healthy n8n 2.41.6, real credential-authenticated execution 1, exact model `models/gemini-3-flash-preview`, successful probe and webhook directions verified. Secrets excluded; no model/provider abstraction. Next: P-01 after commit/clean-tree verification.
+
+- P-00 COMPLETE: user-selected single provider is Google Gemini. Healthy n8n 2.41.6, real credential-authenticated execution 1, exact model `models/gemini-3-flash-preview`, successful probe and webhook directions verified. Secrets excluded; no model/provider abstraction. Next: P-01 after commit/clean-tree verification.

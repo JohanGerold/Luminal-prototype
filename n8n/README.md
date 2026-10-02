@@ -8,7 +8,7 @@ Implementation/setup order:
 
 1. Record exact n8n version and export node `typeVersion` values from that installation.
 2. Build the workflow described in [CONTRACT.md](CONTRACT.md), export JSON without credentials, import into a clean workflow and verify all six connections.
-3. User selects/configures the one OpenAI model credential in n8n. Record the actual model ID after a successful tool-calling smoke test; do not silently substitute models.
+3. User selects/configures the one Google Gemini model credential in n8n. Record the actual model ID after a successful tool-calling smoke test; do not silently substitute models.
 4. Configure fixed tool base URL and header-auth webhook credential. Keep model credentials and run tokens out of prompts/browser/logs.
 5. Publish/activate as required by the installed n8n version. Set AAP's server-side webhook URL to the production webhook path, not the temporary test listener.
 6. Verify manual webhook → real model-selected tool → real fixture mutation → matching AAP event. Then verify UI E2E, timeout and stale-token refusal.

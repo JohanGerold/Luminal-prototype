@@ -2,31 +2,15 @@
 
 ## Current state
 
-Implementation authorized on 3 October 2026. P-00 connectivity preflight is in progress; no application code or filesystem agent exists yet. The demo directory did not exist at the original inspection. Production remains read only. Current evidence and task states are in [TASKS.md](../TASKS.md).
+**P-00 COMPLETE** on 3 October 2026. Native n8n 2.41.6 is healthy; the operator's native Google Gemini Chat Model credential works. Exact selected model `models/gemini-3-flash-preview`. Real webhook execution **1** returned `AAP_PREFLIGHT_OK 4`; the HTTP probe and Calculator completed successfully. See [CONNECTIVITY_PREFLIGHT.md](CONNECTIVITY_PREFLIGHT.md) and [TASKS.md](../TASKS.md).
 
-Start with [PROTOTYPE_PLAN.md](PROTOTYPE_PLAN.md), then architecture, contract and scenarios. P-00 must pass before P-01. After P-06, implement minimal P-09 before P-07. Keep one prototype task order; do not consult or resume the production implementation plan. Inline execution; no subagent execution method has been requested.
+The single provider is Google Gemini. Preserve the configured credential in n8n; never print/decrypt/copy its key into Git, JSON, docs, logs or chat. The checked-in preflight workflow is credential-free. No provider abstraction.
 
-### P-00 discovery checkpoint
+Fixed native topology: AAP → `http://127.0.0.1:5678/webhook/aap-filesystem-agent`; n8n → AAP base `http://127.0.0.1:8001`. P-00 proved reachability using the temporary probe, not actual Django/tools. Stop probe before P-01 starts the app. Replace temporary published preflight with the filesystem workflow at P-03.
 
-- Node 24.19.0 and npm 12.0.2 are installed.
-- No n8n executable or listener on 5678 was detected; Docker engine is not running.
-- Registry metadata identifies n8n 2.41.6, requiring Node >=24.0.0; pinned native installation is underway under ignored `.runtime/n8n`.
-- Candidate topology is same-host native: n8n → Django `http://127.0.0.1:8001`; Django → n8n `http://127.0.0.1:5678/webhook/aap-filesystem-agent`. These URLs are not yet connectivity-verified.
-- Credential selection and real-model AI Agent verification are outstanding. Do not mark P-00 complete or start P-01 based only on installation/startup.
-- Temporary probe is running at `http://127.0.0.1:8001/health/preflight`; direct GET and 404 rejection checks passed. This is not n8n-origin connectivity proof. Stop probe before P-01 Django startup.
-- `scripts/start-n8n.ps1` configures native n8n on loopback port 5678 with isolated ignored local state. Startup and real-model checks remain outstanding while installation completes.
-- Installation finished: n8n executable reports **2.41.6**. npm 12 blocked install scripts; the missing sqlite3 binary was diagnosed with a failed direct load, then repaired by approving only sqlite3@5.1.7 and rebuilding. Direct load now prints `SQLITE_DRIVER_OK`. Startup is initializing; health/editor verification is still pending.
-- `n8n/p00-connectivity-preflight.json` is a five-node native workflow (webhook → HTTP loopback probe → AI Agent with OpenAI model and Calculator). It contains no credential. Its model is the installed node's default `gpt-5-mini`; operator must select a credential and confirm an available model. JSON checks passed; import/model execution remain unverified.
+Resume: commit P-00 and verify clean tree, then P-01. After P-06, implement minimal P-09 before P-07. Update TASKS/HANDOFF and commit each meaningful verified checkpoint. No application code exists yet. Production remains read only.
 
-### P-00 current resume point
-
-Native n8n **2.41.6** is running. GET `/healthz`, `/healthz/readiness`, and `/` each returned HTTP **200**. CLI import returned `Successfully imported 1 workflow`; workflow ID is `aapP00Connectivity`, name **AAP P-00 Connectivity Preflight**. The workflow is inactive and awaiting credential selection.
-
-Operator handoff: finish owner setup at `http://127.0.0.1:5678/setup`, then create/select the OpenAI credential. The user agreed to enter credentials in the UI. Do not capture passwords/API keys in evidence or chat. After setup, open the imported workflow, select credential/model, publish it, POST the exact webhook URL, and confirm the probe and real calculator/model response. Preserve nonsecret execution ID and model ID; mark P-00 complete only after these pass.
-
-Processes started in this session: n8n exec session 76871; temporary probe exec session 20882. If they are no longer alive, restart using `scripts/start-n8n.ps1` and `python scripts/preflight_probe.py`. Stop the probe before starting Django. No application files have been created.
-
-n8n startup warns that native hosting/internal task runners will be deprecated in future releases; current startup passed. Missing optional Python runner is irrelevant to this native HTTP/AI Agent/Calculator preflight. Do not add runner infrastructure for this checkpoint. Launcher now uses the current `N8N_WEBHOOK_URL` setting; the live process accepted its older equivalent during first startup.
+Runtime processes from prior turn: n8n exec session 76871; temporary probe 20882. Restart with `scripts/start-n8n.ps1` and `python scripts/preflight_probe.py` if absent. Ignore native-hosting/optional Python-runner deprecation for this deadline; native HTTP/model/tool path works without Python runner infrastructure.
 
 ## Production inspection and deliberate boundaries
 

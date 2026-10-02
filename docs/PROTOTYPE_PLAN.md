@@ -6,7 +6,7 @@
 
 **Architecture:** One local Django application owns SQLite, execution orchestration, the restricted filesystem API, evaluation, and reports. Local n8n owns the real model/tool loop. One scenario executes at a time.
 
-**Tech stack:** Python, Django, SQLite, Waitress, plain HTML/CSS/JavaScript, n8n, one OpenAI model. Versions are implementation-time pins, not inherited production requirements.
+**Tech stack:** Python, Django, SQLite, Waitress, plain HTML/CSS/JavaScript, n8n, one Google Gemini model. Versions are implementation-time pins, not inherited production requirements.
 
 **Spec:** User's pasted “3-Day Working Prototype — Master Implementation Brief”; decisions are made concrete in [architecture](ARCHITECTURE.md), [scenarios](SCENARIOS.md), and [contract](../n8n/CONTRACT.md).
 

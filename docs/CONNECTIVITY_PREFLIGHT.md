@@ -1,50 +1,37 @@
 # P-00 connectivity preflight
 
-Status: AWAITING CREDENTIAL SETUP. Startup/import verified; real model execution remains unverified.
+**COMPLETE — 3 October 2026. Execution mode: LIVE_MODEL.**
 
-## Runtime inventory
+Native n8n **2.41.6**, Node **24.19.0**, npm **12.0.2**. n8n uses the single real-model provider **Google Gemini**, through its native Google Gemini Chat Model node v1.2 and the operator-configured credential. Exact selected model: **`models/gemini-3-flash-preview`**. No provider abstraction.
 
-Observed on 3 October 2026: Node 24.19.0, npm 12.0.2. No pre-existing n8n executable/listener detected. Docker CLI is installed, but its Linux engine pipe is absent. Native npm installation is the selected baseline, unless the operator supplies an existing instance.
+## Verified evidence
 
-Registry metadata: n8n **2.41.6**, Node requirement **>=24.0.0**. Install location: `.runtime/n8n`; package cache and local n8n state also stay under ignored `.runtime`. No global npm installation or Docker startup is needed.
+| Check | Observed result |
+|---|---|
+| Executable version | `n8n --version` returned 2.41.6. |
+| Health/readiness | GET `/healthz` and `/healthz/readiness` each HTTP 200. |
+| Host/AAP client → n8n | POST `{}` to `http://127.0.0.1:5678/webhook/aap-filesystem-agent` returned `{"output":"AAP_PREFLIGHT_OK 4"}`. |
+| n8n → local app address | HTTP Request node reached `http://127.0.0.1:8001/health/preflight`; returned `{"service":"aap-preflight-probe","ok":true}`. |
+| Credential and real model | Execution **1**, mode `webhook`, status `success`; native Gemini node completed two real calls; Calculator and AI Agent completed successfully. |
+| Model selection | UI selected `models/gemini-3-flash-preview`; credential-authenticated model list loaded. Installed node default agrees; checked-in workflow pins the exact model explicitly. |
 
-## Exact topology to prove
+Execution timestamps from n8n: **2026-10-02T19:15:35.087Z–2026-10-02T19:15:38.408Z** (3 October in Asia/Calcutta). The exact observed marker differs from the user's example but verifies the same real-model requirement; agent used the Calculator to obtain 4. No pinned data or fabricated response.
 
-| Direction | Address | Verification needed |
-|---|---|---|
-| Browser/operator → n8n | `http://127.0.0.1:5678` | Verified: health, readiness and editor HTTP 200; owner setup page opens. |
-| Django → n8n | `http://127.0.0.1:5678/webhook/aap-filesystem-agent` | P-00 temporary webhook responds; P-03 installs filesystem workflow at this path. |
-| n8n → Django | `http://127.0.0.1:8001` | n8n HTTP Request reaches temporary `/health/preflight` probe; P-01 later starts Django on this verified address. |
+Workflow ID `aapP00Connectivity`, name **AAP P-00 Connectivity Preflight**, published locally. Runtime workflow already contained the operator's Gemini node/credential; preserved its existing four other nodes and connections. Checked-in JSON replaces only the provider node/configuration and its connection name; it contains no credential reference or secret.
 
-`scripts/preflight_probe.py` is a temporary standard-library HTTP listener, not application scaffolding. It serves only `/health/preflight` on loopback. Stop it before Django startup. P-00 verifies network reachability to the planned app address; actual Django callback behavior belongs to P-03/P-04.
+## Fixed topology
 
-## Stop condition
+- Native n8n editor: `http://127.0.0.1:5678`.
+- Django/AAP → n8n: `http://127.0.0.1:5678/webhook/aap-filesystem-agent`.
+- n8n → Django/filesystem-service base: `http://127.0.0.1:8001`.
+- Future tool endpoints: `http://127.0.0.1:8001/api/tools/<tool>`.
 
-Probe verification: direct GET `http://127.0.0.1:8001/health/preflight` returned `{service: aap-preflight-probe, ok: true}`; GET `/` returned 404. This is direct host verification, not n8n-origin proof. Native startup command after installation: `powershell -File scripts/start-n8n.ps1`.
+P-00 used a temporary standard-library probe at the future Django address. Actual Django/tool handling does not exist yet and must be verified in P-03/P-04. Stop the probe before P-01 binds Django. Replace the preflight workflow at the same webhook path when P-03 is ready; do not leave two active workflows competing for the path.
 
-- [x] Exact installed n8n version verified from executable: 2.41.6.
-- [x] n8n starts and editor/health responds: health/readiness/editor each HTTP 200.
-- [ ] Model credential selected/configured by operator without copying secrets into repository or chat.
-- [ ] Native AI Agent executes a trivial prompt using the real model; preserve execution ID, observed response and selected model ID.
-- [ ] Native/Docker topology established, and both URL directions proven.
-- [ ] TASKS/HANDOFF updated, focused commit created, working tree checked.
+## Runtime and secrets
 
-Do not start P-01 while any prerequisite above is unverified. Keep credentials and raw n8n execution storage ignored; evidence contains only nonsecret IDs/version/response and endpoint results.
+Start n8n with `powershell -File scripts/start-n8n.ps1`. Local packages, cache, state, encrypted credentials and raw execution storage remain in ignored `.runtime`. npm 12 initially blocked sqlite3's install script; only sqlite3@5.1.7 was approved/rebuilt, then direct driver load passed. No other blanket install-script approval.
 
-## Imported preflight
+The Gemini API key remains in n8n credential storage. It was not read, decrypted, printed, exported to Git or placed in workflow JSON/docs/chat. Only nonsecret credential metadata was used to confirm native node binding. Verification output records sanitized response and node statuses. Do not export credential values into future logs/evidence.
 
-`n8n/p00-connectivity-preflight.json` imported successfully using n8n CLI. ID `aapP00Connectivity`; name **AAP P-00 Connectivity Preflight**. Its webhook uses the planned production path temporarily, calls the local probe, then invokes a native AI Agent with OpenAI model and Calculator. It is inactive until credential selection/publishing. This is a temporary test, not the P-03 filesystem workflow.
-
-Verified commands/results:
-
-```powershell
-node .runtime/n8n/node_modules/n8n/bin/n8n --version
-# 2.41.6
-node -e "require('./.runtime/n8n/node_modules/sqlite3'); console.log('SQLITE_DRIVER_OK')"
-# SQLITE_DRIVER_OK
-$env:N8N_USER_FOLDER = 'C:\Code\AAP-Prototype\.runtime\n8n-state'
-node .runtime/n8n/node_modules/n8n/bin/n8n import:workflow --input=n8n/p00-connectivity-preflight.json
-# Successfully imported 1 workflow.
-```
-
-After operator setup, select the credential in **OpenAI Chat Model - Select Credential**, confirm the model, publish workflow, then POST `{}` to `http://127.0.0.1:5678/webhook/aap-filesystem-agent`. Expected observed response includes `AAP_PREFLIGHT_OK` and calculated result 4; verify execution history shows the probe and real model/tool nodes, rather than accepting the expected text alone.
+P-00 stop condition passed. Commit this checkpoint and verify the working tree before P-01.
