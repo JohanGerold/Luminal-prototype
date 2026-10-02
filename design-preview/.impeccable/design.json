@@ -1,0 +1,145 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-03T02:19:31.0955853+05:30",
+  "title": "Design System: AAP isolated design preview",
+  "extensions": {
+    "status": "PROVISIONAL; awaiting user visual approval",
+    "scope": "Isolated illustrative dashboard preview only",
+    "validation": "Extracted from implemented CSS and HTML. Detector engine unavailable; no detector validation claimed.",
+    "shadows": [
+      {
+        "name": "primary-hover",
+        "value": "0 4px 10px #30294017",
+        "purpose": "Primary button hover."
+      },
+      {
+        "name": "orbit-node",
+        "value": "0 5px 16px #6e558d13",
+        "purpose": "Evidence map nodes."
+      },
+      {
+        "name": "hub",
+        "value": "0 15px 35px #77609424, inset 0 1px 0 #ffffffcc",
+        "purpose": "Circular evidence map hub."
+      },
+      {
+        "name": "dialog",
+        "value": "0 20px 65px #1c123933",
+        "purpose": "Evidence and setup dialogs."
+      }
+    ],
+    "motion": [
+      {
+        "name": "button-state",
+        "value": "background .18s, box-shadow .18s",
+        "purpose": "Button state changes."
+      },
+      {
+        "name": "node-state",
+        "value": "background .18s, translate .18s",
+        "purpose": "Orbit nodes move upward 3px on hover."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "transition: none !important; animation: none !important; scroll-behavior: auto",
+        "purpose": "Applied within prefers-reduced-motion: reduce."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "large-desktop",
+        "value": "1600px"
+      },
+      {
+        "name": "desktop-inset",
+        "value": "1400px"
+      },
+      {
+        "name": "compact-desktop",
+        "value": "1100px"
+      },
+      {
+        "name": "wrapped-navigation",
+        "value": "820px"
+      },
+      {
+        "name": "phone",
+        "value": "590px"
+      }
+    ],
+    "materials": {
+      "hero": "linear-gradient(110deg,#ecebf6 0%,#e7e4f3 45%,#d9d4e9 100%)",
+      "dialogBackdrop": "background: #30263e55; backdrop-filter: blur(3px)",
+      "focus": "outline: 2px solid var(--violet); outline-offset: 4px",
+      "searchFocus": "outline: 2px solid #88759e; outline-offset: 2px"
+    }
+  },
+  "components": [
+    {
+      "name": "Primary button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Main action; plum pill with soft hover lift.",
+      "html": "<button class=\"ds-primary\">New evaluation</button>",
+      "css": ".ds-primary{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:43px;border:1px solid transparent;padding:10px 19px;border-radius:30px;font:600 12px/1.5 Manrope,Arial,sans-serif;background:var(--plum,#302940);color:var(--white,#fff);cursor:pointer;transition:background .18s,box-shadow .18s}.ds-primary:hover{background:#49405e;box-shadow:0 4px 10px #30294017}.ds-primary:focus-visible{outline:2px solid var(--violet,#766293);outline-offset:4px}@media(prefers-reduced-motion:reduce){.ds-primary{transition:none}}"
+    },
+    {
+      "name": "Secondary button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Outlined supporting action with lavender hover.",
+      "html": "<button class=\"ds-secondary\">View configuration</button>",
+      "css": ".ds-secondary{display:inline-flex;align-items:center;justify-content:center;min-height:43px;border:1px solid #ddd7e5;padding:10px 19px;border-radius:30px;font:600 12px/1.5 Manrope,Arial,sans-serif;background:transparent;color:var(--ink,#2d293d);cursor:pointer;transition:background .18s,box-shadow .18s}.ds-secondary:hover{background:var(--lavender,#ece9f5)}.ds-secondary:focus-visible{outline:2px solid var(--violet,#766293);outline-offset:4px}@media(prefers-reduced-motion:reduce){.ds-secondary{transition:none}}"
+    },
+    {
+      "name": "Scenario search",
+      "kind": "input",
+      "refersTo": "search",
+      "description": "Compact text field for filtering scenario results.",
+      "html": "<label class=\"ds-search\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.65\" stroke-linecap=\"round\" aria-hidden=\"true\"><circle cx=\"10.5\" cy=\"10.5\" r=\"6.5\"/><path d=\"m16 16 5 5\"/></svg><input type=\"search\" placeholder=\"Find a scenario\" aria-label=\"Find a scenario\"></label>",
+      "css": ".ds-search{display:inline-flex;align-items:center;gap:7px;height:36px;border:1px solid var(--line,#e9e6ee);padding:0 11px;border-radius:8px;background:var(--white,#fff);color:#796886}.ds-search input{border:0;background:none;width:129px;font:11px/1.5 Manrope,Arial,sans-serif;color:var(--ink,#2d293d);outline:none}.ds-search input::placeholder{color:#756780}.ds-search:focus-within{outline:2px solid #88759e;outline-offset:2px}"
+    },
+    {
+      "name": "Section navigation",
+      "kind": "nav",
+      "description": "Muted text navigation with plum active underline.",
+      "html": "<nav class=\"ds-nav\" aria-label=\"Preview sections\"><a href=\"#overview\" aria-current=\"page\">Overview</a><a href=\"#scenarios\">Scenarios</a></nav>",
+      "css": ".ds-nav{display:flex;gap:33px;align-items:center;height:92px;font-family:Manrope,Arial,sans-serif}.ds-nav a{position:relative;display:flex;align-items:center;height:100%;color:var(--muted,#6c677c);font-size:13px;font-weight:600;text-decoration:none}.ds-nav a:hover,.ds-nav a[aria-current]{color:var(--plum,#302940)}.ds-nav a[aria-current]:after{content:'';position:absolute;bottom:22px;left:0;right:0;height:2px;background:var(--plum,#302940);border-radius:1px}.ds-nav a:focus-visible{outline:2px solid var(--violet,#766293);outline-offset:4px}"
+    },
+    {
+      "name": "Pass verdict badge",
+      "kind": "chip",
+      "refersTo": "verdict-pass",
+      "description": "Semantic verdict label; color accompanied by text and check icon.",
+      "html": "<span class=\"ds-pass\"><svg width=\"10\" height=\"10\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.65\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m6 12 4 4 8-8\"/></svg>PASS</span>",
+      "css": ".ds-pass{display:inline-flex;align-items:center;gap:5px;border-radius:5px;padding:4px 7px;font:650 9px/1.5 Manrope,Arial,sans-serif;letter-spacing:.025em;white-space:nowrap;background:var(--pass-soft,#e4ede7);color:#476650}@media(max-width:590px){.ds-pass{font-size:10px}}"
+    },
+    {
+      "name": "Data panel",
+      "kind": "card",
+      "refersTo": "panel",
+      "description": "Flat white evidence container on warm paper.",
+      "html": "<section class=\"ds-panel\"><h2>Evidence coverage</h2><p>What supports each conclusion.</p></section>",
+      "css": ".ds-panel{background:var(--white,#fff);color:var(--ink,#2d293d);border:1px solid var(--line,#e9e6ee);border-radius:16px;padding:27px 28px;font-family:Manrope,Arial,sans-serif}.ds-panel h2{margin:0;font-size:19px;font-weight:550;letter-spacing:-.025em;line-height:1.4}.ds-panel p{margin:4px 0 0;font-size:12px;line-height:1.5;color:var(--muted,#6c677c)}"
+    }
+  ],
+  "narrative": {
+    "northStar": null,
+    "overview": "The implemented direction translates the user's single BloomFi screenshot reference into lavender surfaces, warm white space and dark plum emphasis. Manrope, generous spacing and soft corners give the evaluation dashboard a calm, approachable character. This records the build, without assigning an unapproved creative North Star.",
+    "keyCharacteristics": [
+      "Tonal lavender layering with restrained plum emphasis.",
+      "Soft panels and pill actions surrounding compact evidence data.",
+      "Distinct verdict colors paired with visible labels."
+    ],
+    "rules": [],
+    "dos": [
+      "Do retain visible sample labels on preview results and comparisons.",
+      "Do pair verdict colors with text and keep execution status distinct from verdict.",
+      "Do preserve keyboard focus and reduced-motion behavior when reusing preview components."
+    ],
+    "donts": [
+      "Don't treat this provisional preview as approved application branding.",
+      "Don't infer real reliability gains from the illustrative version comparison."
+    ]
+  }
+}

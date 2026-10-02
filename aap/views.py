@@ -41,3 +41,8 @@ def trace(request, run_id):
     run = get_object_or_404(EvaluationRun, pk=run_id)
     result = run.results.first()
     return render(request, "trace.html", {"run": run, "events": rows(result) if result else []})
+
+
+def design_preview(request):
+    # A visual-review surface only: no database reads or evaluation dispatch.
+    return render(request, 'design_preview.html')

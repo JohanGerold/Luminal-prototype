@@ -30,4 +30,6 @@ Open `http://127.0.0.1:8001/runs/new`. Tests: `.venv\Scripts\python.exe -m pytes
 
 Normal execution is **LIVE_MODEL**. Emergency scripted execution is **DEMO_FALLBACK**, visibly labelled on every relevant screen. No silent switching.
 
+Dashboard design review: open `http://127.0.0.1:8001/design-preview` while the app runs. This interactive preview uses clearly labelled illustrative data and performs no evaluations or file operations. See [preview scope and verification](docs/UI_DESIGN_PREVIEW.md). Visual approval is pending.
+
 This is not production ready, a secure sandbox certification, a production failure prediction, or a safety certification. Results concern the selected scenarios and real operations on synthetic files inside the demonstration directory.
