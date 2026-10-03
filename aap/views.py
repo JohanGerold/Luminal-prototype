@@ -9,6 +9,11 @@ def home(request):
     return render(request, 'dashboard.html', overview(request.GET.get('mode'), request.GET.get('days')))
 
 
+def compare(request):
+    from .comparison import project
+    return render(request, 'compare.html', project(request.GET.get('mode')))
+
+
 def health(request):
     with connection.cursor() as cursor:
         cursor.execute("SELECT 1")

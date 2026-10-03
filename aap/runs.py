@@ -40,6 +40,7 @@ def start(version_name, scenario_id, mode):
         run = EvaluationRun.objects.create(agent_version=version, execution_mode=mode, status="executing",
             started_at=timezone.now(), input_snapshot={"agent_version": version.version,
                 "system_prompt": version.system_prompt, "tools": version.tools,
+                "execution_limits": {"run_seconds": RUN_SECONDS},
                 "provider": "Google Gemini" if mode == 'LIVE_MODEL' else None,
                 "model": "models/gemini-3-flash-preview" if mode == 'LIVE_MODEL' else None,
                 "fallback_script_version": fallback.SCRIPT_VERSION if mode == 'DEMO_FALLBACK' else None})

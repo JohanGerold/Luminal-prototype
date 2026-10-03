@@ -11,6 +11,7 @@ urlpatterns = [
     path("agents", views.agents),
     path("agents/<slug:agent_id>", views.agent_detail),
     path("scenarios", views.scenarios),
+    path("compare", views.compare),
     path("api/tools/<str:tool>", api.tool),
     path("api/runs", run_api.start),
     path("api/runs/<uuid:run_id>", run_api.status),

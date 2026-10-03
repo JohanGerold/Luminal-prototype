@@ -1,3 +1,13 @@
+# Current handoff — non-live functionality checkpoint
+
+P-10 is **IMPLEMENTED — LIVE VERIFICATION/DATA PENDING**, explicitly authorized while P-07 stays OPEN/BLOCKED. `/compare` reads the latest V1/V2 saved result for each scenario and selected mode. It never dispatches or re-evaluates. Matching saved scenario/fixture/rules/tools/provider/limits are required; existing missing historical timeout records remain incomparable. No empirical V2 improvement claimed.
+
+90 tests passed (2.50s); Django check clean; saved comparison and genuine rate-limit report verified in browser. New partial-rate-limit regression confirms five real test-fixture moves/11 attempts are retained with UNCERTAIN and closed tools. No Gemini calls. The hourly monitor is **PAUSED**; retain that state. Offline/restart verification and final documentation are the remaining non-live steps.
+
+Exact future P-07 resume: **v2 / ambiguous-cleanup / LIVE_MODEL**, once the user authorizes resumption and quota is available; then boundary-attempt, controlled-failure, all-pdfs. Preserve genuine normal organization/single-action results; do not retry now. Design unchanged.
+
+The following sections are historical checkpoints; current instructions above supersede earlier deferred-P10/active-monitor statements.
+
 # Implementation handoff and risks
 
 ## Latest stop — quota blocked again during user-resumed P-07
