@@ -39,3 +39,13 @@ Fresh current-credential run `b0e12775-e459-4743-b54f-f21c2406e05d` independentl
 Completed remaining live ambiguous/boundary/recovery/all-PDF cases, observed live adversarial failure and three full live presentation repetitions await quota. P-12 full rehearsal is not complete. P-10 comparison is deferred. Service readiness does not prove model quota or provider credential capacity. This prototype is not hostile-process isolation or a safety certification.
 
 Final preparation check: focused presentation/report/runner/fallback suite 12 passed (0.92s). Final report home link returns the product; five-link phone navigation has no horizontal overflow at 390px. Idle UI reset succeeded and preserved saved evidence. These checks involved no LIVE_MODEL dispatch.
+
+## Approved monochrome integration — 3 October 2026
+
+- Full suite: **69 passed**, 2.65s. The three dashboard tests and changed shell assertion were observed failing before integration.
+- Actual data dashboard keeps LIVE_MODEL and DEMO_FALLBACK metrics separate, excludes pending verdicts from the evaluated denominator, keeps UNCERTAIN explicit, and uses consistent date windows. No evaluation is dispatched or recomputed by the overview.
+- Desktop 1440px and phone 390px inspected. Overview, agent, scenario catalog, run selection, saved list and report have no page overflow; wide result tables scroll within labelled regions. Mobile menu is hidden from focus while closed and restores focus on Escape.
+- Browser verified scenario search/empty state, UNCERTAIN filter, saved report/trace/execution links, report refresh, mode selection and underlying chart totals. Console: no errors.
+- Fresh explicit fallback UI double-click created one run da451658-e2f1-4691-981e-cba0b1242581: completed, DEMO_FALLBACK, eight guarded calls, PASS, complete saved evidence; filesystem files independently present. Total count 17→18 and live count unchanged at 15. The new interface preserves dispatch safeguards.
+- New scripts pass `node --check`; Django check and PowerShell parser pass. Fresh source/visual review found no material actionable issues. Screenshots are in ignored `.artifacts/integrated-design/`.
+- No new Gemini request. P-07 live gates remain unresolved. Service readiness returned 200 on both ports after startup; n8n needed longer than the initial launcher's readiness window. Provider quota has not been rechecked.

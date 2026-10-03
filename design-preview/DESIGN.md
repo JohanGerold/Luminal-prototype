@@ -1,6 +1,6 @@
 ---
 name: AAP isolated design preview
-description: Approved lavender and plum evaluation dashboard baseline; preview data remains illustrative.
+description: Archived lavender preview; superseded by docs/DESIGN_LOCK.md and the approved monochrome integration.
 colors:
   paper: "#fcfcfa"
   white: "#fff"

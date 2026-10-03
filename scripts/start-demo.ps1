@@ -49,9 +49,9 @@ do {
     Start-Sleep -Seconds 1
 } while ([DateTime]::UtcNow -lt $demoDeadline)
 if (-not $demoAppReady) { throw 'AAP not ready. Check the local Python environment and occupied ports. No evaluation was dispatched.' }
-Write-Host "AAP ready: $demoAppUrl/agents/file-organization"
+Write-Host "AAP ready: $demoAppUrl/"
 Write-Host "Saved evidence: $demoAppUrl/runs"
 if ($demoN8nReady) { Write-Host "n8n ready: $demoN8nUrl (provider quota is not checked)" }
 else { Write-Warning 'n8n unavailable or intentionally skipped. Inspect saved runs, or explicitly select DEMO_FALLBACK. LIVE_MODEL never silently falls back.' }
 Write-Host 'No model request, credential change or workspace reset was performed.'
-if (-not $NoBrowser) { Start-Process "$demoAppUrl/agents/file-organization" }
+if (-not $NoBrowser) { Start-Process "$demoAppUrl/" }

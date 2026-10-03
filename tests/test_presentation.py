@@ -6,7 +6,8 @@ def test_selected_scenario_and_locked_shell(client):
     call_command('seed_demo')
     response = client.get('/runs/new?scenario=controlled-failure')
     assert response.status_code == 200
-    assert b'/design-assets/preview.css' in response.content
+    assert b'/design-assets/monochrome.css' in response.content
+    assert b'/design-assets/preview.css' not in response.content
     assert b'controlled-failure" selected' in response.content
     assert b'id="mode-badge"' in response.content
     assert b'aria-live="polite"' in response.content

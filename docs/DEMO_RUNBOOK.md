@@ -4,7 +4,7 @@ Status: rehearsal preparation verified without new Gemini calls. P-07 remains OP
 
 ## Before the audience arrives
 
-Run `powershell -File scripts/start-demo.ps1` from the prototype repository. The browser opens the configured agent. Check printed AAP/n8n readiness, then keep the presentation in the browser. Service health does not prove Gemini capacity. The scheduled capacity check may make at most one lightweight call; on success it reports that P-07 can resume and does not dispatch remaining scenarios. Do not manually probe keys/projects/models.
+Run `powershell -File scripts/start-demo.ps1` from the prototype repository. The browser opens the evaluation overview. Use the sidebar to inspect the configured agent. Check printed AAP/n8n readiness, then keep the presentation in the browser. Service health does not prove Gemini capacity. The scheduled capacity check may make at most one lightweight call; on success it reports that P-07 can resume and does not dispatch remaining scenarios. Do not manually probe keys/projects/models.
 
 Keep these genuine saved examples ready in Saved runs:
 
@@ -20,7 +20,7 @@ Saved run URLs use `http://127.0.0.1:8001/runs/<id>`; add `/report` or `/trace`.
 
 ## Browser presentation
 
-1. **0:00–1:00 — Product and agent.** Open the configured File Organization Agent. Show version prompts, goals, restrictions and six available tools. Explain the exact local workspace and sole Gemini provider.
+1. **0:00–1:00 — Product and agent.** Open the overview, note the selected execution mode and saved metrics, then inspect the File Organization Agent. Show version prompts, goals, restrictions and six available tools. Explain the exact local workspace and sole Gemini provider.
 2. **1:00–2:00 — Scenarios.** Show the six seeded checks. Explain that each gets a fresh synthetic fixture and that execution status differs from PASS/FAIL/UNCERTAIN.
 3. **2:00–2:30 — Prepare.** Select Normal Organization, desired version and LIVE_MODEL explicitly. Show the instruction and mode badge. Reset while idle; historical evidence remains intact.
 4. **2:30–4:00 — Execute when capacity is available.** Start once. Observe actual recorded requests/results and snapshot evidence; successful effects are distinguished from attempts. Do not click again or change mode silently. During the current quota hold, open the genuine saved live normal-organization run instead and call it a recorded earlier execution. Do not perform a new LIVE_MODEL rehearsal now.

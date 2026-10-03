@@ -26,13 +26,13 @@ uv sync --locked
 .venv\Scripts\python.exe manage.py serve_demo
 ```
 
-Open `http://127.0.0.1:8001/runs/new`. Tests: `.venv\Scripts\python.exe -m pytest -p no:cacheprovider --basetemp=C:\Code\AAP-Prototype\.runtime\test-tmp -q`. The UI resets the owned fixture before each run and rejects simultaneous start/reset. CLI reset is only for a stopped app: `.venv\Scripts\python.exe manage.py reset_demo`. Start n8n with `powershell -File scripts/start-n8n.ps1`; import/configure the committed workflow as described in `n8n/README.md`. Gemini credential stays in n8n. `serve_demo` marks unfinished historical runs interrupted on startup; it never resumes or retries them. Presentation startup is verified below.
+Open `http://127.0.0.1:8001/` for the evaluation overview, then choose **New evaluation**. Tests: `.venv\Scripts\python.exe -m pytest -p no:cacheprovider --basetemp=C:\Code\AAP-Prototype\.runtime\test-tmp -q`. The UI resets the owned fixture before each run and rejects simultaneous start/reset. CLI reset is only for a stopped app: `.venv\Scripts\python.exe manage.py reset_demo`. Start n8n with `powershell -File scripts/start-n8n.ps1`; import/configure the committed workflow as described in `n8n/README.md`. Gemini credential stays in n8n. `serve_demo` marks unfinished historical runs interrupted on startup; it never resumes or retries them. Presentation startup is verified below.
 
 Normal execution is **LIVE_MODEL**. Emergency scripted execution is **DEMO_FALLBACK**, visibly labelled on every relevant screen. No silent switching.
 
 Saved evaluation reports are available from each run's **Inspect evaluation report** link (`/runs/<id>/report`). Reports preserve actual execution status, verdict, failure category, assertions, trace links and filesystem evidence. Missing snapshots never imply observed removal.
 
-Dashboard design review: open `http://127.0.0.1:8001/design-preview` while the app runs. This interactive preview uses clearly labelled illustrative data and performs no evaluations or file operations. See [preview scope and verification](docs/UI_DESIGN_PREVIEW.md). Visual direction is approved and frozen; see [design lock](docs/DESIGN_LOCK.md).
+The approved monochrome Luminal design is integrated across the product. The home dashboard uses saved evidence with separate LIVE_MODEL and DEMO_FALLBACK views, daily activity and latest scenario results. See the superseding [design lock](docs/DESIGN_LOCK.md). The standalone `/design-assets/monochrome.html` is an illustrative design reference only; its sample data never enters real evaluation screens.
 
 This is not production ready, a secure sandbox certification, a production failure prediction, or a safety certification. Results concern the selected scenarios and real operations on synthetic files inside the demonstration directory.
 
@@ -42,6 +42,6 @@ Presentation startup (existing local environment and credential required):
 powershell -File scripts/start-demo.ps1
 ```
 
-One command starts/reuses AAP and native n8n, checks readiness and opens the configured agent. It does not call Gemini. See [startup, URLs and recovery](docs/STARTUP.md). Use `-AppOnly` for intentional n8n outage and explicitly select DEMO_FALLBACK in the UI. Saved reports are available from **Saved runs**; they survive refresh/reset/restart. P-07 remains open and blocked by external model quota; P-10 comparison is deferred.
+One command starts/reuses AAP and native n8n, checks readiness and opens the evaluation overview. It does not call Gemini. See [startup, URLs and recovery](docs/STARTUP.md). Use `-AppOnly` for intentional n8n outage and explicitly select DEMO_FALLBACK in the UI. Saved reports are available from **Saved runs**; they survive refresh/reset/restart. P-07 remains open and blocked by external model quota; P-10 comparison is deferred.
 
 Presentation materials: [ten-minute runbook](docs/DEMO_RUNBOOK.md), [verified evidence and remaining gates](docs/VERIFICATION.md). Full live rehearsal remains open until Gemini quota permits the remaining P-07 scenarios.

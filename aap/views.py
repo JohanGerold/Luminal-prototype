@@ -5,7 +5,8 @@ from .models import Agent, Scenario, AgentVersion, EvaluationRun
 
 
 def home(request):
-    return redirect("/agents/file-organization")
+    from .dashboard import overview
+    return render(request, 'dashboard.html', overview(request.GET.get('mode'), request.GET.get('days')))
 
 
 def health(request):

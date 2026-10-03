@@ -1,8 +1,8 @@
 {% extends 'base.html' %}{% block content %}
-<h1>Observable trace</h1><p><strong class="mode-badge {% if run.execution_mode == 'DEMO_FALLBACK' %}mode-fallback{% else %}mode-live{% endif %}">{{run.execution_mode}}</strong> · {{run.id}} · {{run.status}}</p>
-<p><a href="/runs/{{run.id}}">Return to run</a> · <a href="/runs/{{run.id}}/report">Inspect report</a> · <a href="/runs/{{run.id}}/trace">Reload saved events</a></p>
-<p>Instructions, requests, results and final response. Hidden model reasoning is not recorded.</p>
-{% for event in events %}<section id="event-{{event.sequence}}"><h2>#{{event.sequence}} {{event.kind}} {{event.tool}}</h2>
-<p>{{event.timestamp|date:'c'}}{% if event.request_sequence %} · <a href="#event-{{event.request_sequence}}">Request #{{event.request_sequence}}</a>{% endif %}{% if event.success == True %} · Succeeded{% elif event.success == False %} · Refused or failed{% endif %}</p>
+<div class="page-heading"><div><h1>Observable trace</h1><p class="run-id">{{run.id}} · {{run.status}}</p></div><strong class="mode-badge {% if run.execution_mode == 'DEMO_FALLBACK' %}mode-fallback{% else %}mode-live{% endif %}">{{run.execution_mode}}</strong></div>
+<div class="action-row run-nav"><a class="button" href="/runs/{{run.id}}">Return to run</a><a class="button" href="/runs/{{run.id}}/report">Inspect report</a><a class="text-button" href="/runs/{{run.id}}/trace">Reload saved events</a></div>
+<p class="subtle-copy">Instructions, requests, results and final response. Hidden model reasoning is not recorded.</p>
+{% for event in events %}<section class="trace-event-panel" id="event-{{event.sequence}}"><h2><span class="trace-label">#{{event.sequence}}</span>{{event.kind}} {{event.tool}}</h2>
+<p>{{event.timestamp|date:'d M Y, H:i:s'}} IST{% if event.request_sequence %} · <a href="#event-{{event.request_sequence}}">Request #{{event.request_sequence}}</a>{% endif %}{% if event.success == True %} · Succeeded{% elif event.success == False %} · Refused or failed{% endif %}</p>
 {% if event.error %}<pre>{{event.error}}</pre>{% endif %}<details><summary>Recorded arguments and data</summary><pre>{{event.arguments}}</pre><pre>{{event.data}}</pre></details></section>
-{% empty %}<p>No recorded events.</p>{% endfor %}{% endblock %}
+{% empty %}<section class="panel empty-panel"><h2>No recorded events</h2><p>Return to the run to inspect its current execution status.</p></section>{% endfor %}{% endblock %}

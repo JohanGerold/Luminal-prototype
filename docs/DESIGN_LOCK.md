@@ -1,18 +1,19 @@
 # Approved frontend design lock
 
-Approved by the user on 3 October 2026. Baseline: dashboard implemented at checkpoint `d91e067`, available at `/design-preview`. Preserve this visual direction when implementing real reports and missing screens; sample data remains illustrative until connected to saved evidence.
+Approved by the user on 3 October 2026: the monochrome Luminal dashboard at checkpoint `cfb90fe`, originally `/design-assets/monochrome.html`. The user explicitly asked to lock this design and integrate it. This document supersedes every earlier lavender/plum design instruction, including `design-preview/DESIGN.md`. Preserve the monochrome direction across the working product.
 
-- Palette: warm paper (#fcfcfa), white, muted canvas (#e9e7ee), lavender (#ece9f5), dark plum (#302940), ink (#2d293d). Reuse semantic pass/fail/uncertain colors and visible labels from the existing CSS.
-- Typography: self-hosted Manrope, modest heading weights, tight heading tracking; compact readable supporting text. Preserve the implemented responsive sizes.
-- Spacing: generous outer whitespace and page insets, repeated 20px grid gaps, restrained dense evidence rows. Narrow screens stack existing groups.
-- Surfaces: white/paper panels with thin subdued borders; lavender hero and plum explanatory panel. Preserve intentional evidence-map geometry and existing tonal treatment.
-- Corners: 16px major panels, 8px fields, pill buttons, compact verdict badges. Reuse existing component styles rather than framework defaults.
-- Layouts: horizontal header/navigation, two-column hero, asymmetric summary, scenario ledger, comparison and evidence coverage, shared evidence dialogs. Preserve the established hierarchy; new screens should reuse these patterns where relevant.
-- Controls: plum primary actions, outlined secondary actions, white hero action; consistent icons, focus rings, search and native selects.
-- Navigation: text links with a short active underline, wrapping below the header on narrow screens.
-- Status: labelled semantic verdict colors; execution status stays separate. LIVE_MODEL and DEMO_FALLBACK must remain explicit. Never render illustrative comparisons as observed improvement.
-- Motion: retain restrained hover/focus transitions and reduced-motion support. Execution motion may communicate real progress; it must not imply unobserved work.
+- Palette: white surfaces, near-white canvas `#fcfcfc`, ink `#242527`, muted text `#737579`, pale borders `#e9e9eb`, neutral wash `#f6f6f7`. No lavender hero, plum navigation, decorative gradients or glowing shapes.
+- Typography: locally hosted Manrope, modest weights (500–650), compact headings with restrained tracking. Primary page titles about 25px, panel headings 14px, readable operational text 11–13px. Monospace is reserved for file paths, IDs and recorded data.
+- Layout: fixed 222px left sidebar, narrow 77px header and 34px content insets on desktop. Overview uses four compact metrics, an activity chart beside recent activity, then a wide scenario table. Detail pages retain this shell and use restrained evidence panels and paired before/after views.
+- Spacing: 15–23px panel gaps, 17–24px panel padding, compact controls with generous separation between sections. Related labels and values stay together.
+- Surfaces: flat white panels with 1px pale borders, 9px main radii, 4–6px badges/controls. Avoid heavy shadows, oversized pill buttons and a second theme.
+- Controls: charcoal primary buttons with white text; thin outlined secondary controls; consistent 1.5px outline SVG icons. Visible keyboard focus and hover states. Native selects remain keyboard accessible.
+- Navigation: neutral sidebar rows, a pale active row with a narrow dark left indicator. Mobile uses a menu button and hidden closed navigation, without invisible keyboard targets.
+- Status: PASS uses muted green, FAIL muted red, UNCERTAIN muted amber; always include the word. Execution status remains separate from verdict. LIVE_MODEL uses a neutral solid outline; DEMO_FALLBACK uses a warm dashed outline and an explicit scripted-execution explanation. Unknown evidence must not use success icons.
+- Charts: monochrome line/area charts, fine grid lines, a dashed passed series, text descriptions and focusable points. Plot only observed saved counts in the product. Empty history shows zero counts and no invented pass rate or duration.
+- Motion: restrained control transitions, reduced-motion support, execution feedback driven only by recorded events. No theatrical progress implying unobserved work.
+- Responsive behavior: stack metric/chart/detail groups as needed; wide results use a labelled, keyboard-scrollable region without page overflow. Preserve accessible labels and report/trace links.
 
-Do not introduce a second theme, generic SaaS or bento layout, glassmorphism, glowing blobs, new purple/blue AI gradients, typography replacement, radical radius changes, or aesthetic page restructuring. Preserve functionality with the smallest necessary visual adjustment. Accessibility, responsive fixes and loading/error/empty states are permitted within this baseline.
+Canonical implementation: `design-preview/assets/monochrome.css`, `product.css`, `templates/base.html`, `templates/dashboard.html`. Product scripts are `product.js`, `dashboard.js`, existing `start.js` and `run.js`. The original monochrome demo remains clearly illustrative and isolated. Never load `monochrome.js` or demo fixtures into the working application.
 
-Sources: `../design-preview/DESIGN.md`, `../design-preview/assets/preview.css`, `../templates/design_preview.html`. This records existing approved styling; it introduces no visual changes.
+Data convention: dashboard metrics and chart share a selected LIVE_MODEL or DEMO_FALLBACK mode and 7/28-day window. Pass rate uses all evaluated outcomes (including UNCERTAIN), excludes pending results, and displays its denominator. Recent activity and latest-per-scenario rows are explicitly all-time for that mode. Do not present aggregate results as certification or fabricate V2 improvement.
