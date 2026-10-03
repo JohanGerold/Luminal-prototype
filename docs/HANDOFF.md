@@ -1,5 +1,14 @@
 # Implementation handoff and risks
 
+## Latest stop — quota blocked again during user-resumed P-07
+
+After the user requested continuation, services were started with the documented launcher and the saved capacity result was checkpointed as `2100474`. Both services became healthy. One fresh **LIVE_MODEL v2 / ambiguous-cleanup** run **fe6ac151-ba30-4efb-9205-53a416d81730** started **18:00:15.911 IST on 3 October 2026** and ended **18:00:44.772 IST**. Unchanged `models/gemini-3-flash-preview` and existing native Gemini credential.
+
+Actual result: execution **failed / MODEL_RATE_LIMIT**, **11 tool attempts**, **five successful moves**, incomplete evidence, deterministic verdict **UNCERTAIN**. File-preservation assertions passed; documented completion remains unknown. The saved API and report were independently checked for mode/status/verdict/error labels. No retries, no remaining-scenario dispatches and no fabricated outcomes. Relevant evaluator/scenario tests passed **28/28** (0.83s) before this run.
+
+**P-07 remains OPEN/BLOCKED on external Gemini quota.** Resume at ambiguous cleanup; boundary request, controlled failure and all-PDF completion still await live verification. P-10 stays deferred. Preserve the monochrome design and existing reports/fallback. The hourly capacity monitor remains configured; the previous deletion request was not approved. The earlier 14:07 invocation success is historical evidence, not sustained quota availability.
+
+
 ## Resumed P-07 — capacity evidence recovered
 
 The user returned and requested continuation. Saved scheduled run **5fd626bc-a0e6-42b6-a97e-a052b93d6dbb** was re-read: LIVE_MODEL, unchanged `models/gemini-3-flash-preview`, completed at **14:07:50 IST on 3 October 2026**, four successful tool calls, complete evidence, actual **FAIL / INCOMPLETE_TASK**. The created `Downloads/action-note.txt` had a trailing newline (five bytes, `646f6e650a`) rather than exactly `done`. This proves an available invocation, not a behavioral pass or guaranteed future quota. Earlier relevant evaluator/scenario tests: 28 passed (0.69s).

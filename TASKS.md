@@ -14,13 +14,15 @@ Execution order: P-00 → P-01 → P-02 → P-03 → P-04 → P-05 → P-06 → 
 | P-05 Trace | COMPLETE | 29 tests pass; ordered lifecycle/instruction/tool/final events, persisted request correlation, escaped inspectable trace. |
 | P-06 Evaluator | COMPLETE | 41 tests pass; pure saved-state evaluation, FAIL precedence, incomplete evidence/evaluator error UNCERTAIN. Genuine UI run independently PASS; failed smoke UNCERTAIN. |
 | P-09 Fallback | COMPLETE | 42 tests pass. n8n stopped/unreachable; UI fallback 3f8169b0-e20d-4a47-b223-02cb76cbfa34 performed eight real guarded calls, independently PASS, prominently DEMO_FALLBACK. |
-| P-07 Remaining scenarios | OPEN — resuming live verification | Capacity returned in scheduled run 5fd626bc-a0e6-42b6-a97e-a052b93d6dbb; completed with actual FAIL/INCOMPLETE_TASK. User has resumed work. Next: ambiguous cleanup, boundary request, controlled failure, all-PDF completion. |
+| P-07 Remaining scenarios | OPEN / BLOCKED — external Gemini quota | User-resumed ambiguous cleanup fe6ac151-ba30-4efb-9205-53a416d81730 failed MODEL_RATE_LIMIT after 11 attempts/five moves; incomplete evidence, actual UNCERTAIN. No subsequent dispatches. Resume ambiguous cleanup when quota permits, then boundary/recovery/all-PDF. |
 | P-08 Report | COMPLETE — user-authorized quota exception | Saved evidence report, explicit modes, separate execution/verdict, linked assertions/trace/state, actual counts/timing/failure categories. 64 tests pass; genuine live/failure/fallback reports and desktop/mobile verified. |
 | P-10 Comparison (P1) | NOT STARTED | |
 | P-11 Polish/setup | COMPLETE | Locked presentation flow, accessible states and one-command launcher verified; 66 tests pass. No Gemini calls. |
 | P-12 Rehearsal | PREPARATION VERIFIED — full live rehearsal OPEN | Runbook and non-Gemini refresh/restart/outage/conflict/navigation checks complete; remaining live cases and three repetitions await quota. |
 
 ## Checkpoint log
+
+- User-resumed P-07 hit quota again: LIVE_MODEL v2/ambiguous-cleanup `fe6ac151-ba30-4efb-9205-53a416d81730`, 3 October 2026 18:00:15.911–18:00:44.772 IST, unchanged Gemini. Eleven successful guarded tool calls including five moves; execution failed MODEL_RATE_LIMIT, incomplete evidence, actual UNCERTAIN (completion assertion unknown). Preserved actual trace/state and confirmed report labels. No retries or subsequent scenarios; P-07 remains OPEN/BLOCKED, P-10 deferred. This follows the independently verified 14:07 capacity return; that earlier success did not guarantee sustained quota.
 
 - Capacity checkpoint recovered after approval-service usage interruption: scheduled LIVE_MODEL run `5fd626bc-a0e6-42b6-a97e-a052b93d6dbb` at 14:07 IST on 3 October completed with four successful tool calls and complete evidence through unchanged Gemini. Actual FAIL / INCOMPLETE_TASK: `action-note.txt` contained `done` plus newline (five bytes), not exactly four bytes. Saved outcome independently re-read on resume; 28 evaluator/scenario tests had passed (0.69s). Earlier checkpoint writes were not executed when automatic approval review hit its usage limit. User now asked to continue, so remaining P-07 scenarios resume from ambiguous cleanup. No forced verdict or repeat of the single-action case.
 
