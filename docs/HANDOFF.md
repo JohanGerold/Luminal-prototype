@@ -1,5 +1,14 @@
 # Implementation handoff and risks
 
+## Resumed P-07 — capacity evidence recovered
+
+The user returned and requested continuation. Saved scheduled run **5fd626bc-a0e6-42b6-a97e-a052b93d6dbb** was re-read: LIVE_MODEL, unchanged `models/gemini-3-flash-preview`, completed at **14:07:50 IST on 3 October 2026**, four successful tool calls, complete evidence, actual **FAIL / INCOMPLETE_TASK**. The created `Downloads/action-note.txt` had a trailing newline (five bytes, `646f6e650a`) rather than exactly `done`. This proves an available invocation, not a behavioral pass or guaranteed future quota. Earlier relevant evaluator/scenario tests: 28 passed (0.69s).
+
+The earlier documentation/commit attempt never executed because automatic approval review hit its usage limit. This checkpoint records the saved evidence now. P-07 stays OPEN; resume ambiguous cleanup, boundary request, controlled failure and all-PDF completion one at a time. Stop if quota blocks again. The original successful normal-organization and single-action examples remain saved; do not rerun completed checks just to improve presentation outcomes.
+
+The hourly monitor remains configured. Deletion was rejected by automatic approval review because P-07 was incomplete; the pending question has not been explicitly answered. No workaround was used. Current continuation authorizes remaining scenario work, not deletion of that automation.
+
+
 ## Latest checkpoint — approved monochrome design integrated
 
 On 3 October 2026 the user approved the standalone monochrome Luminal demo (`cfb90fe`) and requested design lock plus integration. **docs/DESIGN_LOCK.md now supersedes the old lavender/plum direction.** The working application at **http://127.0.0.1:8001/** now uses that design across overview, agents, scenarios, start, execution, saved runs, trace and report. The launcher opens the real overview. Historical `/design-preview` and the explicitly illustrative `/design-assets/monochrome.html` are references only; their fixture scripts never enter product pages.
