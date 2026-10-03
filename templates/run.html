@@ -1,6 +1,6 @@
 {% extends 'base.html' %}{% block content %}
 <h1>Evaluation run</h1><p><strong>{{run.execution_mode}}</strong> · Run {{run.id}}</p>
-<p><a href="/runs/new">Start another run</a> · <a href="/runs/{{run.id}}/trace">Inspect chronological trace</a></p><p id="status" role="status" aria-live="polite">Loading recorded evidence…</p>
+<p><a href="/runs/new">Start another run</a> · <a href="/runs/{{run.id}}/trace">Inspect chronological trace</a> · <a href="/runs/{{run.id}}/report">Inspect evaluation report</a></p><p id="status" role="status" aria-live="polite">Loading recorded evidence…</p>
 <p id="configuration"></p><p id="error"></p>
 <h2>Final response</h2><pre id="response"></pre>
 <h2>Recorded tool events</h2><pre id="events"></pre>

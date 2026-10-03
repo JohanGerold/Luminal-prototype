@@ -18,6 +18,7 @@ urlpatterns = [
     path("runs/new", views.new_run),
     path("runs/<uuid:run_id>", views.run_detail),
     path("runs/<uuid:run_id>/trace", views.trace),
+    path("runs/<uuid:run_id>/report", views.report),
     path("design-preview", views.design_preview),
     path("design-assets/<path:path>", serve, {'document_root': settings.BASE_DIR / 'design-preview' / 'assets'}),
 ]

@@ -46,3 +46,9 @@ def trace(request, run_id):
 def design_preview(request):
     # A visual-review surface only: no database reads or evaluation dispatch.
     return render(request, 'design_preview.html')
+
+
+def report(request, run_id):
+    from .reporting import project
+    run = get_object_or_404(EvaluationRun.objects.select_related('agent_version__agent'), pk=run_id)
+    return render(request, 'report.html', project(run))
