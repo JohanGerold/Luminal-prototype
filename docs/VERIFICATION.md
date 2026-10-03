@@ -1,3 +1,17 @@
+# Latest non-live verification — 3 October 2026
+
+- Final full suite **90 passed** (3.89s); 20 comparison tests were observed failing before implementation, then green. Covers nine transition combinations, contract mismatch/legacy missing metadata, no dispatch/re-evaluation, latest pending selection and escaped content. New partial-rate-limit runner regression records 11 successful attempts/five moves, then UNCERTAIN; evaluator unchanged.
+- Django check clean; startup PowerShell parser accepted the 180-second cold-readiness budget. Cold startup restored both services, repeat startup reused them; n8n remains 2.41.6.
+- n8n health unreachable during explicit UI fallback. Double-click produced one run `ca47d8d9-347e-4341-9a18-30ea55042a0d`, DEMO_FALLBACK/completed/PASS, eight attempts, five real moves, complete evidence; disk matched saved snapshot.
+- Browser verified reset, progress, completed fallback report, genuine normal LIVE_MODEL PASS report, partial MODEL_RATE_LIMIT/UNCERTAIN report and trace, refresh, report→scenario navigation, comparison mode separation and missing-data reasons. Desktop 1440px and narrow 390px comparison had no document overflow. Existing styles reused; no visual redesign.
+- Saved evidence fingerprints of `32acc0a1-4560-4626-bff4-5c7738a945ab` and `fe6ac151-ba30-4efb-9205-53a416d81730` unchanged after reset/fallback/restart. Count 21→22; LIVE_MODEL fixed at 18, fallback 3→4. No model request or synthetic live data inserted.
+- Fresh source review found no material findings. Captures: ignored `.artifacts/non-live-completion/`.
+- P-07 remains OPEN/BLOCKED. P-10 implementation complete, genuine matching live data pending. P-12 non-live preparation verified, full live rehearsal pending. Automation is PAUSED; do not probe Gemini.
+
+## Historical verification records
+
+Earlier counts/statuses below describe their own checkpoint, not the current state.
+
 # Prototype verification record — 3 October 2026
 
 Current scope: non-Gemini P-09 verification, P-11 presentation/startup and P-12 rehearsal preparation. No new LIVE_MODEL dispatch occurred during this scope. Live count remained 14. P-07 is OPEN/BLOCKED by external Gemini quota; no fallback result substitutes for remaining live cases.

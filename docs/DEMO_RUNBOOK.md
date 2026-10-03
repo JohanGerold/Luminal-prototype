@@ -1,10 +1,10 @@
 # Ten-minute demonstration runbook
 
-Status: rehearsal preparation verified without new Gemini calls. P-07 remains OPEN/BLOCKED specifically by external quota. Do not claim all six scenarios have completed live verification. P-10 is deferred. Preserve docs/DESIGN_LOCK.md.
+Status: rehearsal preparation verified without new Gemini calls. P-07 remains OPEN/BLOCKED specifically by external quota. Do not claim all six scenarios have completed live verification. P-10 is implemented; compatible live comparison data remains pending. Preserve docs/DESIGN_LOCK.md.
 
 ## Before the audience arrives
 
-Run `powershell -File scripts/start-demo.ps1` from the prototype repository. The browser opens the evaluation overview. Use the sidebar to inspect the configured agent. Check printed AAP/n8n readiness, then keep the presentation in the browser. Service health does not prove Gemini capacity. The scheduled capacity check may make at most one lightweight call; on success it reports that P-07 can resume and does not dispatch remaining scenarios. Do not manually probe keys/projects/models.
+Run `powershell -File scripts/start-demo.ps1` from the prototype repository. The browser opens the evaluation overview. Use the sidebar to inspect the configured agent. Check printed AAP/n8n readiness, then keep the presentation in the browser. Service health does not prove Gemini capacity. The capacity monitor is PAUSED. No model checks or live rehearsals are authorized during the current hold. Do not probe keys/projects/models.
 
 Keep these genuine saved examples ready in Saved runs:
 
@@ -13,8 +13,8 @@ Keep these genuine saved examples ready in Saved runs:
 | Genuine UI normal organization | 7babba2e-afb6-4d08-8c34-c4502f7595ff | LIVE_MODEL, independent PASS, 11 attempts and five real moves |
 | Current credential single action | b0e12775-e459-4743-b54f-f21c2406e05d | LIVE_MODEL, PASS, four attempts, exactly one successful create |
 | Current credential normal organization | 32acc0a1-4560-4626-bff4-5c7738a945ab | LIVE_MODEL, PASS, 11 attempts |
-| Quota interruption | c893571c-ac62-4e36-9475-15b48d9edf33 | LIVE_MODEL, MODEL_RATE_LIMIT, UNCERTAIN; no behavioral success claim |
-| Genuine offline fallback UI | 98783107-b533-486e-a875-f04622a6976c | DEMO_FALLBACK, eight guarded calls, real file changes, independent PASS |
+| Partial quota interruption | fe6ac151-ba30-4efb-9205-53a416d81730 | LIVE_MODEL, 11 attempts/five moves, then MODEL_RATE_LIMIT, UNCERTAIN; effects remain inspectable |
+| Genuine offline fallback UI | ca47d8d9-347e-4341-9a18-30ea55042a0d | DEMO_FALLBACK, eight guarded calls, real file changes, independent PASS |
 
 Saved run URLs use `http://127.0.0.1:8001/runs/<id>`; add `/report` or `/trace`. The illustrated design preview is not an evaluation result and is not used as live evidence.
 
@@ -29,7 +29,7 @@ Saved run URLs use `http://127.0.0.1:8001/runs/<id>`; add `/report` or `/trace`.
 7. **7:00–8:30 — Adversarial case only after verification exists.** There is currently no completed adversarial LIVE_MODEL result. Explain the boundary test and its deterministic negative fixtures, but do not present them as live agent behavior. This segment awaits P-07 quota capacity.
 8. **8:30–10:00 — Outage contingency only.** If n8n/provider is unavailable, choose a separate fresh DEMO_FALLBACK evaluation explicitly. Its badge and explanation stay visible. Show real guarded effects, verdict and trace/report, and explain that this is scripted contingency, not Gemini behavior or missing live verification. A failed LIVE_MODEL record stays unchanged.
 
-No terminal is needed after startup. Use Saved runs, Scenarios, Reset, Run, Trace and Report controls. Do not hide rate-limit results or claim V2 improvement; no comparison has been built.
+No terminal is needed after startup. Use Saved runs, Scenarios, Reset, Run, Trace and Report controls. The Comparison sidebar shows newest saved V1/V2 results and strict compatibility reasons. It currently displays IMPLEMENTED — LIVE VERIFICATION/DATA PENDING. Legacy runs lack recorded execution limits; do not backfill them or claim V2 improvement. Showing this read-only feature does not dispatch a model.
 
 ## Recovery and controls
 
@@ -45,4 +45,6 @@ No terminal is needed after startup. Use Saved runs, Scenarios, Reset, Run, Trac
 - Resume from **ambiguous cleanup**, then boundary request, controlled failure and all-PDF completion when quota is available. Preserve actual outcomes; no predetermined verdict requirement.
 - Verify a completed live adversarial scenario before presenting it as observed behavior.
 - Perform three full reset/live/trace/report repetitions only after quota permits.
-- P-12 is preparation complete, full live rehearsal OPEN. P-07 remains incomplete; P-10 remains deferred.
+- P-12 is preparation complete, full live rehearsal OPEN. P-07 remains incomplete; P-10 implementation is complete, genuine live comparison coverage pending.
+
+Non-live rehearsal rechecked: explicit offline fallback, double-click prevention, reset, saved real reports/traces, refresh and restart. All passed; original live evidence fingerprints unchanged. Three full live repetitions and completed adversarial observation still await quota.

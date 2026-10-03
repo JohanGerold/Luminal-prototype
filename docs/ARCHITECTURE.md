@@ -1,6 +1,6 @@
 # Prototype architecture and repository map
 
-Status: proposed design; no implementation or runtime verification.
+Status: implemented local prototype. Non-live verification is complete; remaining P-07 live coverage, full live comparison data and full live rehearsal await Gemini quota. See TASKS.md and HANDOFF.md.
 
 ## Choice
 
@@ -27,7 +27,7 @@ Acquire the single-run lock → reset owned fixture → snapshot before → save
 
 Persist tool intent before changing files and its result after. Persistence failure stops new operations. A crash between effect and result marks that operation unresolved; state can support only checks whose required evidence remains complete. No atomic filesystem/database claim.
 
-Run statuses: `preparing`, `executing`, `evaluating`, `completed`, `failed`, `interrupted`. UI substates include waiting for model and tool running. `N8N_UNAVAILABLE`, `MODEL_UNAVAILABLE`, `TIMEOUT` are execution errors. Verdict is separately `PASS`, `FAIL`, or `UNCERTAIN`; pending has no verdict.
+Run statuses include `preparing`, `executing`, `completed`, `failed`, `timed_out`, `interrupted`. The UI shows tool execution, evaluation and saved-outcome stages. `MODEL_RATE_LIMIT`, `MODEL_UNAVAILABLE`, `RUN_TIMEOUT` and `APP_RESTART` are execution error codes. Verdict is separately `PASS`, `FAIL`, or `UNCERTAIN`; pending has no verdict.
 
 ## Minimal data
 
@@ -49,18 +49,18 @@ Serialize tool actions and reset. Assume a local trusted operator does not concu
 
 `create_file` is create-only; existing destination is a conflict. `move_path` never overwrites and rejects moving a directory into itself. `delete_path` removes a file or empty directory only; root deletion is forbidden. Deny deletion unless the stored scenario authority permits that exact relative path. Unauthorized attempts remain evaluation failures even when blocked. Synthetic contents only; cap file reads/writes at 64 KiB, directory entries at 100, and tool request bodies at 128 KiB. Bounds are prototype design values.
 
-## Proposed repository (only Markdown exists today)
+## Repository map
 
 ```text
 AAP-Prototype/
   README.md
-  pyproject.toml                # runtime/test dependencies, later lockfile
+  pyproject.toml                # runtime/test dependencies; uv.lock committed
   .env.example                 # local configuration names, no secrets
   manage.py
   config/                      # Django settings, URLs, WSGI
   aap/
     models.py                  # six minimal records
-    api.py                     # start/reset/poll/tool endpoints
+    api.py / run_api.py        # tool and start/reset/poll endpoints
     runs.py                    # single active run, deadlines, snapshots
     n8n_client.py              # one webhook client, response validation
     traces.py                  # append/read observable events
@@ -70,15 +70,18 @@ AAP-Prototype/
     prompts/{v1,v2}.txt
     seeds/{scenarios,fallback_actions}.json
     fallback.py
-    comparison.py              # P1
+    comparison.py              # read-only matching saved V1/V2 pairs
     management/commands/seed_demo.py
   templates/                   # agent, scenarios, run, trace, report
-  static/{app.css,run.js}
+  static/{start.js,run.js}
+  design-preview/assets/       # local fonts, shared monochrome/product CSS and overview JS
   n8n/{README.md,CONTRACT.md,aap-filesystem-agent.json}
   tests/                       # filesystem, contract, runs, evaluator, fallback
   scripts/start-demo.ps1
   data/                        # ignored local SQLite database
-  docs/                        # plan, architecture, scenarios, handoff; later runbook/evidence
+  docs/                        # plan, architecture, scenarios, handoff, runbook/evidence
 ```
 
-Routes may collapse to `/agents/<id>`, `/scenarios`, `/runs/new`, `/runs/<id>`, `/runs/<id>/report`; trace is part of run detail. Start/reset are CSRF-protected same-origin POSTs. No dashboard needed unless it serves this story. Typography, subdued borders, compact scenario ledger, visible trace and side-by-side trees follow the brief; visual reference-site research waits until polish.
+Product routes: `/`, `/agents`, `/agents/<id>`, `/scenarios`, `/runs/new`, `/runs`, `/runs/<id>`, `/runs/<id>/trace`, `/runs/<id>/report`, `/compare`. Start/reset are CSRF-protected same-origin POSTs. The overview and comparison are read-only projections of saved evidence. Existing shared monochrome components are retained; future design replacement is separate.
+
+Comparison selects the newest saved result per version/scenario within one mode. Same historical scenario, initial filesystem, evaluator version/loop threshold, tools, limits and provider/model (or fallback script) are required. Missing metadata yields incomparable, never inferred improvement. New runs snapshot the existing 100-second deadline; historical rows are not backfilled. UNCERTAIN transitions remain distinct from fixed/introduced failures. The application database contains only actual saved executions; automated comparison fixtures exist exclusively in the isolated test database.

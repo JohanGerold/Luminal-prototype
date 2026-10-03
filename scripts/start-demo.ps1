@@ -41,7 +41,8 @@ if (-not $AppOnly -and -not (Test-DemoReady "$demoN8nUrl/healthz" 'n8n')) {
         Write-Host 'Starting pinned local n8n in the background.'
     }
 } elseif (-not $AppOnly) { Write-Host 'n8n already healthy; reusing it.' }
-$demoDeadline = [DateTime]::UtcNow.AddSeconds(90)
+# A cold native n8n start has exceeded 90 seconds on the presentation machine.
+$demoDeadline = [DateTime]::UtcNow.AddSeconds(180)
 do {
     $demoAppReady = Test-DemoReady "$demoAppUrl/health" 'aap'
     $demoN8nReady = -not $AppOnly -and (Test-DemoReady "$demoN8nUrl/healthz" 'n8n')

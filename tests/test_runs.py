@@ -131,5 +131,3 @@ def test_rate_limit_after_real_tool_effects_preserves_uncertain_evidence(runner,
         assert b'MODEL_RATE_LIMIT' in response.content and b'UNCERTAIN' in response.content
         assert b'LIVE_MODEL' in response.content
     assert client.get(f'/runs/{run.pk}/trace').status_code == 200
-
-

@@ -2,12 +2,12 @@
 
 **PROTOTYPE / DEMONSTRATION SYSTEM — 3 October 2026.**
 
-Demonstrate a real LLM choosing restricted filesystem tools through n8n, with AAP independently evaluating the resulting actions and files. P-00–P-04 are complete: the UI invokes real Google Gemini through n8n, restricted tools change the real demo files, and AAP records evidence. Chronological traces, deterministic evaluation and explicit outage fallback are implemented. Six-scenario live verification is waiting on Gemini model quota; genuine earlier live runs are retained. See [TASKS.md](TASKS.md) and [connectivity evidence](docs/CONNECTIVITY_PREFLIGHT.md).
+Demonstrate a real LLM choosing restricted filesystem tools through n8n, with AAP independently evaluating the resulting actions and files. P-00–P-06, reporting, fallback and presentation functionality are complete: the UI invokes real Google Gemini through n8n, restricted tools change the real demo files, and AAP records evidence. Chronological traces, deterministic evaluation and explicit outage fallback are implemented. Six-scenario live verification is waiting on Gemini model quota; genuine earlier live runs are retained. See [TASKS.md](TASKS.md) and [connectivity evidence](docs/CONNECTIVITY_PREFLIGHT.md).
 
 Read in this order:
 
 1. [Prototype plan and task order](docs/PROTOTYPE_PLAN.md)
-2. [Architecture and proposed repository structure](docs/ARCHITECTURE.md)
+2. [Architecture and repository structure](docs/ARCHITECTURE.md)
 3. [n8n integration contract](n8n/CONTRACT.md)
 4. [Scenario assertions](docs/SCENARIOS.md)
 5. [Risks and implementation handoff](docs/HANDOFF.md)
@@ -42,6 +42,8 @@ Presentation startup (existing local environment and credential required):
 powershell -File scripts/start-demo.ps1
 ```
 
-One command starts/reuses AAP and native n8n, checks readiness and opens the evaluation overview. It does not call Gemini. See [startup, URLs and recovery](docs/STARTUP.md). Use `-AppOnly` for intentional n8n outage and explicitly select DEMO_FALLBACK in the UI. Saved reports are available from **Saved runs**; they survive refresh/reset/restart. P-07 remains open and blocked by external model quota; P-10 comparison is deferred.
+One command starts/reuses AAP and native n8n, checks readiness and opens the evaluation overview. It does not call Gemini. See [startup, URLs and recovery](docs/STARTUP.md). Use `-AppOnly` for intentional n8n outage and explicitly select DEMO_FALLBACK in the UI. Saved reports are available from **Saved runs**; they survive refresh/reset/restart. P-07 remains open and blocked by external model quota; P-10 saved comparison is implemented at `/compare`; genuine compatible live data is pending. Historical missing execution limits remain incomparable. The capacity monitor is paused; no Gemini calls should be made during the current hold.
 
 Presentation materials: [ten-minute runbook](docs/DEMO_RUNBOOK.md), [verified evidence and remaining gates](docs/VERIFICATION.md). Full live rehearsal remains open until Gemini quota permits the remaining P-07 scenarios.
+
+Non-live completion: **90 tests pass**. Saved comparison supports all verdict transitions, separates modes and refuses incompatible inputs. Reset, restart, offline fallback, report/trace links and saved real outcomes were verified again; no model request was made. See [current handoff](docs/HANDOFF.md) for the exact remaining live gates.

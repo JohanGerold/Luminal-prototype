@@ -2,6 +2,8 @@
 
 > Approved and frozen, with the user's four amendments on 3 October 2026. Execute sequentially; see `../TASKS.md` for actual checkpoint state. After each meaningful checkpoint verify, update TASKS/HANDOFF, commit, and check the working tree.
 
+> **Later user amendment (3 October 2026):** while external Gemini quota blocks P-07, complete all non-live work, explicitly including P-10 implementation. Make no additional Gemini calls. This overrides the original P0-before-comparison restriction below, but does not waive genuine live verification or permit synthetic live evidence. P-10 implementation and live data coverage must be reported separately; frontend replacement is a separate future task. Original task definitions below are retained; TASKS.md is the current ledger.
+
 **Goal:** Deliver a ten-minute demonstration of real n8n agent execution, restricted real file changes, independent deterministic evaluation, and inspectable failure evidence.
 
 **Architecture:** One local Django application owns SQLite, execution orchestration, the restricted filesystem API, evaluation, and reports. Local n8n owns the real model/tool loop. One scenario executes at a time.

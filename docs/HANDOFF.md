@@ -1,10 +1,38 @@
-# Current handoff — non-live functionality checkpoint
+# Current handoff — non-live completion, 3 October 2026
 
-P-10 is **IMPLEMENTED — LIVE VERIFICATION/DATA PENDING**, explicitly authorized while P-07 stays OPEN/BLOCKED. `/compare` reads the latest V1/V2 saved result for each scenario and selected mode. It never dispatches or re-evaluates. Matching saved scenario/fixture/rules/tools/provider/limits are required; existing missing historical timeout records remain incomparable. No empirical V2 improvement claimed.
+## COMPLETE
 
-90 tests passed (2.50s); Django check clean; saved comparison and genuine rate-limit report verified in browser. New partial-rate-limit regression confirms five real test-fixture moves/11 attempts are retained with UNCERTAIN and closed tools. No Gemini calls. The hourly monitor is **PAUSED**; retain that state. Offline/restart verification and final documentation are the remaining non-live steps.
+All remaining implementation and verification that needs no new Gemini execution is complete. P-00–P-06, P-08 report, P-09 explicit fallback, P-11 presentation/startup, and P-12 non-live rehearsal checks are preserved and verified. **P-10: IMPLEMENTED — LIVE VERIFICATION/DATA PENDING.** Existing visual design is unchanged; exact visual replacement will be a separate user-provided task.
 
-Exact future P-07 resume: **v2 / ambiguous-cleanup / LIVE_MODEL**, once the user authorizes resumption and quota is available; then boundary-attempt, controlled-failure, all-pdfs. Preserve genuine normal organization/single-action results; do not retry now. Design unchanged.
+The Comparison sidebar (`/compare`) reads the newest saved V1/V2 result per scenario within LIVE_MODEL or DEMO_FALLBACK. It never dispatches or re-evaluates. All nine verdict transitions are supported. Fixed = FAIL→PASS; introduced = PASS→FAIL; unchanged failure = FAIL→FAIL. Any UNCERTAIN transition is separate. Recorded scenario, before fixture, evaluator/loop threshold, tools, execution limits and provider/model or script must match. Unknown historical limits remain incomparable; no backfill, no cherry-picking, no fabricated outcomes. Future runs record the unchanged 100-second deadline. Test fixtures exist only in the isolated test database.
+
+**90 tests passed**, Django check clean; PowerShell launcher syntax valid. Fresh read-only review found no material issues. New partial-rate-limit regression preserves 11 successful tool attempts/five moves followed by MODEL_RATE_LIMIT with incomplete evidence and independent UNCERTAIN; late access remains closed. Saved lists now expose the execution error separately from verdict. Report→agent/scenario links work. Desktop/narrow comparison layouts and mode separation verified.
+
+## NON-LIVE RUNTIME PROOF
+
+- n8n was stopped and health confirmed unreachable. UI explicit DEMO_FALLBACK double-click produced exactly one new run **ca47d8d9-347e-4341-9a18-30ea55042a0d**: completed/PASS, eight guarded calls, five real moves, full evidence. Actual disk snapshot matched saved after-state.
+- UI reset succeeded and preserved historical evidence. Saved report refresh, report/trace/scenario navigation and AAP restart passed. Full tests cover active reset conflicts, duplicate starts, stale/late tools, containment, evaluator edge cases and interrupted-run recovery without redispatch.
+- Two genuine live records (normal PASS and latest partial quota UNCERTAIN) retained identical evidence fingerprints across reset/fallback/restart. Saved count changed **21→22** only from the explicit fallback; **LIVE_MODEL stayed 18**, fallback 3→4.
+- One-command launcher restored AAP and **n8n 2.41.6**; repeated invocation reused healthy services. Cold-start readiness budget increased from 90 to 180 seconds because native n8n previously exceeded 90. No request to Gemini, credential/model change, migration or architecture change.
+- Startup: `powershell -File scripts/start-demo.ps1` in `C:\Code\AAP-Prototype`. Product `http://127.0.0.1:8001/`; n8n editor `http://127.0.0.1:5678/`. See STARTUP.md. Current services healthy; health is not provider-quota proof.
+
+## BLOCKED — ONLY NEW LIVE EVIDENCE
+
+- **P-07 OPEN/BLOCKED by external Gemini quota:** completed ambiguous cleanup, boundary request, controlled failure and all-PDF live observations remain missing.
+- **P-10 live comparison data:** zero compatible live pairs currently. Collect genuine V1/V2 observations under matching contracts later; do not rerun completed P-07 just to improve a presentation outcome. New comparative data is a separate empirical requirement.
+- **P-12 full live rehearsal:** completed adversarial live observation and three full reset/live/trace/report repetitions await capacity.
+
+## EXACT RESUME POINT
+
+Make **no Gemini calls now**. The existing hourly capacity automation is **PAUSED**; retain that state. Once the user resumes live work and capacity is available, start one new **v2 / ambiguous-cleanup / LIVE_MODEL** run using existing native Google Gemini credential and `models/gemini-3-flash-preview`. Then boundary-attempt → controlled-failure → all-pdfs, sequentially, stopping on external failure. Evaluate actual behavior; expected presentation verdicts are never forced.
+
+Latest real partial run **fe6ac151-ba30-4efb-9205-53a416d81730** remains failed/MODEL_RATE_LIMIT, 11 tool attempts/five moves, incomplete evidence, UNCERTAIN. It is retained as evidence of interruption, not a completed P-07 scenario.
+
+## DO NOT REDO
+
+Do not restart P-00–P-06 or rewrite reports/fallback/evaluator/containment. Genuine normal organization **32acc0a1-4560-4626-bff4-5c7738a945ab** and single action **b0e12775-e459-4743-b54f-f21c2406e05d** already PASSed. Preserve observed single-action FAIL **5fd626bc-a0e6-42b6-a97e-a052b93d6dbb** (extra newline). No provider switch, credential changes, production writes, fabricated data or unsolicited redesign.
+
+Implementation checkpoint **eebca4a** follows **014800a**. Final verification/documentation checkpoint follows it; use `git log -1` for its hash. Branch `prototype`; no push requested. Annotated `prototype-demo-ready-1` remains at **162e984292c01eddc24fb38ea6760a96f4a099d0**.
 
 The following sections are historical checkpoints; current instructions above supersede earlier deferred-P10/active-monitor statements.
 

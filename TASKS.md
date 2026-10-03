@@ -2,7 +2,7 @@
 
 Plan: `docs/PROTOTYPE_PLAN.md`. Approved and frozen with four user amendments on 3 October 2026.
 
-Execution order: P-00 → P-01 → P-02 → P-03 → P-04 → P-05 → P-06 → P-09 minimal fallback → P-07 → P-08 → P-10 (P1) → P-11 → P-12.
+Original execution order (later explicit user exception permits non-live P-10 during P-07 hold): P-00 → P-01 → P-02 → P-03 → P-04 → P-05 → P-06 → P-09 minimal fallback → P-07 → P-08 → P-10 (P1) → P-11 → P-12.
 
 | Task | State | Evidence / next action |
 |---|---|---|
@@ -18,9 +18,12 @@ Execution order: P-00 → P-01 → P-02 → P-03 → P-04 → P-05 → P-06 → 
 | P-08 Report | COMPLETE — user-authorized quota exception | Saved evidence report, explicit modes, separate execution/verdict, linked assertions/trace/state, actual counts/timing/failure categories. 64 tests pass; genuine live/failure/fallback reports and desktop/mobile verified. |
 | P-10 Comparison (P1) | IMPLEMENTED — LIVE VERIFICATION/DATA PENDING | User explicitly allowed non-live implementation during P-07 hold. Read-only `/compare`, newest V1/V2 by scenario/mode, strict saved contract checks and all nine verdict transitions; no synthetic live records or model calls. |
 | P-11 Polish/setup | COMPLETE | Locked presentation flow, accessible states and one-command launcher verified; 66 tests pass. No Gemini calls. |
-| P-12 Rehearsal | PREPARATION VERIFIED — full live rehearsal OPEN | Runbook and non-Gemini refresh/restart/outage/conflict/navigation checks complete; remaining live cases and three repetitions await quota. |
+| P-12 Rehearsal | PREPARATION VERIFIED — full live rehearsal OPEN | Runbook and non-Gemini refresh/restart/outage/conflict/navigation checks reverified with 90 tests and new explicit offline fallback; remaining live cases and three repetitions await quota. |
 
 ## Checkpoint log
+
+- Final non-live completion: 90 tests passed; P-10 IMPLEMENTED — LIVE VERIFICATION/DATA PENDING, all other non-live scope complete. Genuine latest-pair UI inspected with zero comparable legacy pairs. Explicit n8n-offline fallback `ca47d8d9-347e-4341-9a18-30ea55042a0d` completed eight tools/five moves/PASS; UI double-click created one identity. Reset/refresh/restart preserved saved evidence fingerprints; LIVE_MODEL count unchanged at 18 (total 21→22). Both services restored; n8n 2.41.6. Launcher cold-start readiness now up to 180 seconds; warm reuse passed. Fresh read-only review: no material findings. P-07 stays OPEN/BLOCKED; monitor PAUSED; no Gemini calls. Remaining work: four live P-07 observations, genuine comparison coverage, full live rehearsal, and future separately supplied visual design. Earlier deferred-P10 log entries are historical.
+
 
 - Non-live functionality checkpoint: 90 tests passed (2.50s), Django check clean. Saved comparison route and links verified against real history; currently zero compatible live pairs because historical execution limits were not recorded. Future runs record unchanged 100-second limit; no legacy backfill. Added partial-rate-limit regression with 11 guarded calls/five moves, independent UNCERTAIN, closed late tools and no retry; execution error now visible separately in overview/saved list. P-07 remains OPEN/BLOCKED. Capacity automation inspected: PAUSED; no Gemini calls. Offline/startup/restart verification follows.
 
