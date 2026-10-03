@@ -29,7 +29,9 @@ def scenarios(request):
 
 
 def new_run(request):
-    return render(request, "new_run.html", {"versions": AgentVersion.objects.order_by("version"), "scenarios": Scenario.objects.all()})
+    scenarios = list(Scenario.objects.all())
+    return render(request, "new_run.html", {"versions": AgentVersion.objects.order_by("version"), "scenarios": scenarios,
+        "selected_scenario": request.GET.get("scenario"), "scenario_catalog": {item.id: item.instruction for item in scenarios}})
 
 
 def run_detail(request, run_id):
@@ -52,3 +54,14 @@ def report(request, run_id):
     from .reporting import project
     run = get_object_or_404(EvaluationRun.objects.select_related('agent_version__agent'), pk=run_id)
     return render(request, 'report.html', project(run))
+
+
+def saved_runs(request):
+    records = EvaluationRun.objects.select_related('agent_version').prefetch_related('results__scenario').order_by('-created_at')[:50]
+    rows = []
+    for run in records:
+        result = next(iter(run.results.all()), None)
+        rows.append({'run': run, 'scenario': result.scenario.name if result else None,
+            'version': run.input_snapshot.get('agent_version', run.agent_version.version),
+            'verdict': result.verdict if result else None})
+    return render(request, 'saved_runs.html', {'rows': rows})

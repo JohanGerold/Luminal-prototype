@@ -1,16 +1,6 @@
-{% extends 'base.html' %}{% block content %}
-<h1>Run evaluation</h1>
-<p>Starting a run resets the owned synthetic files in <code>C:\AAP-Demo-Workspace</code>. Google Gemini selects real filesystem tools through n8n.</p>
-<form id="start">{% csrf_token %}
-<p><label>Agent version <select name="agent_version">{% for version in versions %}<option value="{{version.version}}">{{version.version}}</option>{% endfor %}</select></label></p>
-<p><label>Scenario <select name="scenario_id">{% for scenario in scenarios %}<option value="{{scenario.id}}">{{scenario.name}}</option>{% endfor %}</select></label></p>
-<p><label>Execution mode <select name="execution_mode"><option value="LIVE_MODEL">LIVE_MODEL — real Google Gemini</option><option value="DEMO_FALLBACK">DEMO_FALLBACK — emergency script, no model</option></select></label></p>
-<p>Fallback is an explicitly selected fresh run. It performs scripted real file actions and does not measure model behavior.</p>
-<button type="submit">Run evaluation</button> <button type="button" id="reset">Reset demo workspace</button>
-</form><p id="message" role="status"></p>
-<script>
-const form=document.querySelector('#start'), message=document.querySelector('#message');
-async function post(url,body){const response=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json','X-CSRFToken':form.elements.csrfmiddlewaretoken.value},body:JSON.stringify(body)});const data=await response.json();if(!response.ok)throw new Error(data.error);return data;}
-form.addEventListener('submit',async event=>{event.preventDefault();form.querySelector('button').disabled=true;message.textContent='Starting LIVE_MODEL…';try{const data=await post('/api/runs',Object.fromEntries(['agent_version','scenario_id','execution_mode'].map(key=>[key,form.elements[key].value])));location.href=data.url;}catch(error){message.textContent=error.message;form.querySelector('button').disabled=false;}});
-document.querySelector('#reset').addEventListener('click',async()=>{try{await post('/api/reset',{});message.textContent='Synthetic workspace reset.';}catch(error){message.textContent=error.message;}});
-</script>{% endblock %}
+{% extends 'base.html' %}{% block head %}<script defer src="/design-assets/start.js"></script>{% endblock %}{% block content %}
+<div class="page-heading"><div><h1>Run evaluation</h1><p>One scenario. A fresh fixture. Observable evidence.</p></div><a class="button secondary" href="/runs">Saved runs</a></div>
+<form id="start" class="panel selection-panel">{% csrf_token %}<div class="selection-fields"><label>Agent version<select name="agent_version">{% for version in versions %}<option value="{{version.version}}">{{version.version}}</option>{% endfor %}</select></label><label>Scenario<select name="scenario_id">{% for scenario in scenarios %}<option value="{{scenario.id}}" {% if scenario.id == selected_scenario %}selected{% endif %}>{{scenario.name}}</option>{% endfor %}</select></label><label>Execution mode<select name="execution_mode"><option value="LIVE_MODEL">LIVE_MODEL — real Google Gemini</option><option value="DEMO_FALLBACK">DEMO_FALLBACK — emergency script</option></select></label></div>
+<p id="scenario-instruction" class="report-message"></p><p><span id="mode-badge" class="mode-badge mode-live">LIVE_MODEL</span> <span id="mode-explanation">Real Google Gemini chooses the tools. Availability depends on provider quota.</span></p>
+<p>Starting a run resets the owned synthetic fixture in <code>C:\AAP-Demo-Workspace</code>. Only one evaluation can run at a time.</p><div class="action-row"><button class="button primary" type="submit">Run evaluation</button><button class="button secondary" type="button" id="reset">Reset demo workspace</button><a class="text-button" href="/agents/file-organization">Inspect agent</a></div><p id="message" role="status" aria-live="polite"></p></form>{{scenario_catalog|json_script:'scenario-catalog'}}
+{% endblock %}

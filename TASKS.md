@@ -17,7 +17,7 @@ Execution order: P-00 → P-01 → P-02 → P-03 → P-04 → P-05 → P-06 → 
 | P-07 Remaining scenarios | OPEN / BLOCKED — external Gemini quota | All six seeded/oracles proven. Fresh current-credential single-action and normal organization PASS; next ambiguous cleanup independently MODEL_RATE_LIMIT/UNCERTAIN. No retries. Keep exact model; await quota capacity to finish remaining live checks. |
 | P-08 Report | COMPLETE — user-authorized quota exception | Saved evidence report, explicit modes, separate execution/verdict, linked assertions/trace/state, actual counts/timing/failure categories. 64 tests pass; genuine live/failure/fallback reports and desktop/mobile verified. |
 | P-10 Comparison (P1) | NOT STARTED | |
-| P-11 Polish/setup | NOT STARTED | |
+| P-11 Polish/setup | IN PROGRESS — startup verification next | Locked shell/control reuse, mode badges, selection, activity and saved navigation verified; launcher remains. |
 | P-12 Rehearsal | NOT STARTED | |
 
 ## Checkpoint log
@@ -64,3 +64,5 @@ Resume checkpoint verification: full suite 59 passed (2.81s); documentation diff
 - P-08 COMPLETE under latest explicit quota exception: read-only saved-data report at `/runs/<id>/report`, linked from execution. Initial four behavior tests failed before implementation, then passed. Fresh review found missing snapshots displayed as removal; regression test failed then fixed to show snapshot unavailable/change not established. Full suite 64 passed (2.65s), Django check clean, browser genuine PASS/quota UNCERTAIN/DEMO_FALLBACK and trace anchor verified; 1440px/390px layout inspected with no phone overflow. Frozen components/tokens reused; no execution/provider/fallback rewrite. P-07 remains incomplete; P-10 not started.
 
 - P-09 reverified without rewriting: 22 focused fallback/report/scenario tests passed (1.13s); saved genuine n8n-offline run 3f8169b0-e20d-4a47-b223-02cb76cbfa34 remains explicit DEMO_FALLBACK/completed/PASS, eight guarded calls and complete evidence. Separate-run and no-live-relabel behavior proven. User authorizes P-11/startup/P-12 preparation while P-07 stays OPEN/BLOCKED on external quota; no manual Gemini calls and P-10 deferred.
+
+- P-11 presentation checkpoint: 66 tests pass (2.79s), JavaScript syntax clean; fresh source review found no Important/Critical issues. Reused locked shell/font/tokens; explicit contrasting mode badges, scenario instruction selection, busy/reset locks, recorded progress/tool links, snapshots, read-only status retry and latest saved-run navigation. Browser checked 1440px/390px layout (no phone overflow), refresh, report/trace/saved links. n8n offline UI double-click created exactly one fresh run 98783107-b533-486e-a875-f04622a6976c (count 15→16), DEMO_FALLBACK/completed/PASS, eight calls, real moves and complete evidence. No Gemini call. P-11 launcher stop condition still pending. Scheduled heartbeat updated to notify capacity return without automatically dispatching remaining scenarios.

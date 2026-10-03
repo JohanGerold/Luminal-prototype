@@ -16,6 +16,7 @@ urlpatterns = [
     path("api/runs/<uuid:run_id>", run_api.status),
     path("api/reset", run_api.reset),
     path("runs/new", views.new_run),
+    path("runs", views.saved_runs),
     path("runs/<uuid:run_id>", views.run_detail),
     path("runs/<uuid:run_id>/trace", views.trace),
     path("runs/<uuid:run_id>/report", views.report),
