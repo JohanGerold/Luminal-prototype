@@ -3,7 +3,7 @@
 <body><a class="skip-link" href="#main">Skip to report</a>
 <div class="preview-notice"><span class="preview-dot"></span><strong class="mode-badge {% if run.execution_mode == 'DEMO_FALLBACK' %}mode-fallback{% else %}mode-live{% endif %}">{{run.execution_mode}}</strong><span class="notice-divider"></span><span>Recorded execution · Synthetic workspace</span></div>
 <div class="app-shell"><header class="app-header">
-<a class="brand" href="/design-preview" aria-label="AAP overview"><svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 2c0 9-5 14-14 14 9 0 14 5 14 14 0-9 5-14 14-14C21 16 16 11 16 2Z" fill="currentColor"/></svg><span>aap<span class="brand-period">.</span></span></a>
+<a class="brand" href="/" aria-label="AAP home"><svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 2c0 9-5 14-14 14 9 0 14 5 14 14 0-9 5-14 14-14C21 16 16 11 16 2Z" fill="currentColor"/></svg><span>aap<span class="brand-period">.</span></span></a>
 <nav class="main-nav" aria-label="Main navigation"><a href="/agents/file-organization">Agent</a><a href="/scenarios">Scenarios</a><a href="/runs">Saved runs</a><a href="/runs/{{run.id}}">Execution</a><a class="active" href="/runs/{{run.id}}/report" aria-current="page">Report</a></nav></header>
 <main id="main"><section class="page-heading"><div><h1>Evaluation report</h1><p>{{scenario.name|default:'Scenario not recorded'}} · {{run.agent_version.agent.name}} · {{version}}</p></div><a class="button primary" href="/runs/new">New evaluation</a></section>
 <section class="panel report-summary" aria-labelledby="outcome"><div class="section-title"><div><h2 id="outcome">What the evidence supports.</h2><p>Run {{run.id}}</p></div><strong class="execution-state">{{run.execution_mode}}</strong></div>

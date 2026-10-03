@@ -43,3 +43,5 @@ powershell -File scripts/start-demo.ps1
 ```
 
 One command starts/reuses AAP and native n8n, checks readiness and opens the configured agent. It does not call Gemini. See [startup, URLs and recovery](docs/STARTUP.md). Use `-AppOnly` for intentional n8n outage and explicitly select DEMO_FALLBACK in the UI. Saved reports are available from **Saved runs**; they survive refresh/reset/restart. P-07 remains open and blocked by external model quota; P-10 comparison is deferred.
+
+Presentation materials: [ten-minute runbook](docs/DEMO_RUNBOOK.md), [verified evidence and remaining gates](docs/VERIFICATION.md). Full live rehearsal remains open until Gemini quota permits the remaining P-07 scenarios.
