@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#fafafa"><title>Luminal — Dashboard design preview</title>
+  <link rel="stylesheet" href="monochrome.css"><script defer src="monochrome.js"></script>
+</head>
+<body>
+<svg class="symbols" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
+<symbol id="home" viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10H3zM9 20v-7h6v7"/></symbol>
+<symbol id="agent" viewBox="0 0 24 24"><rect x="4" y="6" width="16" height="14" rx="3"/><path d="M12 2v4M8 12h.01M16 12h.01M8 16h8M1 11v5m22-5v5"/></symbol>
+<symbol id="scenarios" viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V2h6v2M9 10h6M9 14h6M9 18h3"/></symbol>
+<symbol id="chart" viewBox="0 0 24 24"><path d="M4 3v17h17M8 15v-4m5 4V7m5 8v-5"/></symbol>
+<symbol id="file" viewBox="0 0 24 24"><path d="M14 3H5v18h14V8zm0 0v5h5M9 12h6m-6 4h6"/></symbol>
+<symbol id="clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+<symbol id="shield" viewBox="0 0 24 24"><path d="m12 3 8 3v6c0 5-8 9-8 9s-8-4-8-9V6zM8 12l3 3 5-6"/></symbol>
+<symbol id="search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></symbol>
+<symbol id="arrow" viewBox="0 0 24 24"><path d="M5 12h14m-5-5 5 5-5 5"/></symbol>
+<symbol id="chevron" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></symbol>
+<symbol id="plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+<symbol id="close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
+<symbol id="filter" viewBox="0 0 24 24"><path d="M3 5h18l-7 8v6l-4 2v-8z"/></symbol>
+<symbol id="download" viewBox="0 0 24 24"><path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5"/></symbol>
+<symbol id="check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+<symbol id="folder" viewBox="0 0 24 24"><path d="M3 6h7l2 3h9v11H3zM3 6V4h7l2 2"/></symbol>
+<symbol id="menu" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
+</defs></svg>
+<a class="skip" href="#main">Skip to dashboard</a>
+<aside class="sidebar" id="sidebar">
+  <a class="brand" href="#overview" aria-label="Luminal dashboard"><svg viewBox="0 0 28 28" aria-hidden="true"><path d="M5 5h6v12h12v6H5z" fill="currentColor"/><path d="M16 5h7v7h-7z" fill="currentColor"/></svg>Luminal<span class="brand-dot">®</span></a>
+  <div class="workspace-label">AAP WORKSPACE</div>
+  <nav aria-label="Main navigation">
+    <a class="nav-link active" href="#overview" data-view="overview" aria-current="page"><svg><use href="#home"/></svg>Overview</a>
+    <button class="nav-link" id="agent-nav"><svg><use href="#agent"/></svg>Agents<span class="nav-count">1</span></button>
+    <a class="nav-link" href="#results" data-view="scenarios"><svg><use href="#scenarios"/></svg>Scenarios<span class="nav-count">6</span></a>
+    <a class="nav-link" href="#results" data-view="runs"><svg><use href="#clock"/></svg>Evaluation runs</a>
+    <a class="nav-link" href="#results" data-view="reports"><svg><use href="#file"/></svg>Reports</a>
+  </nav>
+  <div class="sidebar-bottom"><div class="preview-card"><span class="mini-mark"><svg><use href="#shield"/></svg></span><strong>A clearer view of your agents.</strong><p>Actions, evidence, and outcomes.<br>All in one workspace.</p><button class="button full" id="about-button">About this preview<svg><use href="#arrow"/></svg></button></div><div class="workspace-footer"><span class="workspace-icon">L</span><div><strong>Demo workspace</strong><span>Local prototype</span></div><span class="connection-dot" title="Frontend preview"></span></div></div>
+</aside>
+<div class="page-shell">
+  <header class="topbar"><div class="topbar-start"><button class="icon-button mobile-menu" aria-label="Toggle navigation" aria-expanded="false" aria-controls="sidebar"><svg><use href="#menu"/></svg></button><span>Workspace</span><span class="slash">/</span><strong id="breadcrumb">Overview</strong></div><div class="topbar-end"><span class="preview-label"><span></span>Design preview</span><span class="header-divider"></span><span class="avatar">JG</span><div class="profile"><strong>Johan Gerold</strong><span>Workspace owner</span></div></div></header>
+  <main id="main">
+    <div class="heading" id="overview"><div><h1>Your agents, in focus.</h1><p>Understand what happened. Know what to improve.</p></div><div class="heading-actions"><button class="button" id="export-button"><svg><use href="#download"/></svg>Export samples</button><button class="button primary" id="new-button"><svg><use href="#plus"/></svg>New evaluation</button></div></div>
+    <div class="sample-notice"><span>Illustrative data</span> You’re exploring a frontend concept. These are sample results, not live evaluations.</div>
+    <section class="metrics" aria-label="Sample evaluation summary">
+      <article class="metric"><div class="metric-label">Total evaluations<span class="metric-icon"><svg><use href="#scenarios"/></svg></span></div><strong>24</strong><p>Across 6 testing scenarios</p></article>
+      <article class="metric"><div class="metric-label">Pass rate<span class="metric-icon"><svg><use href="#shield"/></svg></span></div><strong>75<span>%</span></strong><p>18 of 24 evaluations passed</p></article>
+      <article class="metric"><div class="metric-label">Needs attention<span class="metric-icon"><svg><use href="#chart"/></svg></span></div><strong>6</strong><p>4 failed · 2 uncertain</p></article>
+      <article class="metric"><div class="metric-label">Average duration<span class="metric-icon"><svg><use href="#clock"/></svg></span></div><strong>18.4<span>s</span></strong><p>Per evaluation in this sample</p></article>
+    </section>
+    <div class="insights">
+      <section class="panel trend-panel" aria-labelledby="trend-title"><div class="panel-heading"><div><h2 id="trend-title">Evaluation activity</h2><p>How your sample evaluations performed over time.</p></div><select id="period" aria-label="Chart period"><option value="week">Last 7 days</option><option value="month">Last 4 weeks</option></select></div><div class="chart-legend"><span><i class="legend-dot"></i>All evaluations</span><span><i class="legend-line"></i>Passed</span></div><div class="chart" id="activity-chart"></div><div class="chart-foot"><span><svg><use href="#chart"/></svg>24 evaluations in this sample</span><span>18 passed <span class="muted">/ 6 need attention</span></span></div></section>
+      <section class="panel activity-panel" aria-labelledby="activity-title"><div class="panel-heading"><h2 id="activity-title">Recent activity</h2><span class="small-text">Sample timeline</span></div><div class="activity-list">
+        <button class="activity-item" data-detail="organization"><span class="event-icon"><svg><use href="#check"/></svg></span><span><strong>Organization completed</strong><span>5 files moved to their destinations</span><small>Today, 10:42 AM</small></span><svg class="activity-arrow"><use href="#chevron"/></svg></button>
+        <button class="activity-item" data-detail="boundary"><span class="event-icon"><svg><use href="#shield"/></svg></span><span><strong>Boundary attempt blocked</strong><span>Restricted path access recorded</span><small>Today, 10:38 AM</small></span><svg class="activity-arrow"><use href="#chevron"/></svg></button>
+        <button class="activity-item" data-detail="incomplete"><span class="event-icon"><svg><use href="#clock"/></svg></span><span><strong>Evaluation interrupted</strong><span>Insufficient evidence for a verdict</span><small>Today, 10:31 AM</small></span><svg class="activity-arrow"><use href="#chevron"/></svg></button>
+      </div><button class="text-button activity-footer" id="all-activity">View all sample runs<svg><use href="#arrow"/></svg></button></section>
+    </div>
+    <section class="panel results-panel" id="results" aria-labelledby="results-title">
+      <div class="results-heading"><div><h2 id="results-title">Scenario results <span class="number-tag">6</span></h2><p id="results-subtitle">The latest sample result for each scenario.</p></div><div class="table-tools"><label class="search-box"><svg><use href="#search"/></svg><input id="scenario-search" type="search" placeholder="Search scenarios…" aria-label="Search scenarios"><kbd>/</kbd></label><label class="filter-box"><svg><use href="#filter"/></svg><select id="verdict-filter" aria-label="Filter by verdict"><option value="all">All verdicts</option><option>PASS</option><option>FAIL</option><option>UNCERTAIN</option></select></label></div></div>
+      <div class="table-scroll"><table><thead><tr><th scope="col">Scenario</th><th scope="col">Execution mode</th><th scope="col">Execution</th><th scope="col">Verdict</th><th scope="col" class="numeric">Tool calls</th><th scope="col" class="numeric">Duration</th><th scope="col"><span class="sr-only">Details</span></th></tr></thead><tbody id="scenario-rows"></tbody></table></div>
+      <div id="empty-state" hidden><svg><use href="#search"/></svg><h3>No matching scenarios</h3><p>Try another name or clear your verdict filter.</p><button class="button" id="clear-filters">Clear filters</button></div>
+      <div class="table-footer"><span id="result-count" aria-live="polite">Showing 6 of 6 scenarios</span><span>File Organization Agent <span class="version">V2</span></span></div>
+    </section>
+    <footer class="page-footer"><span>Luminal · Agent evaluation & reliability</span><span>Design exploration / 02 <span class="footer-divider">·</span> All values are illustrative</span></footer>
+  </main>
+</div>
+<dialog id="drawer" class="drawer" aria-labelledby="drawer-title"><div class="drawer-top"><span>Illustrative sample</span><button class="icon-button close-dialog" aria-label="Close details"><svg><use href="#close"/></svg></button></div><div id="drawer-content"></div></dialog>
+<dialog id="evaluation-dialog" class="evaluation-dialog" aria-labelledby="evaluation-title"><div class="dialog-heading"><h2 id="evaluation-title">Preview an evaluation</h2><button class="icon-button close-dialog" aria-label="Close evaluation preview"><svg><use href="#close"/></svg></button></div><p>This simulates the interface only. No model is called and no files are changed.</p><form id="preview-form"><label>Agent<select disabled><option>File Organization Agent · V2</option></select></label><label>Scenario<select id="simulation-scenario"><option value="organization">Normal file organization</option><option value="boundary">Filesystem boundary violation</option><option value="incomplete">Incomplete task</option></select></label><div class="simulation-note"><svg><use href="#shield"/></svg>Frontend simulation · not LIVE_MODEL or DEMO_FALLBACK</div><button class="button primary full" id="simulate-button" type="submit"><svg><use href="#plus"/></svg>Play sample execution</button></form><div id="simulation-progress" hidden aria-live="polite"></div></dialog>
+<div class="toast" id="toast" role="status" hidden></div>
+</body>
+</html>

@@ -1,5 +1,11 @@
 # Implementation handoff and risks
 
+## Latest frontend exploration — awaiting approval
+
+On 3 October 2026 the user requested a fresh frontend-only demo based on a new monochrome sidebar-dashboard screenshot, explicitly superseding previous design documents for this exploration. Open **http://127.0.0.1:8001/design-assets/monochrome.html** with the existing AAP service running. The three `design-preview/assets/monochrome.*` files are standalone and also use the existing local Manrope font. The working product, earlier preview, shared styles, architecture and runtime contracts are untouched. No new design has been locked; wait for visual feedback before integrating it.
+
+All data and execution previews are illustrative, including LIVE_MODEL / DEMO_FALLBACK example badges. The frontend makes no API/model calls or filesystem changes. Search, verdict filtering, chart-period selection, scenario evidence/trace drawers, sample CSV export and local simulated progress are implemented. Browser verified filtering/empty state, chart totals, trace tabs, simulation, desktop/mobile layout, mobile menu visibility and restored keyboard focus. Missing evidence uses neutral clock icons. Desktop/mobile captures are in ignored `.artifacts/monochrome-preview/`; focused existing preview/presentation suite **3 passed** (0.21s), JS syntax and whitespace checks passed; review scored both findings resolved. No full-suite rerun was needed for these isolated static assets. P-07 remains OPEN/BLOCKED on quota, P-10 deferred; no Gemini dispatch was made in this work.
+
 ## Current state
 
 **P-00 COMPLETE** on 3 October 2026. Native n8n 2.41.6 is healthy; the operator's native Google Gemini Chat Model credential works. Exact selected model `models/gemini-3-flash-preview`. Real webhook execution **1** returned `AAP_PREFLIGHT_OK 4`; the HTTP probe and Calculator completed successfully. See [CONNECTIVITY_PREFLIGHT.md](CONNECTIVITY_PREFLIGHT.md) and [TASKS.md](../TASKS.md).
