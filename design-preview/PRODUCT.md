@@ -27,7 +27,7 @@ The working app is Django with SQLite and a native n8n Google Gemini agent. Six 
 
 ## Brand Commitments
 
-User supplied a spacious lavender, warm-white and dark-plum web reference. They explicitly selected an evaluation dashboard with charts and scenario results as the preview's focus. The design remains provisional until they approve its appearance.
+User supplied a spacious lavender, warm-white and dark-plum web reference. They explicitly selected an evaluation dashboard with charts and scenario results as the preview's focus. The user approved and froze the implemented visual direction on 3 October 2026; preserve it for subsequent prototype screens.
 
 ## Evidence on Hand
 

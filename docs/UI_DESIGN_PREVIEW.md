@@ -1,6 +1,6 @@
 # Dashboard design review — 3 October 2026
 
-Status: working frontend preview, **awaiting user visual approval**. Open `http://127.0.0.1:8001/design-preview` with AAP running via `manage.py serve_demo`.
+Status: working frontend preview, **approved and locked by the user on 3 October 2026**. Open `http://127.0.0.1:8001/design-preview` with AAP running via `manage.py serve_demo`.
 
 The user explicitly authorized this interim design work while Gemini quota resets and confirmed the focus is an evaluation dashboard with charts and scenario results. This is a separate preview checkpoint; it does not complete P-08/P-10/P-11 or change the frozen implementation sequence.
 
@@ -26,4 +26,4 @@ All values and traces are explicitly illustrative. The preview never invokes a m
 
 59 Python tests pass, including a preview isolation/label check. JavaScript syntax and Django system checks pass. Browser checks cover search/filter/clear, V1 counts, scenario evidence, sample setup flow and mode selection. Desktop 1440px and phone 390px screenshots are captured under ignored `.artifacts/design-preview/`; phone has no horizontal overflow. Accessibility fixes expose comparison/coverage controls as labelled groups and increase/darken small text. Fresh UI review identified those fixes; its follow-up scores their resolution.
 
-Impeccable's context/detector engine was unavailable because its local cache could not be created. Existing product context and the skill's references were read directly; no detector result is claimed. The supplied reference pinned this direction, and user approval of the visual result is the final design-lock step.
+Impeccable's context/detector engine was unavailable because its local cache could not be created. Existing product context and the skill's references were read directly; no detector result is claimed. The supplied reference pinned this direction, and the user has now approved the visual result; docs/DESIGN_LOCK.md records the frozen baseline.

@@ -3,8 +3,8 @@
   "generatedAt": "2026-10-03T02:19:31.0955853+05:30",
   "title": "Design System: AAP isolated design preview",
   "extensions": {
-    "status": "PROVISIONAL; awaiting user visual approval",
-    "scope": "Isolated illustrative dashboard preview only",
+    "status": "APPROVED AND LOCKED by user on 2026-10-03",
+    "scope": "Approved prototype visual baseline; current dashboard data remains illustrative",
     "validation": "Extracted from implemented CSS and HTML. Detector engine unavailable; no detector validation claimed.",
     "shadows": [
       {

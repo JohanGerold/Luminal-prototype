@@ -1,6 +1,6 @@
 ---
 name: AAP isolated design preview
-description: Provisional lavender and plum evaluation dashboard; illustrative data only.
+description: Approved lavender and plum evaluation dashboard baseline; preview data remains illustrative.
 colors:
   paper: "#fcfcfa"
   white: "#fff"
@@ -89,7 +89,7 @@ components:
 
 ## Overview
 
-**Status: PROVISIONAL — awaiting user visual approval. Applies only to this isolated preview, not the working application or a global AAP design canon.**
+**Status: APPROVED AND LOCKED by the user on 3 October 2026. This implemented preview supplies the visual baseline for subsequent prototype screens; data remains illustrative. See ../docs/DESIGN_LOCK.md.**
 
 The implemented direction translates the user's single BloomFi screenshot reference into lavender surfaces, warm white space and dark plum emphasis. Manrope, generous spacing and soft corners give the evaluation dashboard a calm, approachable character. This records the build, without assigning an unapproved creative North Star.
 
@@ -147,5 +147,5 @@ Broad panels and dialogs share the panel radius. Fields use the smaller field ra
 - **Do** retain visible sample labels on preview results and comparisons.
 - **Do** pair verdict colors with text and keep execution status distinct from verdict.
 - **Do** preserve keyboard focus and reduced-motion behavior when reusing preview components.
-- **Don't** treat this provisional preview as approved application branding.
+- **Don't** redesign the approved prototype visual baseline.
 - **Don't** infer real reliability gains from the illustrative version comparison.
