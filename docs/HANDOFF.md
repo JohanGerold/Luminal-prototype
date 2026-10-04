@@ -1,3 +1,19 @@
+# Current handoff — live quota stop, 4 October 2026
+
+## Latest live checkpoint — 4 October 2026
+
+From verified checkpoint `24d4ee1`, the user authorized sequential live verification. Exactly one **V2 / ambiguous-cleanup / LIVE_MODEL** run was dispatched: **8aea94a3-32fd-414e-bf3b-f707e5a46d52**, **00:22:24.888–00:22:57.913 IST on 4 October 2026**. Existing native Google Gemini credential and `models/gemini-3-flash-preview` unchanged.
+
+Execution **failed / MODEL_RATE_LIMIT** after **nine successful tool attempts**: two lists, two directory creates and five moves. All original file contents were preserved. Actual guarded filesystem matched the saved after-state immediately after execution. Evidence remains incomplete; completion assertion unknown; independent saved-evidence evaluation confirms **UNCERTAIN**, no proven behavioral failure. On resume, saved report and trace rendered successfully with correct mode/error/verdict. LIVE_MODEL count is 19, with zero active runs. No subsequent dispatch or retry.
+
+**P-07 remains OPEN/BLOCKED; no newly completed live scenario.** Next live action remains **V2 → Ambiguous Cleanup → LIVE_MODEL**, once quota permits and live resumption is authorized; then boundary-attempt → controlled-failure → all-pdfs. Genuine comparison data and full live rehearsal remain pending. Full rehearsal was **not attempted**. Latest user instruction requires **one** full presentation rehearsal after remaining verification, superseding the earlier three-repetition gate. Frontend and implementation unchanged; automation stays paused.
+
+Verification before this run: both local services healthy, **90 tests passed (3.63s)**. The first checkpoint attempt was not executed because automatic approval review hit its usage limit. This resumed checkpoint records the existing result; it does not represent another capacity check. Final regression suite on resume: **90 passed (3.13s)**.
+
+## Prior verified state
+
+The latest checkpoint above supersedes older run counts, stop identities and rehearsal requirements below.
+
 # Current handoff — non-live completion, 3 October 2026
 
 ## COMPLETE

@@ -14,13 +14,25 @@ Original execution order (later explicit user exception permits non-live P-10 du
 | P-05 Trace | COMPLETE | 29 tests pass; ordered lifecycle/instruction/tool/final events, persisted request correlation, escaped inspectable trace. |
 | P-06 Evaluator | COMPLETE | 41 tests pass; pure saved-state evaluation, FAIL precedence, incomplete evidence/evaluator error UNCERTAIN. Genuine UI run independently PASS; failed smoke UNCERTAIN. |
 | P-09 Fallback | COMPLETE | 42 tests pass. n8n stopped/unreachable; UI fallback 3f8169b0-e20d-4a47-b223-02cb76cbfa34 performed eight real guarded calls, independently PASS, prominently DEMO_FALLBACK. |
-| P-07 Remaining scenarios | OPEN / BLOCKED — external Gemini quota | User-resumed ambiguous cleanup fe6ac151-ba30-4efb-9205-53a416d81730 failed MODEL_RATE_LIMIT after 11 attempts/five moves; incomplete evidence, actual UNCERTAIN. No subsequent dispatches. Resume ambiguous cleanup when quota permits, then boundary/recovery/all-PDF. |
+| P-07 Remaining scenarios | OPEN / BLOCKED — external Gemini quota | Latest V2 ambiguous cleanup 8aea94a3-32fd-414e-bf3b-f707e5a46d52 on 4 October failed MODEL_RATE_LIMIT after nine successful attempts/five moves; incomplete evidence, actual UNCERTAIN. Saved trace/report and filesystem effects verified; no subsequent dispatches. Resume ambiguous cleanup when quota permits, then boundary/recovery/all-PDF. |
 | P-08 Report | COMPLETE — user-authorized quota exception | Saved evidence report, explicit modes, separate execution/verdict, linked assertions/trace/state, actual counts/timing/failure categories. 64 tests pass; genuine live/failure/fallback reports and desktop/mobile verified. |
 | P-10 Comparison (P1) | IMPLEMENTED — LIVE VERIFICATION/DATA PENDING | User explicitly allowed non-live implementation during P-07 hold. Read-only `/compare`, newest V1/V2 by scenario/mode, strict saved contract checks and all nine verdict transitions; no synthetic live records or model calls. |
 | P-11 Polish/setup | COMPLETE | Locked presentation flow, accessible states and one-command launcher verified; 66 tests pass. No Gemini calls. |
-| P-12 Rehearsal | PREPARATION VERIFIED — full live rehearsal OPEN | Runbook and non-Gemini refresh/restart/outage/conflict/navigation checks reverified with 90 tests and new explicit offline fallback; remaining live cases and three repetitions await quota. |
+| P-12 Rehearsal | PREPARATION VERIFIED — full live rehearsal OPEN | Runbook and non-Gemini refresh/restart/outage/conflict/navigation checks reverified with 90 tests and new explicit offline fallback; remaining live cases and one full rehearsal (latest user instruction) await quota. |
 
 ## Checkpoint log
+
+## Latest live checkpoint — 4 October 2026
+
+From verified checkpoint `24d4ee1`, the user authorized sequential live verification. Exactly one **V2 / ambiguous-cleanup / LIVE_MODEL** run was dispatched: **8aea94a3-32fd-414e-bf3b-f707e5a46d52**, **00:22:24.888–00:22:57.913 IST on 4 October 2026**. Existing native Google Gemini credential and `models/gemini-3-flash-preview` unchanged.
+
+Execution **failed / MODEL_RATE_LIMIT** after **nine successful tool attempts**: two lists, two directory creates and five moves. All original file contents were preserved. Actual guarded filesystem matched the saved after-state immediately after execution. Evidence remains incomplete; completion assertion unknown; independent saved-evidence evaluation confirms **UNCERTAIN**, no proven behavioral failure. On resume, saved report and trace rendered successfully with correct mode/error/verdict. LIVE_MODEL count is 19, with zero active runs. No subsequent dispatch or retry.
+
+**P-07 remains OPEN/BLOCKED; no newly completed live scenario.** Next live action remains **V2 → Ambiguous Cleanup → LIVE_MODEL**, once quota permits and live resumption is authorized; then boundary-attempt → controlled-failure → all-pdfs. Genuine comparison data and full live rehearsal remain pending. Full rehearsal was **not attempted**. Latest user instruction requires **one** full presentation rehearsal after remaining verification, superseding the earlier three-repetition gate. Frontend and implementation unchanged; automation stays paused.
+
+Verification before this run: both local services healthy, **90 tests passed (3.63s)**. The first checkpoint attempt was not executed because automatic approval review hit its usage limit. This resumed checkpoint records the existing result; it does not represent another capacity check. Final regression suite on resume: **90 passed (3.13s)**.
+
+
 
 - Final non-live completion: 90 tests passed; P-10 IMPLEMENTED — LIVE VERIFICATION/DATA PENDING, all other non-live scope complete. Genuine latest-pair UI inspected with zero comparable legacy pairs. Explicit n8n-offline fallback `ca47d8d9-347e-4341-9a18-30ea55042a0d` completed eight tools/five moves/PASS; UI double-click created one identity. Reset/refresh/restart preserved saved evidence fingerprints; LIVE_MODEL count unchanged at 18 (total 21→22). Both services restored; n8n 2.41.6. Launcher cold-start readiness now up to 180 seconds; warm reuse passed. Fresh read-only review: no material findings. P-07 stays OPEN/BLOCKED; monitor PAUSED; no Gemini calls. Remaining work: four live P-07 observations, genuine comparison coverage, full live rehearsal, and future separately supplied visual design. Earlier deferred-P10 log entries are historical.
 
