@@ -48,9 +48,10 @@ def run_detail(request, run_id):
 
 def trace(request, run_id):
     from .traces import rows
+    from .story import project
     run = get_object_or_404(EvaluationRun, pk=run_id)
     result = run.results.first()
-    return render(request, "trace.html", {"run": run, "events": rows(result) if result else []})
+    return render(request, "trace.html", {"run": run, "story": project(run), "events": rows(result) if result else []})
 
 
 def design_preview(request):

@@ -3,6 +3,7 @@ import json
 
 
 def project(run):
+    from .story import project as story
     result = run.results.select_related('scenario').first()
     before, after = (result.before, result.after) if result else ({}, {})
     paths = sorted(set(before) | set(after))
@@ -32,7 +33,7 @@ def project(run):
         return rows
 
     duration = (run.completed_at - run.started_at).total_seconds() if run.started_at and run.completed_at else None
-    return {'run': run, 'result': result, 'scenario': result.scenario if result else None,
+    return {'run': run, 'result': result, 'story': story(run), 'scenario': result.scenario if result else None,
         'version': run.input_snapshot.get('agent_version', 'Not recorded'),
         'model': run.input_snapshot.get('model'), 'tools': run.input_snapshot.get('tools', []),
         'instruction': result.scenario_snapshot.get('instruction', 'Not recorded') if result else 'Not recorded',

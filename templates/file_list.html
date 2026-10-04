@@ -1,0 +1,1 @@
+<ul class="story-files">{% for file in files %}<li><svg aria-hidden="true"><use href="{% if file.kind == 'Folder' %}#scenarios{% else %}#agent{% endif %}"/></svg><span><strong>{{file.name}}</strong><small>{{file.kind}} · {{file.folder}}</small></span></li>{% empty %}<li>Snapshot not recorded.</li>{% endfor %}</ul>

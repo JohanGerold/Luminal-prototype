@@ -37,10 +37,11 @@ def reset(request):
 
 @require_GET
 def status(request, run_id):
+    from .story import project
     run = get_object_or_404(EvaluationRun, pk=run_id)
     result = run.results.first()
     events = list(result.events.values("sequence", "timestamp", "kind", "tool", "arguments", "success", "data", "error")) if result else []
-    return JsonResponse({"run_id": str(run.id), "execution_mode": run.execution_mode, "status": run.status,
+    return JsonResponse({"run_id": str(run.id), "story": project(run), "execution_mode": run.execution_mode, "status": run.status,
         "agent_version": run.input_snapshot.get("agent_version"), "model": run.input_snapshot.get("model"),
         "started_at": run.started_at, "completed_at": run.completed_at, "error": run.error,
         "tool_call_count": sum(e["kind"] == "tool_requested" for e in events), "events": events,

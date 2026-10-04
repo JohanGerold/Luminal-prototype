@@ -11,7 +11,10 @@ def append(result, kind, tool='', arguments=None, success=None, data=None, error
 
 
 def rows(result):
+    from .story import event_story
     return [{'sequence': event.sequence, 'timestamp': event.timestamp, 'kind': event.kind,
         'tool': event.tool, 'success': event.success, 'request_sequence': event.data.get('request_sequence'),
+        **event_story({'kind': event.kind, 'tool': event.tool, 'arguments': event.arguments,
+            'success': event.success, 'data': event.data, 'error': event.error}),
         'arguments': json.dumps(event.arguments, indent=2), 'data': json.dumps(event.data, indent=2),
         'error': json.dumps(event.error, indent=2) if event.error else ''} for event in result.events.all()]
