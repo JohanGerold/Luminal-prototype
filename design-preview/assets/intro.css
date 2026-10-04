@@ -1,0 +1,23 @@
+/* Intro-only surface. Operational dashboard tokens remain unchanged. */
+.liminal-intro{--paper:#f5f5f1;position:relative;height:100svh;min-height:640px;background:var(--paper);color:#181918;overflow:hidden;font-family:Manrope,Arial,sans-serif;isolation:isolate}
+.liminal-intro::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:4;opacity:.13;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.92' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Cpath fill='%23000' filter='url(%23n)' opacity='.7' d='M0 0h180v180H0z'/%3E%3C/svg%3E")}
+.intro-header{position:absolute;inset:0 0 auto;display:flex;align-items:center;justify-content:space-between;padding:30px 5vw;z-index:5}
+.intro-brand{font-size:25px;font-weight:800;letter-spacing:-1.4px;text-decoration:none;color:inherit}.intro-brand span{font-size:10px;vertical-align:top;letter-spacing:0;margin-left:3px}
+.intro-header-note{font-size:11px;color:#62645f}.intro-enter{display:flex;gap:25px;align-items:center;background:#181918;color:#fff;padding:12px 18px;border-radius:30px;text-decoration:none;font-size:11px}.intro-enter:hover{background:#393c37}.intro-enter span{font-size:18px;line-height:1}
+.intro-copy{position:absolute;top:16svh;left:0;width:100%;text-align:center;z-index:3;will-change:opacity,transform}
+.intro-eyebrow{font-size:10px;letter-spacing:2.3px;margin:0 0 10px}.intro-copy h1{font-size:clamp(90px,11vw,170px);font-weight:800;line-height:1.05;letter-spacing:-.085em;margin:0 0 22px;padding-right:.085em;color:#141513}
+.intro-description{font-size:clamp(14px,1.25vw,19px);line-height:1.55;margin:0}.intro-description span{display:inline-block;font-size:12px;color:#696b65;margin-top:10px}
+.intro-hands{position:absolute;left:-5vw;top:calc(60svh - 30vw);width:110vw;aspect-ratio:3/2;pointer-events:none;z-index:2}
+.intro-hand{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;will-change:transform}.intro-robot{clip-path:inset(0 50% 0 0);transform:translateX(-6%)}.intro-human{clip-path:inset(0 0 0 50%);transform:translateX(6%)}
+.intro-caption{position:absolute;bottom:13svh;text-align:center;width:100%;z-index:3}.intro-caption>span{font-size:16px;letter-spacing:-.5px}.intro-caption p{font-size:11px;line-height:1.7;color:#757770;margin-top:10px}
+.intro-bottom{position:absolute;bottom:27px;left:5vw;right:5vw;display:flex;justify-content:space-between;align-items:end;z-index:5;font-size:9px;letter-spacing:.8px}.intro-scroll{color:#33372f;display:flex;flex-direction:column;align-items:center;gap:13px;text-decoration:none;font-size:10px;letter-spacing:.3px}.intro-scroll>span:last-child{font-size:20px}.intro-edition,.intro-progress{color:#7b7d75}.intro-distance{display:none}
+.intro-active .liminal-intro{position:fixed;inset:0;z-index:30;min-height:0}.intro-active .intro-distance{display:block;height:240svh}.intro-active #workspace-page{position:fixed;inset:0;overflow:hidden;opacity:0;transform:translateY(22px);pointer-events:none;will-change:opacity,transform}.intro-active{overflow-x:clip}
+.liminal-intro a:focus-visible{outline:2px solid #141513;outline-offset:6px}.intro-active>.skip{z-index:40}
+@media(max-width:700px){.liminal-intro{min-height:600px}.intro-header{padding:25px 22px}.intro-brand{font-size:22px}.intro-header-note{display:none}.intro-enter{padding:11px 15px;gap:12px;font-size:10px}.intro-copy{top:19svh}.intro-copy h1{font-size:100px;margin-bottom:23px}.intro-eyebrow{font-size:8px;letter-spacing:1.6px}.intro-description{font-size:15px}.intro-description span{font-size:10px}.intro-hands{width:170vw;left:-35vw;top:calc(61svh - 46.5vw)}.intro-caption{bottom:15svh}.intro-caption>span{font-size:14px}.intro-caption p{font-size:10px}.intro-bottom{left:22px;right:22px;bottom:25px}.intro-edition{max-width:90px;line-height:1.7;font-size:8px}.intro-progress{font-size:8px}}
+@media(max-height:660px) and (min-width:701px){.intro-copy{top:15svh}.intro-copy h1{font-size:100px;margin-bottom:10px}.intro-description{font-size:13px}.intro-hands{top:calc(64svh - 30vw)}.intro-caption{bottom:11svh}.intro-caption p{display:none}.intro-bottom{bottom:15px}}
+@media(prefers-reduced-motion:reduce){.intro-hand,.intro-copy{will-change:auto}.intro-scroll>span:first-child{font-size:0}.intro-scroll>span:first-child::after{content:"Enter workspace";font-size:10px}}
+
+/* Static/no-JS entry keeps fixed dashboard navigation below the scene. */
+.liminal-intro:not([hidden])~#workspace-page{position:relative}
+.liminal-intro:not([hidden])~#workspace-page>.sidebar{position:absolute}
+.intro-active .liminal-intro~#workspace-page{position:fixed}

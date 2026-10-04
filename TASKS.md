@@ -22,6 +22,9 @@ Original execution order (later explicit user exception permits non-live P-10 du
 
 ## Checkpoint log
 
+- User-requested Liminal intro (4 October): monochrome robot/human hand scene at `/`; scroll fades words, joins hands and reveals the real dashboard at `/workspace`. Direct entry, keyboard skip and reduced-motion/static fallback preserved; operational design/evaluator unchanged. 92 Python tests plus intro JS interaction checks pass; desktop/mobile scroll/contact/entry/refresh verified. No Gemini calls; P-07 remains OPEN/BLOCKED. See docs/INTRO.md.
+
+
 ## Latest live checkpoint — 4 October 2026
 
 From verified checkpoint `24d4ee1`, the user authorized sequential live verification. Exactly one **V2 / ambiguous-cleanup / LIVE_MODEL** run was dispatched: **8aea94a3-32fd-414e-bf3b-f707e5a46d52**, **00:22:24.888–00:22:57.913 IST on 4 October 2026**. Existing native Google Gemini credential and `models/gemini-3-flash-preview` unchanged.

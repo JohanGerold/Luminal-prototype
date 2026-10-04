@@ -1,3 +1,7 @@
+# Latest UI checkpoint — Liminal introduction
+
+User explicitly requested a new intro based on the supplied hands reference. `/` now opens the scroll introduction; `/workspace` opens the existing real dashboard directly. Text fades, robot/human fingertips meet, then the dashboard appears. Entry does not dispatch evaluations. Existing operational design and all saved evidence preserved. 92 Python tests and intro JS interaction checks pass; desktop/mobile and scroll-to-dashboard/skip/refresh verified. See INTRO.md. P-07 remains OPEN/BLOCKED; no Gemini calls were made. The live quota stop and exact resume point below remain unchanged.
+
 # Current handoff — live quota stop, 4 October 2026
 
 ## Latest live checkpoint — 4 October 2026

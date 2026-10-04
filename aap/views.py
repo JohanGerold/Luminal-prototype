@@ -6,7 +6,9 @@ from .models import Agent, Scenario, AgentVersion, EvaluationRun
 
 def home(request):
     from .dashboard import overview
-    return render(request, 'dashboard.html', overview(request.GET.get('mode'), request.GET.get('days')))
+    context = overview(request.GET.get('mode'), request.GET.get('days'))
+    context['show_intro'] = request.path == '/' and not request.GET
+    return render(request, 'dashboard.html', context)
 
 
 def compare(request):

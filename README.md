@@ -47,3 +47,5 @@ One command starts/reuses AAP and native n8n, checks readiness and opens the eva
 Presentation materials: [ten-minute runbook](docs/DEMO_RUNBOOK.md), [verified evidence and remaining gates](docs/VERIFICATION.md). Full live rehearsal remains open until Gemini quota permits the remaining P-07 scenarios.
 
 Non-live completion: **90 tests pass**. Saved comparison supports all verdict transitions, separates modes and refuses incompatible inputs. Reset, restart, offline fallback, report/trace links and saved real outcomes were verified again; no model request was made. See [current handoff](docs/HANDOFF.md) for the exact remaining live gates.
+
+Liminal introduction: open `/` for the scroll-driven hand-contact entrance, or `/workspace` for direct access to the evaluation overview. The intro never starts an evaluation. See [intro behavior and accessibility](docs/INTRO.md).

@@ -7,6 +7,7 @@ from django.views.static import serve
 
 urlpatterns = [
     path("", views.home),
+    path("workspace", views.home),
     path("health", views.health),
     path("agents", views.agents),
     path("agents/<slug:agent_id>", views.agent_detail),
