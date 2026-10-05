@@ -1,51 +1,128 @@
-# AAP Prototype
+# Luminal
 
-**PROTOTYPE / DEMONSTRATION SYSTEM — 3 October 2026.**
+Luminal is a local AI agent evaluation workspace. It shows what an agent was asked to do, which tools it requested, what changed on disk, and what the saved evidence supports.
 
-Demonstrate a real LLM choosing restricted filesystem tools through n8n, with AAP independently evaluating the resulting actions and files. P-00–P-06, reporting, fallback and presentation functionality are complete: the UI invokes real Google Gemini through n8n, restricted tools change the real demo files, and AAP records evidence. Chronological traces, deterministic evaluation and explicit outage fallback are implemented. Six-scenario live verification is waiting on Gemini model quota; genuine earlier live runs are retained. See [TASKS.md](TASKS.md) and [connectivity evidence](docs/CONNECTIVITY_PREFLIGHT.md).
+The prototype demonstrates this path:
 
-Read in this order:
+**AAP UI -> n8n -> Google Gemini -> guarded filesystem tools -> synthetic workspace -> trace -> deterministic evaluator -> report**
 
-1. [Prototype plan and task order](docs/PROTOTYPE_PLAN.md)
-2. [Architecture and repository structure](docs/ARCHITECTURE.md)
-3. [n8n integration contract](n8n/CONTRACT.md)
-4. [Scenario assertions](docs/SCENARIOS.md)
-5. [Risks and implementation handoff](docs/HANDOFF.md)
-6. [n8n setup handoff](n8n/README.md)
+The project is designed for a short technical demonstration. It keeps model execution, filesystem effects, evidence capture, evaluation, and presentation reporting as separate concepts.
 
-Production documentation in `C:\Code\AAP` was consulted for product understanding only. Do not modify it, reuse its implementation plan, continue T-001–T-045, or import its release gates.
+## What is included
 
-Runtime: Python 3.13.15, Django 5.2.17, SQLite, Waitress 3.0.2, server-rendered HTML with JavaScript polling, and native n8n 2.41.6 with Google Gemini `models/gemini-3-flash-preview`. Run one app process only.
+- Native n8n 2.41.6 integration with Google Gemini `models/gemini-3-flash-preview`
+- Django and SQLite application with server-rendered pages and small polling scripts
+- Guarded filesystem tools restricted to `C:\AAP-Demo-Workspace`
+- Six seeded evaluation scenarios
+- Ordered trace events with tool intent and result records
+- Deterministic `PASS`, `FAIL`, and `UNCERTAIN` verdicts
+- Explicit `LIVE_MODEL` and `DEMO_FALLBACK` execution modes
+- Saved reports with execution status, verdict, assertions, trace links, and before/after filesystem evidence
+- Offline fallback that uses the same guarded filesystem and evaluator contracts
+- Saved V1/V2 comparison support, with incompatible or missing data shown as pending
+- Monochrome Luminal interface, scroll-driven landing page, report, trace, and presentation views
+- Presentation materials in [`presentation-output/`](presentation-output/) and [`report-output/`](report-output/)
 
-Verified P-01 setup (Python 3.13 required):
+## Quick start
+
+Use the included launcher on Windows:
+
+```bat
+start.bat
+```
+
+It closes listeners on the prototype's fixed AAP and n8n ports, starts fresh hidden services, waits for readiness, and opens the product in the default browser.
+
+The equivalent PowerShell command is:
+
+```powershell
+powershell -File scripts/start-demo.ps1 -Restart
+```
+
+The application opens at [http://127.0.0.1:8001/](http://127.0.0.1:8001/). The landing page is the Luminal introduction; choose **Enter workspace** or scroll through the hand-contact transition. Direct workspace access is available at [http://127.0.0.1:8001/workspace](http://127.0.0.1:8001/workspace).
+
+## First-time setup
+
+The launcher expects an existing local environment and configured n8n credential. It does not install packages, create credentials, or expose secrets.
 
 ```powershell
 uv sync --locked
 .venv\Scripts\python.exe manage.py migrate
 .venv\Scripts\python.exe manage.py seed_demo
-.venv\Scripts\python.exe manage.py serve_demo
 ```
 
-Open `http://127.0.0.1:8001/` for the evaluation overview, then choose **New evaluation**. Tests: `.venv\Scripts\python.exe -m pytest -p no:cacheprovider --basetemp=C:\Code\AAP-Prototype\.runtime\test-tmp -q`. The UI resets the owned fixture before each run and rejects simultaneous start/reset. CLI reset is only for a stopped app: `.venv\Scripts\python.exe manage.py reset_demo`. Start n8n with `powershell -File scripts/start-n8n.ps1`; import/configure the committed workflow as described in `n8n/README.md`. Gemini credential stays in n8n. `serve_demo` marks unfinished historical runs interrupted on startup; it never resumes or retries them. Presentation startup is verified below.
+Configure the native Google Gemini credential in local n8n as described in [`n8n/README.md`](n8n/README.md). The credential remains in n8n's encrypted local state. Do not put API keys in Git, workflow JSON, documentation, logs, or chat.
 
-Normal execution is **LIVE_MODEL**. Emergency scripted execution is **DEMO_FALLBACK**, visibly labelled on every relevant screen. No silent switching.
+Useful local URLs:
 
-Saved evaluation reports are available from each run's **Inspect evaluation report** link (`/runs/<id>/report`). Reports preserve actual execution status, verdict, failure category, assertions, trace links and filesystem evidence. Missing snapshots never imply observed removal.
+- AAP: `http://127.0.0.1:8001/`
+- AAP health: `http://127.0.0.1:8001/health`
+- n8n: `http://127.0.0.1:5678/`
+- n8n health: `http://127.0.0.1:5678/healthz`
 
-The approved monochrome Luminal design is integrated across the product. The home dashboard uses saved evidence with separate LIVE_MODEL and DEMO_FALLBACK views, daily activity and latest scenario results. See the superseding [design lock](docs/DESIGN_LOCK.md). The standalone `/design-assets/monochrome.html` is an illustrative design reference only; its sample data never enters real evaluation screens.
+## Demonstration flow
 
-This is not production ready, a secure sandbox certification, a production failure prediction, or a safety certification. Results concern the selected scenarios and real operations on synthetic files inside the demonstration directory.
+1. Open the Luminal introduction and enter the workspace.
+2. Inspect the configured agent and its six restricted tools.
+3. Choose a scenario and reset the owned synthetic workspace.
+4. Select `LIVE_MODEL` explicitly when Gemini capacity is available.
+5. Start one evaluation and observe progress and tool activity.
+6. Inspect the saved report, trace, assertions, and filesystem before/after state.
+7. Use a separate `DEMO_FALLBACK` run only when demonstrating an n8n or provider outage.
 
-Presentation startup (existing local environment and credential required):
+The UI prevents simultaneous starts and resets. Refreshing a run reads saved evidence and never dispatches a second model call. A failed live execution remains a live execution; it is never silently converted to fallback.
+
+## Evidence and evaluation
+
+Luminal keeps these concepts separate:
+
+- **Execution status:** preparing, executing, completed, failed, timed out, or interrupted.
+- **Execution mode:** `LIVE_MODEL` or `DEMO_FALLBACK`.
+- **Verdict:** `PASS`, `FAIL`, or `UNCERTAIN` based on saved evidence.
+
+The evaluator checks scenario assertions against persisted inputs, ordered trace events, filesystem snapshots, content hashes, and completion evidence. A provider rate limit or incomplete record is reported as `UNCERTAIN`; it is not presented as a behavioral failure without independent evidence.
+
+The six seeded scenarios cover normal organization, ambiguous cleanup, boundary requests, controlled tool failure, incomplete PDF organization, and duplicate/repeated actions.
+
+## Verification status
+
+The non-live prototype verification record contains **98 tests**. The latest sandbox check passed 97 tests and deselected one Windows junction-creation test because this environment does not grant link-creation privileges; clean Django checks, browser checks for report/trace/reset/refresh/fallback labeling, and verified startup/recovery behavior also pass.
+
+Saved genuine evidence includes successful `LIVE_MODEL` runs, an honestly recorded quota-interrupted `LIVE_MODEL` run, and separate `DEMO_FALLBACK` PASS/FAIL examples. Remaining live scenario coverage and the full live rehearsal are held when Gemini quota is unavailable; no missing result is fabricated.
+
+Read the durable project records in this order:
+
+1. [`TASKS.md`](TASKS.md)
+2. [`docs/PROTOTYPE_PLAN.md`](docs/PROTOTYPE_PLAN.md)
+3. [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)
+4. [`docs/SCENARIOS.md`](docs/SCENARIOS.md)
+5. [`docs/HANDOFF.md`](docs/HANDOFF.md)
+6. [`docs/VERIFICATION.md`](docs/VERIFICATION.md)
+7. [`docs/DEMO_RUNBOOK.md`](docs/DEMO_RUNBOOK.md)
+
+## Limitations
+
+This is a local presentation prototype, not a production safety certification.
+
+- Gemini API quota and provider availability can interrupt live scenarios.
+- Only one provider and one Gemini model are configured, so cross-provider reliability is not measured.
+- Scenarios use a synthetic Windows fixture rather than arbitrary user files.
+- The deterministic evaluator checks explicit observable assertions; it is not a general semantic judge.
+- n8n and the AAP app are local dependencies that can fail independently.
+- Filesystem containment assumes a trusted local operator and is not hostile-process isolation.
+- Remaining unverified live scenarios are kept pending rather than replaced with fallback data.
+
+## Presentation files
+
+- [PowerPoint presentation](presentation-output/Liminal_Agent_Evaluation_Overview.pptx)
+- [Project report PDF](report-output/Liminal_Project_Report.pdf)
+- [Editable project report](report-output/Liminal_Project_Report.docx)
+
+## Tests
 
 ```powershell
-powershell -File scripts/start-demo.ps1
+.venv\Scripts\python.exe -m pytest -p no:cacheprovider --basetemp=C:\Code\AAP-Prototype\.runtime\test-tmp -q
+.venv\Scripts\python.exe manage.py check
 ```
 
-One command starts/reuses AAP and native n8n, checks readiness and opens the evaluation overview. It does not call Gemini. See [startup, URLs and recovery](docs/STARTUP.md). Use `-AppOnly` for intentional n8n outage and explicitly select DEMO_FALLBACK in the UI. Saved reports are available from **Saved runs**; they survive refresh/reset/restart. P-07 remains open and blocked by external model quota; P-10 saved comparison is implemented at `/compare`; genuine compatible live data is pending. Historical missing execution limits remain incomparable. The capacity monitor is paused; no Gemini calls should be made during the current hold.
-
-Presentation materials: [ten-minute runbook](docs/DEMO_RUNBOOK.md), [verified evidence and remaining gates](docs/VERIFICATION.md). Full live rehearsal remains open until Gemini quota permits the remaining P-07 scenarios.
-
-Non-live completion: **90 tests pass**. Saved comparison supports all verdict transitions, separates modes and refuses incompatible inputs. Reset, restart, offline fallback, report/trace links and saved real outcomes were verified again; no model request was made. See [current handoff](docs/HANDOFF.md) for the exact remaining live gates.
-
-Liminal introduction: open `/` for the scroll-driven hand-contact entrance, or `/workspace` for direct access to the evaluation overview. The intro never starts an evaluation. See [intro behavior and accessibility](docs/INTRO.md).
+Production documentation in `C:\Code\AAP` was consulted for product understanding only. This repository is the separate Luminal prototype and does not modify the production checkout.

@@ -21,3 +21,6 @@
 .liminal-intro:not([hidden])~#workspace-page{position:relative}
 .liminal-intro:not([hidden])~#workspace-page>.sidebar{position:absolute}
 .intro-active .liminal-intro~#workspace-page{position:fixed}
+.intro-transitioning .liminal-intro{transition:opacity 720ms cubic-bezier(.22,1,.36,1)}
+.intro-transitioning #workspace-page{transition:opacity 720ms cubic-bezier(.22,1,.36,1),transform 720ms cubic-bezier(.22,1,.36,1)}
+.intro-awaiting-scroll{overflow:hidden}

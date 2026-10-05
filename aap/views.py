@@ -7,7 +7,9 @@ from .models import Agent, Scenario, AgentVersion, EvaluationRun
 def home(request):
     from .dashboard import overview
     context = overview(request.GET.get('mode'), request.GET.get('days'))
-    context['show_intro'] = request.path == '/' and not request.GET
+    # The explicit flag lets the workspace logo replay the landing scene even
+    # after the first visit. Other query strings remain dashboard filters.
+    context['show_intro'] = request.path == '/' and (not request.GET or request.GET.get('intro') == '1')
     return render(request, 'dashboard.html', context)
 
 

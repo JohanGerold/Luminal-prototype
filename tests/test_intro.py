@@ -9,11 +9,15 @@ def test_intro_and_direct_workspace_never_dispatch(client, monkeypatch):
     landing = client.get('/')
     assert landing.status_code == 200
     assert b'id="liminal-intro"' in landing.content
-    assert b'Liminal' in landing.content
+    assert b'Luminal' in landing.content
     assert b'href="/workspace"' in landing.content
     workspace = client.get('/workspace')
     assert workspace.status_code == 200
     assert b'id="liminal-intro"' not in workspace.content
+    assert b'class="brand" href="/?intro=1"' in workspace.content
+    replay = client.get('/?intro=1')
+    assert replay.status_code == 200
+    assert b'id="liminal-intro"' in replay.content
     assert b'Your agents, in focus.' in workspace.content
     assert EvaluationRun.objects.count() == 0
 

@@ -1,4 +1,4 @@
-param([switch]$NoBrowser, [switch]$AppOnly)
+param([switch]$NoBrowser, [switch]$AppOnly, [switch]$Restart)
 $ErrorActionPreference = 'Stop'
 $demoRoot = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
 $demoPython = Join-Path $demoRoot '.venv\Scripts\python.exe'
@@ -14,9 +14,30 @@ function Test-DemoReady([string]$Uri, [string]$Service) {
         return $payload.status -eq 'ok'
     } catch { return $false }
 }
+function Stop-DemoPort([int]$Port) {
+    $listeners = @(Get-NetTCPConnection -LocalPort $Port -State Listen -ErrorAction SilentlyContinue)
+    foreach ($processId in @($listeners | Select-Object -ExpandProperty OwningProcess -Unique)) {
+        $process = Get-Process -Id $processId -ErrorAction SilentlyContinue
+        if ($process) {
+            Write-Host "Stopping prototype service on port $Port (PID $processId)."
+            Stop-Process -Id $processId -Force
+        }
+    }
+    $deadline = [DateTime]::UtcNow.AddSeconds(10)
+    while ((Get-NetTCPConnection -LocalPort $Port -State Listen -ErrorAction SilentlyContinue) -and [DateTime]::UtcNow -lt $deadline) {
+        Start-Sleep -Milliseconds 250
+    }
+    if (Get-NetTCPConnection -LocalPort $Port -State Listen -ErrorAction SilentlyContinue) {
+        throw "Prototype port $Port did not close; no new service was started."
+    }
+}
 function Assert-FreePort([int]$Port) {
     $listener = Get-NetTCPConnection -LocalPort $Port -State Listen -ErrorAction SilentlyContinue
     if ($listener) { throw "Port $Port is occupied by an unready service. Stop that service before retrying; this launcher never kills existing processes." }
+}
+if ($Restart) {
+    Stop-DemoPort 8001
+    if (-not $AppOnly) { Stop-DemoPort 5678 }
 }
 if (-not (Test-Path -LiteralPath $demoPython)) { throw 'Python environment missing. Run uv sync --locked once from the prototype repository.' }
 if (-not (Test-Path -LiteralPath (Join-Path $demoRoot '.env'))) { throw 'Local .env missing. Follow the existing n8n setup guide; never paste secrets into this script.' }

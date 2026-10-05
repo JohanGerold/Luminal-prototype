@@ -1,14 +1,14 @@
 # Local presentation startup
 
-From `C:\Code\AAP-Prototype`, run one command:
+From `C:\Code\AAP-Prototype`, double-click `start.bat` to start the demo and open the product in your default browser. From PowerShell, the equivalent command is:
 
 ```powershell
 powershell -File scripts/start-demo.ps1
 ```
 
-The script checks the existing environment, migrates/seeds the catalog only when starting AAP, starts missing services in hidden background processes, waits up to 180 seconds for readiness and opens the evaluation overview. Running it again reuses healthy services. It never invokes Gemini, changes credentials, resets the workspace or kills an existing process. No secrets or provider output are logged by the launcher. Windows, Python 3.13 environment, installed pinned native n8n 2.41.6, Node on PATH and the existing local `.env`/n8n credential state are prerequisites. First-time dependency setup remains `uv sync --locked` and the existing `n8n/README.md` instructions; this launcher does not install or upgrade packages.
+The batch file passes `-Restart`, so it closes only listeners on the prototype's fixed AAP (`8001`) and n8n (`5678`) ports before starting fresh hidden services. The PowerShell launcher without `-Restart` checks the existing environment, migrates/seeds the catalog only when starting AAP, starts missing services in hidden background processes, waits up to 180 seconds for readiness and opens the evaluation overview. It never invokes Gemini, changes credentials or resets the workspace. No secrets or provider output are logged by the launcher. Windows, Python 3.13 environment, installed pinned native n8n 2.41.6, Node on PATH and the existing local `.env`/n8n credential state are prerequisites. First-time dependency setup remains `uv sync --locked` and the existing `n8n/README.md` instructions; this launcher does not install or upgrade packages.
 
-Options: `-NoBrowser` checks/starts without opening a browser; `-AppOnly` intentionally skips n8n for an outage demonstration. Both can be combined. Readiness checks services only, not model quota or credential validity. A cold native n8n startup can exceed 90 seconds; allow the launcher to finish before starting a second copy.
+Options: `-NoBrowser` checks/starts without opening a browser; `-AppOnly` intentionally skips n8n for an outage demonstration; `-Restart` closes the fixed prototype listeners before starting. These can be combined. Readiness checks services only, not model quota or credential validity. A cold native n8n startup can exceed 90 seconds; allow the launcher to finish before starting a second copy.
 
 ## URLs and readiness
 
