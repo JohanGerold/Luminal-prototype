@@ -7,11 +7,8 @@ from django.test import Client
 
 @pytest.fixture
 def runner(tmp_path, monkeypatch, transactional_db):
-    from django.conf import settings
     from aap import runs
     from aap.filesystem.service import Workspace
-    # These tests exercise the n8n dispatch path (they replace invoke_agent); pin it regardless of .env.
-    monkeypatch.setattr(settings, "AAP_LIVE", settings.AAP_LIVE_PROVIDERS["ollama"])
     call_command("seed_demo")
     monkeypatch.setattr(runs, "workspace", Workspace(tmp_path / "demo"))
     return runs

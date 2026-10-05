@@ -7,15 +7,16 @@ from tests.test_runs import runner, wait_terminal  # noqa: F401
 
 
 def test_configured_provider_selects_its_own_runtime():
-    live = settings.AAP_LIVE_PROVIDERS[settings.AAP_LIVE_PROVIDER]
-    assert settings.AAP_LIVE is live
+    import config.settings as conf  # import-time configuration; the autouse test fixture overrides AAP_LIVE
+    live = conf.AAP_LIVE_PROVIDERS[conf.AAP_LIVE_PROVIDER]
+    assert conf.AAP_LIVE is live
     if live["webhook_path"]:
-        assert settings.AAP_N8N_WEBHOOK_URL == "http://127.0.0.1:5678/webhook/" + live["webhook_path"]
+        assert conf.AAP_N8N_WEBHOOK_URL == "http://127.0.0.1:5678/webhook/" + live["webhook_path"]
     else:
-        assert settings.AAP_N8N_WEBHOOK_URL is None and live["api"] in ("ollama", "openai")
-    paths = [item["webhook_path"] for item in settings.AAP_LIVE_PROVIDERS.values() if item["webhook_path"]]
+        assert conf.AAP_N8N_WEBHOOK_URL is None and live["api"] in ("ollama", "openai")
+    paths = [item["webhook_path"] for item in conf.AAP_LIVE_PROVIDERS.values() if item["webhook_path"]]
     assert len(paths) == len(set(paths))
-    labels = [item["provider"] for item in settings.AAP_LIVE_PROVIDERS.values()]
+    labels = [item["provider"] for item in conf.AAP_LIVE_PROVIDERS.values()]
     assert len(labels) == len(set(labels))  # distinct labels keep comparison from pairing different runtimes
 
 
