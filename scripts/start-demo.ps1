@@ -6,6 +6,12 @@ $demoN8n = Join-Path $demoRoot '.runtime\n8n\node_modules\n8n\package.json'
 $demoN8nLauncher = Join-Path $demoRoot 'scripts\start-n8n.ps1'
 $demoAppUrl = 'http://127.0.0.1:8001'
 $demoN8nUrl = 'http://127.0.0.1:5678'
+$demoEnv = Join-Path $demoRoot '.env'
+$demoProvider = if (Test-Path -LiteralPath $demoEnv) { (Get-Content -LiteralPath $demoEnv | Where-Object { $_ -match '^AAP_LIVE_PROVIDER=' } | Select-Object -First 1) -replace '^AAP_LIVE_PROVIDER=', '' } else { '' }
+$demoProvider = if ($demoProvider) { $demoProvider.Trim().ToLower() } else { 'groq' }
+# groq and direct-ollama run the agent loop inside AAP, so n8n is neither started nor required.
+$demoDirect = $demoProvider -in @('groq', 'direct-ollama')
+$demoSkipN8n = $AppOnly -or $demoDirect
 function Test-DemoReady([string]$Uri, [string]$Service) {
     try {
         $response = Invoke-WebRequest -Uri $Uri -UseBasicParsing -TimeoutSec 2
@@ -37,7 +43,7 @@ function Assert-FreePort([int]$Port) {
 }
 if ($Restart) {
     Stop-DemoPort 8001
-    if (-not $AppOnly) { Stop-DemoPort 5678 }
+    if (-not $demoSkipN8n) { Stop-DemoPort 5678 }
 }
 if (-not (Test-Path -LiteralPath $demoPython)) { throw 'Python environment missing. Run uv sync --locked once from the prototype repository.' }
 if (-not (Test-Path -LiteralPath (Join-Path $demoRoot '.env'))) { throw 'Local .env missing. Follow the existing n8n setup guide; never paste secrets into this script.' }
@@ -53,7 +59,7 @@ if (-not (Test-DemoReady "$demoAppUrl/health" 'aap')) {
     $null = Start-Process -FilePath $demoPython -ArgumentList @('manage.py','serve_demo') -WorkingDirectory $demoRoot -WindowStyle Hidden -PassThru
     Write-Host 'Starting local AAP in the background.'
 } else { Write-Host 'AAP already healthy; reusing it.' }
-if (-not $AppOnly -and -not (Test-DemoReady "$demoN8nUrl/healthz" 'n8n')) {
+if (-not $demoSkipN8n -and -not (Test-DemoReady "$demoN8nUrl/healthz" 'n8n')) {
     if (-not (Test-Path -LiteralPath $demoN8n)) { Write-Warning 'Pinned n8n is missing. AAP can still show saved evidence and explicitly selected DEMO_FALLBACK.' }
     elseif ((Get-Content -LiteralPath $demoN8n -Raw | ConvertFrom-Json).version -ne '2.41.6') { throw 'n8n version differs from pinned 2.41.6; no automatic upgrade.' }
     else {
@@ -61,19 +67,17 @@ if (-not $AppOnly -and -not (Test-DemoReady "$demoN8nUrl/healthz" 'n8n')) {
         $null = Start-Process -FilePath 'powershell.exe' -ArgumentList @('-NoProfile','-File',('"' + $demoN8nLauncher + '"')) -WorkingDirectory $demoRoot -WindowStyle Hidden -PassThru
         Write-Host 'Starting pinned local n8n in the background.'
     }
-} elseif (-not $AppOnly) { Write-Host 'n8n already healthy; reusing it.' }
+} elseif (-not $demoSkipN8n) { Write-Host 'n8n already healthy; reusing it.' }
 # A cold native n8n start has exceeded 90 seconds on the presentation machine.
 $demoDeadline = [DateTime]::UtcNow.AddSeconds(180)
 do {
     $demoAppReady = Test-DemoReady "$demoAppUrl/health" 'aap'
-    $demoN8nReady = -not $AppOnly -and (Test-DemoReady "$demoN8nUrl/healthz" 'n8n')
-    if ($demoAppReady -and ($AppOnly -or $demoN8nReady -or -not (Test-Path -LiteralPath $demoN8n))) { break }
+    $demoN8nReady = -not $demoSkipN8n -and (Test-DemoReady "$demoN8nUrl/healthz" 'n8n')
+    if ($demoAppReady -and ($demoSkipN8n -or $demoN8nReady -or -not (Test-Path -LiteralPath $demoN8n))) { break }
     Start-Sleep -Seconds 1
 } while ([DateTime]::UtcNow -lt $demoDeadline)
 if (-not $demoAppReady) { throw 'AAP not ready. Check the local Python environment and occupied ports. No evaluation was dispatched.' }
-$demoProvider = (Get-Content -LiteralPath (Join-Path $demoRoot '.env') | Where-Object { $_ -match '^AAP_LIVE_PROVIDER=' } | Select-Object -First 1) -replace '^AAP_LIVE_PROVIDER=', ''
-if (-not $demoProvider) { $demoProvider = 'ollama' }
-if (-not $AppOnly -and $demoProvider.Trim().ToLower() -eq 'ollama') {
+if (-not $AppOnly -and $demoProvider -in @('ollama', 'direct-ollama')) {
     $demoOllamaUrl = 'http://127.0.0.1:11434'
     $demoOllamaUp = { try { $null = Invoke-WebRequest -Uri "$demoOllamaUrl/api/version" -UseBasicParsing -TimeoutSec 2; $true } catch { $false } }
     if (-not (& $demoOllamaUp)) {
@@ -99,7 +103,7 @@ Write-Host "Saved evidence: $demoAppUrl/runs"
 if ($demoN8nReady) {
     # n8n can report healthy before (or without) registering a published webhook. An unauthenticated
     # empty POST returns 403 once the live workflow is registered and 404 while it is not; it never runs the agent.
-    $demoWebhookPath = if ($demoProvider.Trim().ToLower() -eq 'gemini') { 'aap-filesystem-agent' } else { 'aap-filesystem-agent-ollama' }
+    $demoWebhookPath = if ($demoProvider -eq 'gemini') { 'aap-filesystem-agent' } else { 'aap-filesystem-agent-ollama' }
     $demoWebhookDeadline = [DateTime]::UtcNow.AddSeconds(45)
     do {
         try { $null = Invoke-WebRequest -Uri "$demoN8nUrl/webhook/$demoWebhookPath" -Method Post -Body '{}' -ContentType 'application/json' -UseBasicParsing -TimeoutSec 5; $demoWebhookCode = 200 }
@@ -110,6 +114,13 @@ if ($demoN8nReady) {
     if ($demoWebhookCode -eq 403) { Write-Host "n8n ready: $demoN8nUrl (live workflow /webhook/$demoWebhookPath registered for $demoProvider)" }
     else { Write-Warning "n8n is up but /webhook/$demoWebhookPath is not registered (HTTP $demoWebhookCode). Run start.bat again; if it persists, see n8n/README.md. LIVE_MODEL runs will fail until then." }
 }
+elseif ($demoProvider -eq 'groq' -and -not $AppOnly) {
+    # Only checks that a key is present; the value is never printed or sent anywhere by the launcher.
+    $demoGroqKey = Get-Content -LiteralPath $demoEnv | Where-Object { $_ -match '^AAP_GROQ_API_KEY=.{20,}' }
+    if ($demoGroqKey) { Write-Host 'Live model: Groq cloud (openai/gpt-oss-120b). n8n and the local GPU are not used.' }
+    else { Write-Warning 'AAP_GROQ_API_KEY is missing from .env. LIVE_MODEL runs will fail with MODEL_AUTH_FAILED until it is added.' }
+}
+elseif ($demoProvider -eq 'direct-ollama' -and -not $AppOnly) { Write-Host 'n8n not needed: direct-ollama runs the agent loop inside AAP against local Ollama.' }
 else { Write-Warning 'n8n unavailable or intentionally skipped. Inspect saved runs, or explicitly select DEMO_FALLBACK. LIVE_MODEL never silently falls back.' }
 Write-Host 'No evaluation, credential change or workspace reset was performed.'
 if (-not $NoBrowser) { Start-Process "$demoAppUrl/" }

@@ -5,7 +5,7 @@
 The agent under test is a **file-organization agent**. It runs in n8n and uses a real language model with six tools. The tools perform real file operations, but only inside a guarded folder of synthetic files.
 
 ```
-Luminal UI ─▶ Django app ─▶ n8n AI Agent ─▶ language model (local Ollama, or Google Gemini)
+Luminal UI ─▶ Django app ─▶ agent loop ─▶ language model (Groq cloud by default; or local Ollama / Gemini via n8n)
                  ▲                │
                  │                └─▶ 6 guarded HTTP tools ─▶ C:\AAP-Demo-Workspace (synthetic files)
                  │                                │
@@ -16,7 +16,7 @@ Luminal UI ─▶ Django app ─▶ n8n AI Agent ─▶ language model (local Ol
 
 ## Highlights
 
-- **Live agent on a local model**: n8n's native AI Agent drives **`qwen3:8b` through Ollama** by default. That means no API quota, no internet dependency and runs that take seconds. Google Gemini (`models/gemini-3-flash-preview`) remains available as a second provider.
+- **Live agent without heavy local hardware**: by default AAP runs the agent loop itself against **Groq's free cloud API (`openai/gpt-oss-120b`)**, so the laptop only sends small requests. The same agent can also run in n8n on local Ollama `qwen3:8b` or on Google Gemini, and every run records which one executed it.
 - **Guarded real filesystem tools**: six tools (list, read, create directory, create file, move, delete). They accept only relative paths inside `C:\AAP-Demo-Workspace`, and reject `..`, absolute, UNC and device paths, alternate data streams, junctions and links. They never overwrite, and deletion requires explicit scenario authority.
 - **Evidence before verdict**: every tool attempt is saved twice, once as an intent before any change and once as a result after it. Each run stores before and after snapshots of the folder, with a content hash for every file.
 - **Deterministic evaluator**: there is no AI judge. A proven violation gives `FAIL`. Missing or interrupted evidence gives `UNCERTAIN`. Otherwise the result is `PASS`. The agent's own final message never overrides the file and event evidence.
@@ -35,8 +35,10 @@ start.bat
 
 The launcher:
 - restarts the prototype's services on their fixed ports;
-- starts Ollama if needed and preloads `qwen3:8b` into GPU memory, so the first live run is instant;
-- checks that the live n8n webhook is actually registered;
+- starts only what the selected provider needs: with `groq` (the default), no n8n and no local model;
+- warns if the Groq key is missing (it never prints the key);
+- with the n8n providers, starts n8n and checks that the live webhook is actually registered;
+- with the Ollama providers, preloads `qwen3:8b` into GPU memory;
 - opens the product in your browser.
 
 - Product: <http://127.0.0.1:8001/> (introduction) or <http://127.0.0.1:8001/workspace> (dashboard directly)
@@ -51,7 +53,8 @@ Requirements:
 - Python 3.13 with [uv](https://docs.astral.sh/uv/)
 - Node.js
 - [Ollama](https://ollama.com/download)
-- A GPU with about 8 GB of VRAM is recommended. With less, `qwen3:8b` partly runs on the CPU and is slower.
+- For the default `groq` provider: a free Groq API key from <https://console.groq.com/keys>. No GPU, n8n or Ollama is needed.
+- Only for the local Ollama providers: Node.js with the pinned n8n, Ollama, and a GPU with about 8 GB of VRAM. Local inference keeps the GPU at full load; avoid it on a laptop with a damaged or noisy fan.
 
 ```powershell
 # 1. Python environment and database
@@ -59,27 +62,29 @@ uv sync --locked
 .venv\Scripts\python.exe manage.py migrate
 .venv\Scripts\python.exe manage.py seed_demo
 
-# 2. Pinned n8n 2.41.6 in .runtime\n8n (see n8n/README.md)
-
-# 3. Local model
-ollama pull qwen3:8b
-
-# 4. Register the Ollama credential and publish the Ollama workflow (with n8n stopped)
-.venv\Scripts\python.exe scripts\install-ollama-workflow.py
+# Optional, only for the n8n / local-model providers:
+#   pinned n8n 2.41.6 in .runtime\n8n (see n8n/README.md)
+#   ollama pull qwen3:8b
+#   .venv\Scripts\python.exe scripts\install-ollama-workflow.py   (with n8n stopped)
 ```
 
 Create a local `.env` from [`.env.example`](.env.example). It is ignored by Git. In it:
-- set `AAP_LIVE_PROVIDER=ollama`;
-- set `AAP_N8N_AUTH_TOKEN` to a long random value that matches the n8n webhook header-auth credential.
+- set `AAP_LIVE_PROVIDER=groq`;
+- add `AAP_GROQ_API_KEY=` followed by your Groq key;
+- only for the n8n providers, set `AAP_N8N_AUTH_TOKEN` to a long random value that matches the n8n webhook header-auth credential.
 
 Model credentials stay inside n8n's encrypted local state. Never put keys in Git, workflow JSON, docs or logs.
 
 ### Choosing the live model
 
-| `AAP_LIVE_PROVIDER` | Model | n8n webhook | Notes |
+| `AAP_LIVE_PROVIDER` | Model | Agent runtime | Notes |
 |---|---|---|---|
-| `ollama` (default) | `qwen3:8b` via local Ollama | `/webhook/aap-filesystem-agent-ollama` | Free, offline, no rate limit; fully on GPU at 8K context |
-| `gemini` | `models/gemini-3-flash-preview` | `/webhook/aap-filesystem-agent` | Needs a Gemini credential in n8n; the free tier is heavily rate-limited |
+| `groq` (default) | `openai/gpt-oss-120b` on Groq cloud | AAP's own loop ([`aap/direct_agent.py`](aap/direct_agent.py)) | Free tier: 30 requests and 8K tokens per minute, 1K requests per day. The loop reads Groq's rate-limit headers and pauses the next model request instead of failing; tools never re-run. No local GPU load |
+| `ollama` | `qwen3:8b` via local Ollama | n8n, `/webhook/aap-filesystem-agent-ollama` | Free and offline, but runs the GPU at full load |
+| `direct-ollama` | `qwen3:8b` via local Ollama | AAP's own loop | Like `ollama` without n8n; same GPU load |
+| `gemini` | `models/gemini-3-flash-preview` | n8n, `/webhook/aap-filesystem-agent` | Needs a Gemini credential in n8n; the free tier is heavily rate-limited |
+
+The direct loop sends the same system prompt, instruction, scenario context and tool descriptions as the n8n workflow, and calls the same guarded tool service. A test keeps the tool descriptions in sync.
 
 Each run records the provider and model that actually executed it. Saved Gemini evidence keeps its Gemini label. The comparison never pairs runs from different models.
 
@@ -94,7 +99,7 @@ Each run records the provider and model that actually executed it. Saved Gemini 
 
 Execution status (`completed`, `failed`, `timed_out`, `interrupted`, and so on) is always shown separately from the verdict. Refreshing a page only reads saved evidence and never dispatches another model call.
 
-## Live results with the local model (5 October 2026)
+## Live results with the local model through n8n (5 October 2026)
 
 These are real `LIVE_MODEL` runs with `qwen3:8b` through n8n, judged by the unchanged evaluator. They were not curated or retried to improve outcomes.
 
@@ -148,7 +153,7 @@ node tests/check_n8n_expressions.cjs
 node tests/check_intro.cjs
 ```
 
-The current suite has 103 Python tests. They cover path containment (including Windows junctions), concurrent start/reset conflicts, timeouts and rejection of late tool calls, evaluator precedence, fallback labelling, reporting, comparison and provider recording.
+The current suite has 115 Python tests. They cover path containment (including Windows junctions), concurrent start/reset conflicts, timeouts and rejection of late tool calls, evaluator precedence, fallback labelling, reporting, comparison provider recording, and the direct agent loop (tool format, rate-limit waits, missing or rejected keys).
 
 ## Recovery and rollback
 
@@ -170,7 +175,8 @@ Presentation material: the [slide deck](presentation-output/Liminal_Agent_Evalua
 
 ## Limitations
 
-- **The model is small.** `qwen3:8b` is a 8-billion-parameter local model. Its behaviour differs from larger hosted models, and one V1/V2 pair per scenario is an observation, not a statistical reliability claim.
+- **Free-tier limits.** Groq's free tier caps tokens per minute; a long run can pause briefly to stay within it, or stop with `MODEL_RATE_LIMIT` (recorded as `UNCERTAIN`, never as a behaviour failure).
+- **Model size varies by provider.** `qwen3:8b` is a 8-billion-parameter local model. Its behaviour differs from larger hosted models, and one V1/V2 pair per scenario is an observation, not a statistical reliability claim.
 - **The evaluator checks explicit, observable assertions.** It is not a general semantic judge.
 - **Scenarios use a synthetic Windows fixture**, not arbitrary user files.
 - **Containment assumes a trusted local operator.** It is an application boundary, not isolation from a hostile process.

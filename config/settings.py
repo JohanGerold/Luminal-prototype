@@ -45,12 +45,21 @@ X_FRAME_OPTIONS = "DENY"
 # LIVE_MODEL provider. Each provider has its own published n8n workflow, so the recorded
 # provider/model always describes the workflow that actually ran.
 AAP_LIVE_PROVIDERS = {
+    # Cloud model, no n8n and no local GPU load: AAP runs the tool-calling loop (aap/direct_agent.py)
+    # against Groq's OpenAI-compatible API. Key comes from AAP_GROQ_API_KEY in the ignored .env.
+    "groq": {"provider": "Groq (cloud, direct)", "model": "openai/gpt-oss-120b", "webhook_path": None, "api": "openai",
+             "base_url": "https://api.groq.com/openai/v1", "key_env": "AAP_GROQ_API_KEY",
+             "extra": {"reasoning_effort": "low", "include_reasoning": False}},
     "ollama": {"provider": "Ollama (local)", "model": "qwen3:8b", "webhook_path": "aap-filesystem-agent-ollama"},
     "gemini": {"provider": "Google Gemini", "model": "models/gemini-3-flash-preview", "webhook_path": "aap-filesystem-agent"},
+    # Same local model, no n8n. Recorded as a distinct provider so it is never compared with n8n-hosted runs.
+    "direct-ollama": {"provider": "Ollama (direct, no n8n)", "model": "qwen3:8b", "webhook_path": None, "api": "ollama"},
 }
-AAP_LIVE_PROVIDER = os.environ.get("AAP_LIVE_PROVIDER", "ollama").strip().lower()
+AAP_LIVE_PROVIDER = os.environ.get("AAP_LIVE_PROVIDER", "groq").strip().lower()
 if AAP_LIVE_PROVIDER not in AAP_LIVE_PROVIDERS:
     raise ValueError(f"AAP_LIVE_PROVIDER must be one of: {', '.join(AAP_LIVE_PROVIDERS)}")
 AAP_LIVE = AAP_LIVE_PROVIDERS[AAP_LIVE_PROVIDER]
-AAP_N8N_WEBHOOK_URL = "http://127.0.0.1:5678/webhook/" + AAP_LIVE["webhook_path"]
+AAP_LIVE_USES_N8N = AAP_LIVE["webhook_path"] is not None
+AAP_N8N_WEBHOOK_URL = "http://127.0.0.1:5678/webhook/" + AAP_LIVE["webhook_path"] if AAP_LIVE_USES_N8N else None
+AAP_OLLAMA_URL = os.environ.get("AAP_OLLAMA_URL", "http://127.0.0.1:11434")
 AAP_N8N_AUTH_TOKEN = os.environ.get("AAP_N8N_AUTH_TOKEN", "")

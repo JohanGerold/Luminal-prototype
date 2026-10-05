@@ -9,7 +9,7 @@ from aap.models import AgentVersion, EvaluationRun, Scenario, ScenarioResult
 from aap.n8n_client import invoke_agent
 from aap.traces import append
 from aap.evaluation import evaluate_result
-from aap import fallback
+from aap import direct_agent, fallback
 
 RUN_SECONDS = 100
 active_lock = threading.Lock()
@@ -67,7 +67,12 @@ def start(version_name, scenario_id, mode):
 def _dispatch(result, token, mailbox):
     close_old_connections()
     try:
-        mailbox.put(invoke_agent(result, token) if result.run.execution_mode == 'LIVE_MODEL' else fallback.execute(result, token, workspace))
+        if result.run.execution_mode == 'DEMO_FALLBACK':
+            mailbox.put(fallback.execute(result, token, workspace))
+        elif settings.AAP_LIVE["webhook_path"] is None:
+            mailbox.put(direct_agent.execute(result, token, workspace))
+        else:
+            mailbox.put(invoke_agent(result, token))
     except Exception:
         # Provider response bodies and credentials never enter app error logs.
         mailbox.put(None)

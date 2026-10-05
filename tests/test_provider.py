@@ -6,12 +6,17 @@ from tests.test_reporting import saved_run  # noqa: F401
 from tests.test_runs import runner, wait_terminal  # noqa: F401
 
 
-def test_configured_provider_selects_its_own_webhook():
+def test_configured_provider_selects_its_own_runtime():
     live = settings.AAP_LIVE_PROVIDERS[settings.AAP_LIVE_PROVIDER]
     assert settings.AAP_LIVE is live
-    assert settings.AAP_N8N_WEBHOOK_URL == "http://127.0.0.1:5678/webhook/" + live["webhook_path"]
-    paths = [item["webhook_path"] for item in settings.AAP_LIVE_PROVIDERS.values()]
+    if live["webhook_path"]:
+        assert settings.AAP_N8N_WEBHOOK_URL == "http://127.0.0.1:5678/webhook/" + live["webhook_path"]
+    else:
+        assert settings.AAP_N8N_WEBHOOK_URL is None and live["api"] in ("ollama", "openai")
+    paths = [item["webhook_path"] for item in settings.AAP_LIVE_PROVIDERS.values() if item["webhook_path"]]
     assert len(paths) == len(set(paths))
+    labels = [item["provider"] for item in settings.AAP_LIVE_PROVIDERS.values()]
+    assert len(labels) == len(set(labels))  # distinct labels keep comparison from pairing different runtimes
 
 
 @pytest.mark.parametrize("name", ["ollama", "gemini"])

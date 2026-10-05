@@ -1,5 +1,13 @@
 # Latest UI checkpoint — Liminal introduction
 
+# Latest checkpoint — Groq cloud provider and direct agent loop, 5 October 2026
+
+The presentation laptop's fan was damaged during sustained local inference. The interrupted `direct-ollama` live batch recorded no runs. Local GPU inference is now off by default. `AAP_LIVE_PROVIDER=groq` (default) runs the agent loop inside AAP (`aap/direct_agent.py`) against Groq's OpenAI-compatible API with `openai/gpt-oss-120b`, `reasoning_effort=low`. No n8n, no Ollama, no GPU load. It uses the same system prompt, instruction, scenario context, tool descriptions and guarded `workspace.execute` path as n8n, under a distinct provider label ("Groq (cloud, direct)"), so comparison never pairs it with n8n runs. `direct-ollama` (same loop, local model) also exists but is not live-verified and should not be used on this laptop.
+
+Rate limits (free tier, checked 5 October 2026): 30 RPM, 8K TPM, 1K RPD, 200K TPD for `openai/gpt-oss-120b`. The loop reads `x-ratelimit-remaining-tokens`/`x-ratelimit-reset-tokens` and pauses before the next model request; on 429 it waits `retry-after` (at most three times, within the 90 s budget) and resends only that model request. Tools are never re-executed and runs are never redispatched. A missing key fails as MODEL_AUTH_FAILED before any request; the key lives only in the ignored `.env` as `AAP_GROQ_API_KEY` and never enters snapshots, traces or logs.
+
+Verification: 115 tests pass (12 new direct-loop/Groq tests with a fake HTTP server); launcher in groq mode starts only AAP and warns when the key is missing. **Live Groq verification is pending the operator adding a key.**
+
 # Latest checkpoint — local Ollama live provider, 5 October 2026
 
 User-authorized workaround for the Gemini free-tier quota: LIVE_MODEL now defaults to **local Ollama `qwen3:8b`** through a second, otherwise identical n8n workflow (`aapFilesystemAgentOllama`, `/webhook/aap-filesystem-agent-ollama`). Gemini workflow, credential and saved evidence are unchanged and selectable with `AAP_LIVE_PROVIDER=gemini`. Each run snapshots the provider/model that actually ran; reports show the recorded provider, not the current setting. Model options: thinking off, temperature 0.2, 8192 context (100% GPU on the 8 GB RTX 4060 Laptop), keep-alive 60 min.

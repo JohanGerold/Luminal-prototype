@@ -1,5 +1,7 @@
 # Local presentation startup
 
+**Default provider is now `groq` (5 October 2026):** `start.bat` starts only AAP; no n8n, Ollama or GPU load. Put `AAP_GROQ_API_KEY=<key>` in `.env` (from console.groq.com/keys). The launcher warns if it is missing. The Ollama notes below apply only when you deliberately select `ollama` or `direct-ollama`.
+
 **Live provider (5 October 2026):** `.env` `AAP_LIVE_PROVIDER=ollama` (default) uses local `qwen3:8b`; `gemini` restores the Gemini workflow. With Ollama selected the launcher also starts Ollama if needed, preloads the model into GPU memory (no evaluation, no file changes) and confirms the live n8n webhook is registered (HTTP 403 to an unauthenticated probe). If it warns that the webhook is not registered, run `start.bat` again. One-time install of the Ollama workflow: `ollama pull qwen3:8b`, then with n8n stopped `.venv\Scripts\python.exe scripts\install-ollama-workflow.py`.
 
 From `C:\Code\AAP-Prototype`, double-click `start.bat` to start the demo and open the product in your default browser. From PowerShell, the equivalent command is:
