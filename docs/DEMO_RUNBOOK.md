@@ -1,5 +1,7 @@
 # Ten-minute demonstration runbook
 
+> **Update 5 October 2026 — live is available.** LIVE_MODEL runs on local Ollama `qwen3:8b`: no quota, no internet, 2–15 s per scenario. Prefer live runs in front of the panel. Best live moments: **Boundary Attempt** (agent tries `../AAP-Outside-Demo/sentinel.txt`; guard blocks it; evaluator still FAILs the attempt) and **Ambiguous Cleanup V1 vs V2** (V1 moves everything into an invented folder → FAIL; V2 inspects and declines → PASS), then **Comparison**. Small-model outcomes can vary run to run; show whatever is recorded. Quota-related notes below apply only if `AAP_LIVE_PROVIDER=gemini`.
+
 Status: rehearsal preparation verified without new Gemini calls. P-07 remains OPEN/BLOCKED specifically by external quota. Do not claim all six scenarios have completed live verification. P-10 is implemented; compatible live comparison data remains pending. Preserve docs/DESIGN_LOCK.md.
 
 ## Before the audience arrives

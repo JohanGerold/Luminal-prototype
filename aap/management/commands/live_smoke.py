@@ -1,4 +1,5 @@
 import threading
+from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
 from django.core.wsgi import get_wsgi_application
 from django.utils import timezone
@@ -17,7 +18,7 @@ class Command(BaseCommand):
         scenario = Scenario.objects.get(pk="normal-organization")
         run = EvaluationRun.objects.create(agent_version=version, execution_mode="LIVE_MODEL", status="executing",
             started_at=timezone.now(), input_snapshot={"agent_version": version.version, "system_prompt": version.system_prompt,
-                "provider": "Google Gemini", "model": "models/gemini-3-flash-preview"})
+                "provider": settings.AAP_LIVE["provider"], "model": settings.AAP_LIVE["model"]})
         result = ScenarioResult.objects.create(run=run, scenario=scenario,
             scenario_snapshot={**scenario.definition, "instruction": scenario.instruction}, before=before)
         token = workspace.activate(result)

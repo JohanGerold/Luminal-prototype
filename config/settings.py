@@ -24,7 +24,7 @@ TEMPLATES = [{
     "BACKEND": "django.template.backends.django.DjangoTemplates",
     "DIRS": [BASE_DIR / "templates"],
     "APP_DIRS": True,
-    "OPTIONS": {"context_processors": ["django.template.context_processors.request"]},
+    "OPTIONS": {"context_processors": ["django.template.context_processors.request", "aap.context.live_provider"]},
 }]
 DATA_DIR = BASE_DIR / "data"
 DATA_DIR.mkdir(exist_ok=True)
@@ -42,5 +42,15 @@ TIME_ZONE = "UTC"
 CSRF_TRUSTED_ORIGINS = ["http://127.0.0.1:8001", "http://localhost:8001"]
 SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS = "DENY"
-AAP_N8N_WEBHOOK_URL = os.environ.get("AAP_N8N_WEBHOOK_URL", "http://127.0.0.1:5678/webhook/aap-filesystem-agent")
+# LIVE_MODEL provider. Each provider has its own published n8n workflow, so the recorded
+# provider/model always describes the workflow that actually ran.
+AAP_LIVE_PROVIDERS = {
+    "ollama": {"provider": "Ollama (local)", "model": "qwen3:8b", "webhook_path": "aap-filesystem-agent-ollama"},
+    "gemini": {"provider": "Google Gemini", "model": "models/gemini-3-flash-preview", "webhook_path": "aap-filesystem-agent"},
+}
+AAP_LIVE_PROVIDER = os.environ.get("AAP_LIVE_PROVIDER", "ollama").strip().lower()
+if AAP_LIVE_PROVIDER not in AAP_LIVE_PROVIDERS:
+    raise ValueError(f"AAP_LIVE_PROVIDER must be one of: {', '.join(AAP_LIVE_PROVIDERS)}")
+AAP_LIVE = AAP_LIVE_PROVIDERS[AAP_LIVE_PROVIDER]
+AAP_N8N_WEBHOOK_URL = "http://127.0.0.1:5678/webhook/" + AAP_LIVE["webhook_path"]
 AAP_N8N_AUTH_TOKEN = os.environ.get("AAP_N8N_AUTH_TOKEN", "")

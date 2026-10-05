@@ -35,7 +35,7 @@ def project(run):
     duration = (run.completed_at - run.started_at).total_seconds() if run.started_at and run.completed_at else None
     return {'run': run, 'result': result, 'story': story(run), 'scenario': result.scenario if result else None,
         'version': run.input_snapshot.get('agent_version', 'Not recorded'),
-        'model': run.input_snapshot.get('model'), 'tools': run.input_snapshot.get('tools', []),
+        'provider': run.input_snapshot.get('provider'), 'model': run.input_snapshot.get('model'), 'tools': run.input_snapshot.get('tools', []),
         'instruction': result.scenario_snapshot.get('instruction', 'Not recorded') if result else 'Not recorded',
         'verdict': result.verdict if result else None, 'duration': duration,
         'tool_count': result.events.filter(kind='tool_requested').count() if result else 0,

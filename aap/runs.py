@@ -1,6 +1,7 @@
 """One bounded in-process execution. Never redispatch a lost model response."""
 import queue
 import threading
+from django.conf import settings
 from django.db import close_old_connections
 from django.utils import timezone
 from aap.filesystem.service import workspace
@@ -41,8 +42,8 @@ def start(version_name, scenario_id, mode):
             started_at=timezone.now(), input_snapshot={"agent_version": version.version,
                 "system_prompt": version.system_prompt, "tools": version.tools,
                 "execution_limits": {"run_seconds": RUN_SECONDS},
-                "provider": "Google Gemini" if mode == 'LIVE_MODEL' else None,
-                "model": "models/gemini-3-flash-preview" if mode == 'LIVE_MODEL' else None,
+                "provider": settings.AAP_LIVE["provider"] if mode == 'LIVE_MODEL' else None,
+                "model": settings.AAP_LIVE["model"] if mode == 'LIVE_MODEL' else None,
                 "fallback_script_version": fallback.SCRIPT_VERSION if mode == 'DEMO_FALLBACK' else None})
         result = ScenarioResult.objects.create(run=run, scenario=scenario,
             scenario_snapshot={**scenario.definition, "instruction": scenario.instruction}, before=before)

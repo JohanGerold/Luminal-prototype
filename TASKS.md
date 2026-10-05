@@ -1,5 +1,7 @@
 # Prototype task ledger
 
+> **5 October 2026 — local Ollama provider.** P-07 live coverage COMPLETE on `qwen3:8b` (all six scenarios, V1 and V2); P-10 now has 6 comparable LIVE_MODEL pairs (1 fixed, 1 unchanged failure). Gemini rows below remain as historical record. See HANDOFF.md for run IDs. Rollback point: tag `pre-ollama-baseline`.
+
 Plan: `docs/PROTOTYPE_PLAN.md`. Approved and frozen with four user amendments on 3 October 2026.
 
 Original execution order (later explicit user exception permits non-live P-10 during P-07 hold): P-00 → P-01 → P-02 → P-03 → P-04 → P-05 → P-06 → P-09 minimal fallback → P-07 → P-08 → P-10 (P1) → P-11 → P-12.

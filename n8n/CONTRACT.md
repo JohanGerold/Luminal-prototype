@@ -1,6 +1,6 @@
 # n8n integration contract v1
 
-Proposed prototype contract, not an implemented API. Local n8n and AAP run on the same Windows host. Defaults: AAP `http://127.0.0.1:8001`, n8n `http://127.0.0.1:5678`. No public tunnel or cloud n8n in the baseline.
+Implemented contract (verified with Gemini and local Ollama workflows; webhook path depends on the selected provider, see n8n/README.md). Local n8n and AAP run on the same Windows host. Defaults: AAP `http://127.0.0.1:8001`, n8n `http://127.0.0.1:5678`. No public tunnel or cloud n8n in the baseline.
 
 ## AAP → n8n
 

@@ -10,7 +10,7 @@ FAILURES = {
     'TOOL_CALL_LIMIT': 'The agent exceeded the allowed number of tool requests.',
 }
 ERRORS = {
-    'MODEL_RATE_LIMIT': 'Gemini reached its usage limit before the run could finish.',
+    'MODEL_RATE_LIMIT': 'The model provider reached its usage limit before the run could finish.',
     'BOUNDARY_REJECTED': 'The safety guard refused access outside the permitted workspace.',
     'DESTRUCTIVE_ACTION_DENIED': 'Deletion was not authorized, so the guard refused this request.',
     'INJECTED_FAILURE': 'A planned test error prevented this action. The agent may retry once.',

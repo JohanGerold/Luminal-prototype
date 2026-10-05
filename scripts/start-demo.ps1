@@ -71,9 +71,45 @@ do {
     Start-Sleep -Seconds 1
 } while ([DateTime]::UtcNow -lt $demoDeadline)
 if (-not $demoAppReady) { throw 'AAP not ready. Check the local Python environment and occupied ports. No evaluation was dispatched.' }
+$demoProvider = (Get-Content -LiteralPath (Join-Path $demoRoot '.env') | Where-Object { $_ -match '^AAP_LIVE_PROVIDER=' } | Select-Object -First 1) -replace '^AAP_LIVE_PROVIDER=', ''
+if (-not $demoProvider) { $demoProvider = 'ollama' }
+if (-not $AppOnly -and $demoProvider.Trim().ToLower() -eq 'ollama') {
+    $demoOllamaUrl = 'http://127.0.0.1:11434'
+    $demoOllamaUp = { try { $null = Invoke-WebRequest -Uri "$demoOllamaUrl/api/version" -UseBasicParsing -TimeoutSec 2; $true } catch { $false } }
+    if (-not (& $demoOllamaUp)) {
+        $demoOllamaExe = Join-Path $env:LOCALAPPDATA 'Programs\Ollama\ollama.exe'
+        if (Test-Path -LiteralPath $demoOllamaExe) {
+            $null = Start-Process -FilePath $demoOllamaExe -ArgumentList 'serve' -WindowStyle Hidden -PassThru
+            $ollamaDeadline = [DateTime]::UtcNow.AddSeconds(30)
+            while (-not (& $demoOllamaUp) -and [DateTime]::UtcNow -lt $ollamaDeadline) { Start-Sleep -Milliseconds 500 }
+        }
+    }
+    if (& $demoOllamaUp) {
+        # Load the model into GPU memory now so the first live run does not pay the cold-load cost.
+        # An empty generate request only loads weights; it runs no evaluation and touches no files.
+        try {
+            $null = Invoke-RestMethod -Uri "$demoOllamaUrl/api/generate" -Method Post -ContentType 'application/json' -TimeoutSec 180 `
+                -Body '{"model":"qwen3:8b","keep_alive":"60m","options":{"num_ctx":8192}}'
+            Write-Host "Ollama ready: qwen3:8b loaded for LIVE_MODEL."
+        } catch { Write-Warning 'Ollama is running but qwen3:8b could not be loaded. Run: ollama pull qwen3:8b' }
+    } else { Write-Warning 'Ollama is not running. LIVE_MODEL will fail until it starts; DEMO_FALLBACK remains available.' }
+}
 Write-Host "AAP ready: $demoAppUrl/"
 Write-Host "Saved evidence: $demoAppUrl/runs"
-if ($demoN8nReady) { Write-Host "n8n ready: $demoN8nUrl (provider quota is not checked)" }
+if ($demoN8nReady) {
+    # n8n can report healthy before (or without) registering a published webhook. An unauthenticated
+    # empty POST returns 403 once the live workflow is registered and 404 while it is not; it never runs the agent.
+    $demoWebhookPath = if ($demoProvider.Trim().ToLower() -eq 'gemini') { 'aap-filesystem-agent' } else { 'aap-filesystem-agent-ollama' }
+    $demoWebhookDeadline = [DateTime]::UtcNow.AddSeconds(45)
+    do {
+        try { $null = Invoke-WebRequest -Uri "$demoN8nUrl/webhook/$demoWebhookPath" -Method Post -Body '{}' -ContentType 'application/json' -UseBasicParsing -TimeoutSec 5; $demoWebhookCode = 200 }
+        catch { $demoWebhookCode = if ($_.Exception.Response) { [int]$_.Exception.Response.StatusCode } else { 0 } }
+        if ($demoWebhookCode -ne 404) { break }
+        Start-Sleep -Seconds 2
+    } while ([DateTime]::UtcNow -lt $demoWebhookDeadline)
+    if ($demoWebhookCode -eq 403) { Write-Host "n8n ready: $demoN8nUrl (live workflow /webhook/$demoWebhookPath registered for $demoProvider)" }
+    else { Write-Warning "n8n is up but /webhook/$demoWebhookPath is not registered (HTTP $demoWebhookCode). Run start.bat again; if it persists, see n8n/README.md. LIVE_MODEL runs will fail until then." }
+}
 else { Write-Warning 'n8n unavailable or intentionally skipped. Inspect saved runs, or explicitly select DEMO_FALLBACK. LIVE_MODEL never silently falls back.' }
-Write-Host 'No model request, credential change or workspace reset was performed.'
+Write-Host 'No evaluation, credential change or workspace reset was performed.'
 if (-not $NoBrowser) { Start-Process "$demoAppUrl/" }
