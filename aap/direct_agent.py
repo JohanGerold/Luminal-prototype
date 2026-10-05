@@ -83,7 +83,9 @@ class Throttle:
 
 
 def post(url, body, headers, timeout):
-    request = Request(url, data=json.dumps(body).encode(), headers={"Content-Type": "application/json", **headers}, method="POST")
+    # Groq's edge (Cloudflare) rejects Python's default User-Agent with 403 / error 1010.
+    request = Request(url, data=json.dumps(body).encode(), method="POST",
+                      headers={"Content-Type": "application/json", "User-Agent": "Luminal-AAP/1.0", **headers})
     with urlopen(request, timeout=timeout) as response:
         return json.loads(response.read()), {k.lower(): v for k, v in response.headers.items()}
 

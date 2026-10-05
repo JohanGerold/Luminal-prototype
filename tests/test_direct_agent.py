@@ -131,6 +131,7 @@ def test_groq_run_uses_openai_tool_format_and_records_provider(runner, groq):  #
     first, second = (json.loads(r.data) for r in requests)
     assert requests[0].full_url == "https://api.groq.com/openai/v1/chat/completions"
     assert requests[0].get_header("Authorization") == "Bearer test-groq-key-not-real"
+    assert requests[0].get_header("User-agent") == "Luminal-AAP/1.0"  # default Python UA is blocked by Groq's edge
     assert (first["reasoning_effort"], first["include_reasoning"]) == ("low", False)
     assert second["messages"][-1]["tool_call_id"] == "call_0" and json.loads(second["messages"][-1]["content"])["success"]
     assert "test-groq-key-not-real" not in json.dumps(run.input_snapshot) + json.dumps(list(result.events.values()), default=str)
